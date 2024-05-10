@@ -23,8 +23,8 @@
 /
 
  &coupler_nml
-            months = 0,
-            days   = 2,
+            months = 12,
+            days   = 0,
             hours  = 0,
             current_date = 2004,1,1,0,0,0,
             calendar = 'julian',
@@ -46,7 +46,7 @@
 
  &diag_manager_nml
             max_axes = 600,
-            flush_nc_files=.false.
+            flush_nc_files=.true.
             max_files = 600,
             max_num_axis_sets = 600,
             max_input_fields = 2000
@@ -142,9 +142,13 @@
        co2_calc = 'mocsy'
        debug = .false.
        imbalance_tolerance=1.0e-9
-!       do_nh3_atm_ocean_exchange = .true.  !turn on exchange of NH3
-!       scheme_no3_nh4_lim        = 2       !update nh4/no3 uptake scheme
-!       scheme_nitrif             = 3       !new nitrification scheme
+       do_FEISTY                  = .false.
+       do_print_FEISTY_diagnostic = .false.
+!      do_nh3_atm_ocean_exchange = .true.  !turn on exchange of NH3
+!      scheme_no3_nh4_lim        = 2       !update nh4/no3 uptake scheme
+!      scheme_nitrif             = 3       !new nitrification scheme
+
+
 /
 
 
