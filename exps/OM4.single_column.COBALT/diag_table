@@ -6,20 +6,23 @@ OM4_single_column
 #==========================================================================================
 # Proposed ESM4 production diagnostics (CAS, 1/11/18)
 #==========================================================================================
-"ocean_cobalt_sfc",             1, "months", 1, "days", "time",
-"ocean_cobalt_btm",             1, "months", 1, "days", "time",
-"ocean_cobalt_tracers_int",     1, "months", 1, "days", "time",
-"ocean_cobalt_fluxes_int",      1, "months", 1, "days", "time",
-"ocean_cobalt_fdet_100",        1, "months", 1, "days", "time",
-"ocean_cobalt_tracers_month_z", 1, "months", 1, "days", "time",
-"ocean_cobalt_tracers_instant",12, "months", 1, "days", "time",
-"ocean_cobalt_daily_2d",          24, "hours",  1, "days", "time",
+"ocean_cobalt_sfc",             1,  "months", 1, "days", "time",
+"ocean_cobalt_btm",             1,  "months", 1, "days", "time",
+"ocean_cobalt_tracers_int",     1,  "months", 1, "days", "time",
+"ocean_cobalt_fluxes_int",      1,  "months", 1, "days", "time",
+"ocean_cobalt_fdet_100",        1,  "months", 1, "days", "time",
+"ocean_cobalt_tracers_month_z", 1,  "months", 1, "days", "time",
+"ocean_cobalt_tracers_instant", 12, "months", 1, "days", "time",
+"ocean_cobalt_daily_2d",        24, "hours",  1, "days", "time",
+"ocean_feisty_tracers",         24, "hours",  1, "days", "time",
+"ocean_feisty_fluxes",          24, "hours",  1, "days", "time",
+"ocean_feisty_forcing_offline", 24, "hours",  1, "days", "time", 
 #
 #======================
 # GENERIC OCEAN COBALT DIAGNOSTICS
 #======================
 #
-# "generic_cobalt","mld03",       "mld03",       "ocean_cobalt_daily_2d","all","mean","none",2
+# "generic_cobalt","mld03",         "mld03",         "ocean_cobalt_daily_2d","all","mean","none",2
 # "generic_cobalt","sfc_chl",       "sfc_chl",       "ocean_cobalt_daily_2d","all","mean","none",2
 # "generic_cobalt","sfc_chl_lgp",   "sfc_chl_lgp",   "ocean_cobalt_daily_2d","all","mean","none",2
 # "generic_cobalt","sfc_chl_mdp",   "sfc_chl_mdp",   "ocean_cobalt_daily_2d","all","mean","none",2
@@ -716,6 +719,205 @@ OM4_single_column
  "generic_cobalt_z","fescav",       "fescav",                 "ocean_cobalt_omip_rates_year_z","all","mean","none",2
  "generic_cobalt_z","fediss",       "fediss",                 "ocean_cobalt_omip_rates_year_z","all","mean","none",2
  "generic_cobalt_z","graz",         "graz",                   "ocean_cobalt_omip_rates_year_z","all","mean","none",2
+#
+# FEISTY tracers output
+"ocean_model", "volcello",     "volcello",         "ocean_feisty_tracers",      "all", "mean", "none",2 # Cell measure for 3d data
+"generic_feisty", "Sf_B",  "Sf_B",     "ocean_feisty_tracers","all","mean","none",2
+"generic_feisty", "Sp_B",  "Sp_B",     "ocean_feisty_tracers","all","mean","none",2
+"generic_feisty", "Sd_B",  "Sd_B",     "ocean_feisty_tracers","all","mean","none",2
+"generic_feisty", "Mf_B",  "Mf_B",     "ocean_feisty_tracers","all","mean","none",2
+"generic_feisty", "Mp_B",  "Mp_B",     "ocean_feisty_tracers","all","mean","none",2
+"generic_feisty", "Md_B",  "Md_B",     "ocean_feisty_tracers","all","mean","none",2
+"generic_feisty", "Lp_B",  "Lp_B",     "ocean_feisty_tracers","all","mean","none",2
+"generic_feisty", "Ld_B",  "Ld_B",     "ocean_feisty_tracers","all","mean","none",2
+"generic_feisty", "BE_B",  "BE_B",     "ocean_feisty_tracers","all","mean","none",2
+#
+# FEISTY diagnostic output
+"ocean_model",    "volcello", "volcello",     "ocean_feisty_fluxes","all","mean","none",2 # Cell measure for 3d data
+# SF:
+"generic_feisty", "SF_met",      "SF_met",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_enc_Mz",   "SF_enc_Mz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_enc_Lz",   "SF_enc_Lz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_enc_f",    "SF_enc_f",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_enc_p",    "SF_enc_p",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_enc_d",    "SF_enc_d",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_enc_BE",   "SF_enc_BE",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_cons_Mz",  "SF_cons_Mz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_cons_Lz",  "SF_cons_Lz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_cons_f",   "SF_cons_f",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_cons_p",   "SF_cons_p",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_cons_d",   "SF_cons_d",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_cons_BE",  "SF_cons_BE",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_cons_tot", "SF_cons_tot",     "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_f_tot",    "SF_f_tot",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_mu_p",     "SF_mu_p",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_E_A",      "SF_E_A",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_prod",     "SF_prod",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_Fout",     "SF_Fout",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_rho",      "SF_rho",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SF_yield",    "SF_yield",        "ocean_feisty_fluxes","all","mean","none",2
+# SP:
+"generic_feisty", "SP_met",      "SP_met",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_enc_Mz",   "SP_enc_Mz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_enc_Lz",   "SP_enc_Lz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_enc_f",    "SP_enc_f",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_enc_p",    "SP_enc_p",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_enc_d",    "SP_enc_d",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_enc_BE",   "SP_enc_BE",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_cons_Mz",  "SP_cons_Mz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_cons_Lz",  "SP_cons_Lz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_cons_f",   "SP_cons_f",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_cons_p",   "SP_cons_p",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_cons_d",   "SP_cons_d",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_cons_BE",  "SP_cons_BE",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_cons_tot", "SP_cons_tot",     "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_f_tot",    "SP_f_tot",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_mu_p",     "SP_mu_p",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_E_A",      "SP_E_A",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_prod",     "SP_prod",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_Fout",     "SP_Fout",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_rho",      "SP_rho",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SP_yield",    "SP_yield",        "ocean_feisty_fluxes","all","mean","none",2
+# SD:
+"generic_feisty", "SD_met",      "SD_met",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_enc_Mz",   "SD_enc_Mz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_enc_Lz",   "SD_enc_Lz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_enc_f",    "SD_enc_f",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_enc_p",    "SD_enc_p",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_enc_d",    "SD_enc_d",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_enc_BE",   "SD_enc_BE",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_cons_Mz",  "SD_cons_Mz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_cons_Lz",  "SD_cons_Lz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_cons_f",   "SD_cons_f",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_cons_p",   "SD_cons_p",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_cons_d",   "SD_cons_d",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_cons_BE",  "SD_cons_BE",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_cons_tot", "SD_cons_tot",     "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_f_tot",    "SD_f_tot",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_mu_p",     "SD_mu_p",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_E_A",      "SD_E_A",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_prod",     "SD_prod",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_Fout",     "SD_Fout",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_rho",      "SD_rho",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "SD_yield",    "SD_yield",        "ocean_feisty_fluxes","all","mean","none",2
+# MF_:
+"generic_feisty", "MF_met",      "MF_met",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_enc_Mz",   "MF_enc_Mz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_enc_Lz",   "MF_enc_Lz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_enc_f",    "MF_enc_f",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_enc_p",    "MF_enc_p",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_enc_d",    "MF_enc_d",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_enc_BE",   "MF_enc_BE",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_cons_Mz",  "MF_cons_Mz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_cons_Lz",  "MF_cons_Lz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_cons_f",   "MF_cons_f",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_cons_p",   "MF_cons_p",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_cons_d",   "MF_cons_d",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_cons_BE",  "MF_cons_BE",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_cons_tot", "MF_cons_tot",     "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_f_tot",    "MF_f_tot",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_mu_p",     "MF_mu_p",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_E_A",      "MF_E_A",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_prod",     "MF_prod",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_Fout",     "MF_Fout",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_rho",      "MF_rho",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MF_yield",    "MF_yield",        "ocean_feisty_fluxes","all","mean","none",2
+# MP_:
+"generic_feisty", "MP_met",      "MP_met",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_enc_Mz",   "MP_enc_Mz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_enc_Lz",   "MP_enc_Lz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_enc_f",    "MP_enc_f",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_enc_p",    "MP_enc_p",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_enc_d",    "MP_enc_d",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_enc_BE",   "MP_enc_BE",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_cons_Mz",  "MP_cons_Mz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_cons_Lz",  "MP_cons_Lz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_cons_f",   "MP_cons_f",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_cons_p",   "MP_cons_p",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_cons_d",   "MP_cons_d",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_cons_BE",  "MP_cons_BE",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_cons_tot", "MP_cons_tot",     "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_f_tot",    "MP_f_tot",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_mu_p",     "MP_mu_p",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_E_A",      "MP_E_A",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_prod",     "MP_prod",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_Fout",     "MP_Fout",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_rho",      "MP_rho",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MP_yield",    "MP_yield",        "ocean_feisty_fluxes","all","mean","none",2
+# MD_:
+"generic_feisty", "MD_met",      "MD_met",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_enc_Mz",   "MD_enc_Mz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_enc_Lz",   "MD_enc_Lz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_enc_f",    "MD_enc_f",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_enc_p",    "MD_enc_p",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_enc_d",    "MD_enc_d",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_enc_BE",   "MD_enc_BE",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_cons_Mz",  "MD_cons_Mz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_cons_Lz",  "MD_cons_Lz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_cons_f",   "MD_cons_f",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_cons_p",   "MD_cons_p",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_cons_d",   "MD_cons_d",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_cons_BE",  "MD_cons_BE",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_cons_tot", "MD_cons_tot",     "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_f_tot",    "MD_f_tot",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_mu_p",     "MD_mu_p",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_E_A",      "MD_E_A",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_prod",     "MD_prod",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_Fout",     "MD_Fout",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_rho",      "MD_rho",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "MD_yield",    "MD_yield",        "ocean_feisty_fluxes","all","mean","none",2
+# LP_:
+"generic_feisty", "LP_met",      "LP_met",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_enc_Mz",   "LP_enc_Mz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_enc_Lz",   "LP_enc_Lz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_enc_f",    "LP_enc_f",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_enc_p",    "LP_enc_p",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_enc_d",    "LP_enc_d",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_enc_BE",   "LP_enc_BE",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_cons_Mz",  "LP_cons_Mz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_cons_Lz",  "LP_cons_Lz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_cons_f",   "LP_cons_f",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_cons_p",   "LP_cons_p",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_cons_d",   "LP_cons_d",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_cons_BE",  "LP_cons_BE",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_cons_tot", "LP_cons_tot",     "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_f_tot",    "LP_f_tot",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_mu_p",     "LP_mu_p",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_E_A",      "LP_E_A",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_prod",     "LP_prod",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_Fout",     "LP_Fout",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_rho",      "LP_rho",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LP_yield",    "LP_yield",        "ocean_feisty_fluxes","all","mean","none",2
+# LD_:
+"generic_feisty", "LD_met",      "LD_met",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_enc_Mz",   "LD_enc_Mz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_enc_Lz",   "LD_enc_Lz",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_enc_f",    "LD_enc_f",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_enc_p",    "LD_enc_p",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_enc_d",    "LD_enc_d",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_enc_BE",   "LD_enc_BE",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_cons_Mz",  "LD_cons_Mz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_cons_Lz",  "LD_cons_Lz",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_cons_f",   "LD_cons_f",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_cons_p",   "LD_cons_p",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_cons_d",   "LD_cons_d",       "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_cons_BE",  "LD_cons_BE",      "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_cons_tot", "LD_cons_tot",     "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_f_tot",    "LD_f_tot",        "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_mu_p",     "LD_mu_p",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_E_A",      "LD_E_A",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_prod",     "LD_prod",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_Fout",     "LD_Fout",         "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_rho",      "LD_rho",          "ocean_feisty_fluxes","all","mean","none",2
+"generic_feisty", "LD_yield",    "LD_yield",        "ocean_feisty_fluxes","all","mean","none",2
+#
+# FEISTY forcing files for offline simulation:
+"ocean_model",    "volcello",      "volcello",         "ocean_feisty_forcing_offline",  "all", "mean", "none",2
+"ocean_model",    "thetao",        "thetao",           "ocean_feisty_forcing_offline",  "all", "mean", "none",2  
+"generic_cobalt", "jhploss_n_Mdz", "jhploss_n_Mdz",    "ocean_feisty_forcing_offline",  "all", "mean", "none",2
+"generic_cobalt", "jhploss_n_Lgz", "jhploss_n_Lgz",    "ocean_feisty_forcing_offline",  "all", "mean", "none",2
+"generic_cobalt", "nmdz",          "nmdz",             "ocean_feisty_forcing_offline",  "all", "mean", "none",2
+"generic_cobalt", "nlgz",          "nlgz",             "ocean_feisty_forcing_offline",  "all", "mean", "none",2
 #
 # MOM6 ocean diagnostics files
 "ocean_daily",            1, "days",   1, "days", "time"

@@ -1,0 +1,216 @@
+NOTE: MPP_DOMAINS_SET_STACK_SIZE: stack size set to    32768.
+&MPP_IO_NML
+ HEADER_BUFFER_VAL=16384      ,
+ GLOBAL_FIELD_ON_ROOT_PE=T,
+ IO_CLOCKS_ON=F,
+ SHUFFLE=0          ,
+ DEFLATE_LEVEL=-1         ,
+ CF_COMPLIANCE=F,
+ /
+NOTE: MPP_IO_SET_STACK_SIZE: stack size set to     131072.
+NOTE: MPP_DOMAINS_SET_STACK_SIZE: stack size set to  5000000.
+ Entering coupler_init at 20240312 094837.766
+ Starting initializing ensemble_manager at 20240312 094837.767
+ Finished initializing ensemble_manager at 20240312 094837.767
+NOTE: coupler_init: Atmos PE range:      0     0 ens_01
+NOTE: coupler_init: Ocean PE range:      0     0 ens_01
+NOTE: coupler_init: Land PE range:      0     0 ens_01
+NOTE: coupler_init: Ice PE range:      0     0 ens_01
+NOTE: coupler_init: Running with SERIAL coupling.
+NOTE: coupler_init: Sending most recent fluxes to ocean.
+ Starting to initialize diag_manager at 20240312 094837.767
+NOTE: diag_manager_mod::diag_manager_init: diag_manager is using fms2_io
+ Finished initializing diag_manager at 20240312 094837.841
+ Starting to initialize tracer_manager at 20240312 094837.851
+
+ Dumping coupler_mod/types tree
+types/
+      air_sea_gas_flux_generic/
+            implementation/
+                  ocmip2/
+                        num_parameters = 2
+                  duce/
+                        num_parameters = 1
+                  johnson/
+                        num_parameters = 2
+            num_flags = 0
+            use_atm_pressure = T
+            use_10m_wind_speed = T
+            pass_through_ice = F
+            atm/
+                  name[1] = 'pcair'
+                  name[2] = 'u10'
+                  name[3] = 'psurf'
+                  long_name[1] = 'Atmospheric concentration'
+                  long_name[2] = 'Wind speed at 10 m'
+                  long_name[3] = 'Surface atmospheric pressure'
+                  units[1] = 'mol/mol'
+                  units[2] = 'm/s'
+                  units[3] = 'Pa'
+            ice/
+                  name[1] = 'alpha'
+                  name[2] = 'csurf'
+                  name[3] = 'sc_no'
+                  long_name[1] = 'Solubility w.r.t. atmosphere'
+                  long_name[2] = 'Ocean concentration'
+                  long_name[3] = 'Schmidt number'
+                  units[1] = 'mol/m^3/atm'
+                  units[2] = 'mol/m^3'
+                  units[3] = 'dimensionless'
+            flux/
+                  name[1] = 'flux'
+                  name[2] = 'deltap'
+                  name[3] = 'kw'
+                  name[4] = 'flux0'
+                  long_name[1] = 'Surface flux'
+                  long_name[2] = 'Ocean-air delta pressure'
+                  long_name[3] = 'Piston velocity'
+                  long_name[4] = 'Surface flux no atm'
+                  units[1] = 'mol/m^2/s'
+                  units[2] = 'uatm'
+                  units[3] = 'm/s'
+                  units[4] = 'mol/m^2/s'
+      air_sea_gas_flux/
+            implementation/
+                  ocmip2/
+                        num_parameters = 2
+                  ocmip2_data/
+                        num_parameters = 2
+                  linear/
+                        num_parameters = 3
+            num_flags = 0
+            use_atm_pressure = T
+            use_10m_wind_speed = T
+            pass_through_ice = F
+            atm/
+                  name[1] = 'pcair'
+                  name[2] = 'u10'
+                  name[3] = 'psurf'
+                  long_name[1] = 'Atmospheric concentration'
+                  long_name[2] = 'Wind speed at 10 m'
+                  long_name[3] = 'Surface atmospheric pressure'
+                  units[1] = 'mol/mol'
+                  units[2] = 'm/s'
+                  units[3] = 'Pa'
+            ice/
+                  name[1] = 'alpha'
+                  name[2] = 'csurf'
+                  long_name[1] = 'Solubility from atmosphere times Schmidt number term'
+                  long_name[2] = 'Ocean concentration times Schmidt number term'
+                  units[1] = 'mol/m^3/atm'
+                  units[2] = 'mol/m^3'
+            flux/
+                  name = 'flux'
+                  long_name = 'Surface flux'
+                  units = 'mol/m^2/s'
+      air_sea_deposition/
+            implementation/
+                  dry/
+                        num_parameters = 1
+                  wet/
+                        num_parameters = 1
+            num_flags = 0
+            use_atm_pressure = F
+            use_10m_wind_speed = F
+            pass_through_ice = T
+            atm/
+                  name = 'deposition'
+                  long_name = 'Atmospheric deposition'
+                  units = 'kg/m^2/s'
+            ice/
+                  name = NULL
+                  long_name = NULL
+                  units = NULL
+            flux/
+                  name = 'flux'
+                  long_name = 'Surface deposition'
+                  units = 'mol/m^2/s'
+      land_sea_runoff/
+            implementation/
+                  river/
+                        num_parameters = 1
+            num_flags = 0
+            use_atm_pressure = F
+            use_10m_wind_speed = F
+            pass_through_ice = T
+            atm/
+                  name = 'runoff'
+                  long_name = 'Concentration in land runoff'
+                  units = 'mol/m^3'
+            ice/
+                  name = NULL
+                  long_name = NULL
+                  units = NULL
+            flux/
+                  name = 'flux'
+                  long_name = 'Concentration in land runoff'
+                  units = 'mol/m^3'
+NOTE: open_param_file: MOM_input has been opened successfully.
+NOTE: open_param_file: MOM_saltrestore has been opened successfully.
+NOTE: open_param_file: MOM_layout has been opened successfully.
+NOTE: open_param_file: MOM_override has been opened successfully.
+NOTE: close_param_file: MOM_input has been closed successfully.
+NOTE: close_param_file: MOM_saltrestore has been closed successfully.
+NOTE: close_param_file: MOM_layout has been closed successfully.
+NOTE: close_param_file: MOM_override has been closed successfully.
+
+
+&GENERIC_TRACER_NML
+ DO_GENERIC_TRACER=T,
+ DO_GENERIC_ABIOTIC=F,
+ DO_GENERIC_AGE=F,
+ DO_GENERIC_ARGON=F,
+ DO_GENERIC_CFC=F,
+ DO_GENERIC_SF6=F,
+ DO_GENERIC_TOPAZ=F,
+ DO_GENERIC_ERGOM=F,
+ DO_GENERIC_BLING=F,
+ DO_GENERIC_MINIBLING=F,
+ DO_GENERIC_COBALT=T,
+ FORCE_UPDATE_FLUXES=T,
+ DO_GENERIC_BLRES=F,
+ AS_PARAM="unused    ",
+ DO_VERTFILL_POST=T,
+ /
+
+
+&MOCSY_NML
+ BORON_FORMULATION="l10",
+ DISSOCIATION_CONSTANTS="m10",
+ HF_EQUILIBRIUM_CONSTANT="dg",
+ EPSLN=  1.0000000000000000E-010,
+ PRINT_OOR_WARNINGS=F,
+ MAXIMUM_SALINITY=  200.00000000000000     ,
+ MAX_SPECIES_VALUE=  4.0000000000000000     ,
+ MINIMUM_TEMPERATURE= -2.0000000000000000     ,
+ SAL_FLOOR_BASED_ON_ALK=T,
+ APPLY_EPSLN_FLOOR=T,
+ APPLY_SPECIES_CEILING=T,
+ APPLY_SALINITY_CEILING=T,
+ APPLY_TEMPERATURE_FLOOR=T,
+ /
+
+FATAL: check_nml_error in fms_mod:  Unknown namelist, or mistyped namelist variable in namelist generic_COBALT_nml,   (IOSTAT =         5010 )
+
+
+FATAL: check_nml_error in fms_mod:  Unknown namelist, or mistyped namelist variable in namelist generic_COBALT_nml,   (IOSTAT =         5010 )
+
+#0  0x7f259b02b171 in ???
+#1  0x16a6572 in ???
+#2  0x16aac0b in ???
+#3  0x161f3c6 in ???
+#4  0xe56e27 in ???
+#5  0x495c58 in ???
+#6  0x548af6 in ???
+#7  0xae1f01 in ???
+#8  0x535ed2 in ???
+#9  0x104d3f7 in ???
+#10  0x8ae2e0 in ???
+#11  0x4071ac in ???
+#12  0x7f259a4a6d84 in ???
+#13  0x4071ed in ???
+#14  0xffffffffffffffff in ???
+application called MPI_Abort(MPI_COMM_WORLD, 1) - process 0
+[unset]: PMIU_write error; fd=-1 buf=:cmd=abort exitcode=1 message=application called MPI_Abort(MPI_COMM_WORLD, 1) - process 0
+:
+system msg for write_line failure : Bad file descriptor

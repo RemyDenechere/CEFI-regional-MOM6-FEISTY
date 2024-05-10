@@ -2,3 +2,14 @@
 *.swp
 *~
 html
+*.pdf
+*.m
+
+# Ignore the database
+exps/datasets/
+exps/OM4.single_column.COBALT/*.nc
+exps/OM4.single_column.COBALT/INPUT/*.nc
+
+# Ignore the programs produced
+/builds/build/redhat580-linux-gnu/ocean_ice/debug/MOM6SIS2
+/builds/build/redhat580-linux-gnu/ocean_ice/prod/MOM6SIS2
