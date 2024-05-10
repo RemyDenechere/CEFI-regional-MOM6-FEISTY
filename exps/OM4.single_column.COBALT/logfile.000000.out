@@ -1,0 +1,919 @@
+========================================================================
+READ_ASCII_FILE: unknown
+READ_ASCII_FILE: File: input.nml
+========================================================================
+READ_INPUT_NML: unknown
+READ_INPUT_NML: input.nml 
+  &MOM_input_nml
+          output_directory = '.',
+          input_filename = 'n'
+          restart_input_dir = 'INPUT',
+          restart_output_dir = 'RESTART',
+          parameter_filename = 'MOM_input',
+                               'MOM_saltrestore',
+                               'MOM_layout',
+                               'MOM_override'
+ /
+ 
+  &SIS_input_nml
+         output_directory = './',
+         input_filename = 'n'
+         restart_input_dir = 'INPUT/',
+         restart_output_dir = 'RESTART/',
+         parameter_filename = 'SIS_input',
+                              'SIS_layout',
+                              'SIS_override' /
+ 
+  &atmos_model_nml
+            layout = 1, 1
+ /
+ 
+  &coupler_nml
+             months = 12,
+             days   = 0,
+             hours  = 0,
+             current_date = 2004,1,1,0,0,0,
+             calendar = 'julian',
+             dt_cpld = 1200,
+             dt_atmos = 1200,
+             do_atmos = .false.,
+             do_land = .false.,
+             do_ice = .true.,
+             do_ocean = .true.,
+             do_flux = .true.,
+             atmos_npes = 0,
+             ocean_npes = 0,
+             concurrent = .false.
+             use_lag_fluxes=.false.
+             check_stocks = 0
+             do_chksum = .false.
+             do_endpoint_chksum = .false.
+ /
+ 
+  &diag_manager_nml
+             max_axes = 600,
+             flush_nc_files=.true.
+             max_files = 600,
+             max_num_axis_sets = 600,
+             max_input_fields = 2000
+             max_output_fields = 5000
+             mix_snapshot_average_fields=.false.
+ /
+ 
+  &flux_exchange_nml
+             debug_stocks = .FALSE.
+             divert_stocks_report = .TRUE.
+             do_area_weighted_flux = .FALSE.
+ /
+ 
+  &fms_io_nml
+             fms_netcdf_restart=.true.
+             threading_read='multi'
+             max_files_r = 800
+             max_files_w = 800
+             checksum_required = .false.
+ /
+ 
+  &fms_nml
+             clock_grain='ROUTINE'
+             clock_flags='NONE'
+             domains_stack_size = 5000000
+             stack_size =0
+ /
+ 
+  &ice_albedo_nml
+             t_range = 10.
+ /
+ 
+  &ice_model_nml
+ /
+ 
+  &icebergs_nml
+     verbose=.false.,
+     verbose_hrs=24,
+     traj_sample_hrs=24,
+     debug=.false.,
+     really_debug=.false.,
+     use_slow_find=.true.,
+     add_weight_to_ocean=.true.,
+     passive_mode=.false.,
+     generate_test_icebergs=.false.,
+     speed_limit=0.,
+     use_roundoff_fix=.true.,
+     make_calving_reproduce=.true.,
+  /
+ 
+  &monin_obukhov_nml
+             neutral = .true.
+ /
+ 
+  &ocean_albedo_nml
+             ocean_albedo_option = 2
+ /
+ 
+  &ocean_rough_nml
+             rough_scheme = 'beljaars'
+ /
+ 
+  &sat_vapor_pres_nml
+             construct_table_wrt_liq = .true.
+             construct_table_wrt_liq_and_ice = .true.
+ /
+ 
+  &surface_flux_nml
+             ncar_ocean_flux = .true.
+ 	    raoult_sat_vap = .true.
+ /
+ 
+  &topography_nml
+             topog_file = 'INPUT/navy_topography.data.nc'
+ /
+ 
+  &xgrid_nml
+             make_exchange_reproduce = .false.
+             interp_method = 'second_order'
+ /
+ 
+  &generic_tracer_nml
+        do_generic_tracer=.true.
+        do_generic_abiotic=.false.
+        do_generic_CFC=.false.
+        do_generic_COBALT=.true.
+        do_generic_SF6=.false.
+        force_update_fluxes=.true.
+        as_param='unused'
+        do_vertfill_post=.true.
+ /
+  &generic_COBALT_nml
+        co2_calc = 'mocsy'
+        debug = .false.
+        imbalance_tolerance=1.0e-9
+        do_FEISTY                  = .false.
+        do_print_FEISTY_diagnostic = .false.
+ !      do_nh3_atm_ocean_exchange = .true.  !turn on exchange of NH3
+ !      scheme_no3_nh4_lim        = 2       !update nh4/no3 uptake scheme
+ !      scheme_nitrif             = 3       !new nitrification scheme
+ 
+ 
+ /
+ 
+ 
+ 
+
+MPP module unknown
+MPP started with NPES=     1
+Using MPI library for message passing...
+Realtime clock resolution=  1.0000E-09 sec ( 999999999 ticks/sec)
+Clock rolls over after   9.2234E+09 sec ( 9223372036854775806 ticks)
+
+MPP Parameter module unknown
+
+MPP Data module unknown
+
+MPP_DOMAINS module unknown
+&MPP_IO_NML
+ HEADER_BUFFER_VAL=16384      ,
+ GLOBAL_FIELD_ON_ROOT_PE=T,
+ IO_CLOCKS_ON=F,
+ SHUFFLE=0          ,
+ DEFLATE_LEVEL=-1         ,
+ CF_COMPLIANCE=F,
+ /
+
+MPP_IO module unknown
+
+Using netCDF library version 4.7.0 of Jul 16 2023 05:25:18 $
+
+================================================================================
+FMS_IO_MOD
+unknown
+
+================================================================================
+FMS_MOD
+unknown
+&FMS_NML
+ READ_ALL_PE=T,
+ CLOCK_GRAIN="ROUTINE         ",
+ CLOCK_FLAGS="NONE            ",
+ WARNING_LEVEL="warning ",
+ STACK_SIZE=0          ,
+ DOMAINS_STACK_SIZE=5000000    ,
+ PRINT_MEMORY_USAGE=F,
+ /
+ nml_error_codes=
+
+================================================================================
+CONSTANTS_MOD
+FMSConstants: GFDL
+
+================================================================================
+FMSConstants: GFDL
+
+================================================================================
+fms_affinity_mod
+unknown
+&FMS_AFFINITY_NML
+ AFFINITY=T,
+ STRICT=T,
+ DEBUG_AFFINITY=F,
+ DEBUG_CPUSET=F,
+ /
+
+================================================================================
+$Id$
+$Name$
+
+================================================================================
+TIME_MANAGER_MOD
+unknown
+&COUPLER_NML
+ CURRENT_DATE=2004       , 2*1          , 3*0          ,
+ CALENDAR="julian           ",
+ FORCE_DATE_FROM_NAMELIST=T,
+ MONTHS=12         ,
+ DAYS=0          ,
+ HOURS=0          ,
+ MINUTES=0          ,
+ SECONDS=0          ,
+ DT_CPLD=1200       ,
+ DT_ATMOS=1200       ,
+ DO_ATMOS=F,
+ DO_LAND=F,
+ DO_ICE=T,
+ DO_OCEAN=T,
+ DO_FLUX=T,
+ ATMOS_NPES=1          ,
+ OCEAN_NPES=1          ,
+ ICE_NPES=1          ,
+ LAND_NPES=1          ,
+ ATMOS_NTHREADS=1          ,
+ OCEAN_NTHREADS=1          ,
+ RADIATION_NTHREADS=1          ,
+ CONCURRENT=F,
+ DO_CONCURRENT_RADIATION=F,
+ USE_LAG_FLUXES=F,
+ CHECK_STOCKS=0          ,
+ RESTART_INTERVAL= 6*0          ,
+ DO_DEBUG=F,
+ DO_CHKSUM=F,
+ USE_HYPER_THREAD=F,
+ CONCURRENT_ICE=F,
+ SLOW_ICE_WITH_OCEAN=F,
+ DO_ENDPOINT_CHKSUM=F,
+ COMBINED_ICE_AND_OCEAN=F,
+ /
+  current date used = 2004 January  1  0:00:00 gmt
+
+================================================================================
+DIAG_UTIL_MOD
+unknown
+
+================================================================================
+DIAG_DATA_MOD
+unknown
+
+================================================================================
+DIAG_MANAGER_MOD
+unknown
+&DIAG_MANAGER_NML
+ APPEND_PELIST_NAME=F,
+ MIX_SNAPSHOT_AVERAGE_FIELDS=F,
+ MAX_OUTPUT_FIELDS=5000       ,
+ MAX_INPUT_FIELDS=2000       ,
+ MAX_AXES=600        ,
+ DO_DIAG_FIELD_LOG=F,
+ WRITE_BYTES_IN_FILE=F,
+ DEBUG_DIAG_MANAGER=F,
+ MAX_NUM_AXIS_SETS=600        ,
+ MAX_FILES=600        ,
+ USE_CMOR=F,
+ ISSUE_OOR_WARNINGS=T,
+ OOR_WARNINGS_FATAL=F,
+ MAX_OUT_PER_IN_FIELD=150        ,
+ FLUSH_NC_FILES=T,
+ REGION_OUT_USE_ALT_VALUE=T,
+ MAX_FIELD_ATTRIBUTES=4          ,
+ MAX_FILE_ATTRIBUTES=2          ,
+ MAX_AXIS_ATTRIBUTES=4          ,
+ PREPEND_DATE=T,
+ USE_MPP_IO=F,
+ /
+========================================================================
+READ_ASCII_FILE: unknown
+READ_ASCII_FILE: File: diag_table
+base date used = 2004 January  1  0:00:00 gmt
+
+================================================================================
+DIAG_AXIS_MOD
+unknown
+
+================================================================================
+TRACER_MANAGER_MOD
+unknown
+
+================================================================================
+FIELD_MANAGER_MOD
+unknown
+# specific humidity for moist runs                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+ "TRACER", "atmos_mod", "sphum"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+##         "profile_type", "fixed", "surface_value=3.e-6" /                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
+# prognostic cloud scheme tracers                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+  "TRACER", "atmos_mod", "liq_wat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+  "TRACER", "atmos_mod", "ice_wat"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+  "TRACER", "atmos_mod", "cld_amt"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+# sphum must be present on land as well                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+ "TRACER", "land_mod",     "sphum"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+# test tracer for radon                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+#                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+# "TRACER", "atmos_mod", "radon"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+#           "longname",     "radon test tracer"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+#           "units",        "kg/kg" /                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+###.................................................                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+"namelists","ocean_mod","generic_COBALT"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+ ----------------------------------------------------
+ Contents of tracer entry            1
+ Model type and field name
+ Model                :            1
+ Field name           : sphum
+ Tracer units         : kg/kg
+ Tracer longname      : specific humidity
+ Tracer is_prognostic :  T
+ ----------------------------------------------------
+ ----------------------------------------------------
+ Contents of tracer entry            2
+ Model type and field name
+ Model                :            1
+ Field name           : liq_wat
+ Tracer units         : kg/kg
+ Tracer longname      : cloud liquid specific humidity
+ Tracer is_prognostic :  T
+ ----------------------------------------------------
+ ----------------------------------------------------
+ Contents of tracer entry            3
+ Model type and field name
+ Model                :            1
+ Field name           : ice_wat
+ Tracer units         : kg/kg
+ Tracer longname      : cloud ice water specific humidity
+ Tracer is_prognostic :  T
+ ----------------------------------------------------
+ ----------------------------------------------------
+ Contents of tracer entry            4
+ Model type and field name
+ Model                :            1
+ Field name           : cld_amt
+ Tracer units         : none
+ Tracer longname      : cloud fraction
+ Tracer is_prognostic :  T
+ ----------------------------------------------------
+Number of tracers in field table for atmospheric model =    4
+Number of tracers in field table for oceanic model =    0
+ ----------------------------------------------------
+ Contents of tracer entry            5
+ Model type and field name
+ Model                :            3
+ Field name           : sphum
+ Tracer units         : kg/kg
+ Tracer longname      : specific humidity
+ Tracer is_prognostic :  T
+ ----------------------------------------------------
+Number of tracers in field table for land model =    1
+Number of tracers in field table for ice model =    0
+Number of tracers in field table for coupler model =    0
+&GENERIC_TRACER_NML
+ DO_GENERIC_TRACER=T,
+ DO_GENERIC_ABIOTIC=F,
+ DO_GENERIC_AGE=F,
+ DO_GENERIC_ARGON=F,
+ DO_GENERIC_CFC=F,
+ DO_GENERIC_SF6=F,
+ DO_GENERIC_TOPAZ=F,
+ DO_GENERIC_ERGOM=F,
+ DO_GENERIC_BLING=F,
+ DO_GENERIC_MINIBLING=F,
+ DO_GENERIC_COBALT=T,
+ FORCE_UPDATE_FLUXES=T,
+ DO_GENERIC_BLRES=F,
+ AS_PARAM="unused    ",
+ DO_VERTFILL_POST=T,
+ /
+&MOCSY_NML
+ BORON_FORMULATION="l10",
+ DISSOCIATION_CONSTANTS="m10",
+ HF_EQUILIBRIUM_CONSTANT="dg",
+ EPSLN=  1.0000000000000000E-010,
+ PRINT_OOR_WARNINGS=F,
+ MAXIMUM_SALINITY=  200.00000000000000     ,
+ MAX_SPECIES_VALUE=  4.0000000000000000     ,
+ MINIMUM_TEMPERATURE= -2.0000000000000000     ,
+ SAL_FLOOR_BASED_ON_ALK=T,
+ APPLY_EPSLN_FLOOR=T,
+ APPLY_SPECIES_CEILING=T,
+ APPLY_SALINITY_CEILING=T,
+ APPLY_TEMPERATURE_FLOOR=T,
+ /
+&GENERIC_COBALT_NML
+ DO_14C=F,
+ CO2_CALC="mocsy     ",
+ DEBUG=F,
+ DO_NH3_ATM_OCEAN_EXCHANGE=F,
+ SCHEME_NITRIF=3          ,
+ K_NH4_SMALL=  1.0000000000000000E-008,
+ K_NH4_LARGE=  4.9999999999999998E-008,
+ K_NH4_DIAZO=  9.9999999999999995E-008,
+ SCHEME_NO3_NH4_LIM=2          ,
+ K_NO3_SMALL=  4.9999999999999998E-007,
+ K_NO3_LARGE=  2.5000000000000002E-006,
+ K_NO3_DIAZO=  5.0000000000000004E-006,
+ O2_MIN_NIT=  1.0000000000000000E-008,
+ K_O2_NIT=  3.8999999999999999E-006,
+ IRR_INHIBIT=  10.000000000000000     ,
+ K_NH3_NITRIF=  3.1000000000000000E-009,
+ GAMMA_NITRIF=  3500000.0000000000     ,
+ DO_VERTFILL_PRE=F,
+ IMBALANCE_TOLERANCE=  1.0000000000000001E-009,
+ DO_FEISTY=F,
+ DO_PRINT_FEISTY_DIAGNOSTIC=F,
+ /
+
+================================================================================
+atmos_ocean_fluxes_mod
+unknown
+
+================================================================================
+coupler_types_mod
+unknown
+
+atmos model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+FMSConstants: GFDL
+
+================================================================================
+DIAG_INTEGRAL_MOD
+unknown
+&DIAG_INTEGRAL_NML
+ OUTPUT_INTERVAL= -1.0000000000000000     ,
+ TIME_UNITS="hours   ",
+ FILE_NAME="                                                                ",
+ PRINT_HEADER=T,
+ FIELDS_PER_PRINT_LINE=4          ,
+ /
+&DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE=F,
+ GRID_CENTER_BUG=F,
+ REPRODUCE_NULL_CHAR_BUG=F,
+ /
+
+================================================================================
+HORIZ_INTERP_MOD
+unknown
+&HORIZ_INTERP_NML
+ REPRODUCE_SIENA=F,
+ /
+
+================================================================================
+HORIZ_INTERP_CONSERVE_MOD
+unknown
+
+================================================================================
+HORIZ_INTERP_BILINEAR_MOD
+unknown
+
+================================================================================
+HORIZ_INTERP_BICUBIC_MOD
+unknown
+
+================================================================================
+horiz_interp_spherical_mod
+unknown
+
+================================================================================
+DATA_OVERRIDE_MOD
+unknown
+
+================================================================================
+TIME_INTERP_EXTERNAL_MOD
+unknown
+&TIME_INTERP_EXTERNAL_NML
+ NUM_IO_BUFFERS=2          ,
+ DEBUG_THIS_MODULE=F,
+ MAX_FIELDS=100        ,
+ MAX_FILES=40         ,
+ /
+
+================================================================================
+TIME_INTERP_MOD
+unknown
+&TIME_INTERP_NML
+ PERTHLIKE_BEHAVIOR=F,
+ /
+
+================================================================================
+$Id$
+$Name$
+
+land model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+&DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE=F,
+ GRID_CENTER_BUG=F,
+ REPRODUCE_NULL_CHAR_BUG=F,
+ /
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice modelc domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_MOSAIC domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_MOSAIC domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model aux domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model aux domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice_nohalo domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice_nohalo domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+&DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE=F,
+ GRID_CENTER_BUG=F,
+ REPRODUCE_NULL_CHAR_BUG=F,
+ /
+&DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE=F,
+ GRID_CENTER_BUG=F,
+ REPRODUCE_NULL_CHAR_BUG=F,
+ /
+
+================================================================================
+FMSConstants: GFDL
+
+================================================================================
+ASTRONOMY_MOD
+unknown
+&ASTRONOMY_NML
+ ECC=  1.6709999999999999E-002,
+ OBLIQ=  23.439000000000000     ,
+ PER=  102.93200000000000     ,
+ PERIOD=0          ,
+ YEAR_AE=1998       ,
+ MONTH_AE=9          ,
+ DAY_AE=23         ,
+ HOUR_AE=5          ,
+ MINUTE_AE=37         ,
+ SECOND_AE=0          ,
+ NUM_ANGLES=3600       ,
+ /
+&DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE=F,
+ GRID_CENTER_BUG=F,
+ REPRODUCE_NULL_CHAR_BUG=F,
+ /
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_inc domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_MOSAIC domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_MOSAIC domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+================================================================================
+unknown
+&DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE=F,
+ GRID_CENTER_BUG=F,
+ REPRODUCE_NULL_CHAR_BUG=F,
+ /
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+&DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE=F,
+ GRID_CENTER_BUG=F,
+ REPRODUCE_NULL_CHAR_BUG=F,
+ /
+
+================================================================================
+SAT_VAPOR_PRES_MOD
+unknown
+&SAT_VAPOR_PRES_NML
+ SHOW_BAD_VALUE_COUNT_BY_SLICE=T,
+ SHOW_ALL_BAD_VALUES=F,
+ USE_EXACT_QS=F,
+ DO_SIMPLE=F,
+ CONSTRUCT_TABLE_WRT_LIQ=T,
+ CONSTRUCT_TABLE_WRT_LIQ_AND_ICE=T,
+ /
+
+================================================================================
+$Id$
+$Name$
+&FLUX_EXCHANGE_NML
+ Z_REF_HEAT=  2.0000000000000000     ,
+ Z_REF_MOM=  10.000000000000000     ,
+ EX_U_STAR_SMOOTH_BUG=F,
+ SW1WAY_BUG=F,
+ DO_AREA_WEIGHTED_FLUX=F,
+ DEBUG_STOCKS=F,
+ DIVERT_STOCKS_REPORT=T,
+ DO_RUNOFF=T,
+ DO_FORECAST=F,
+ NBLOCKS=1          ,
+ PARTITION_FPREC_FROM_LPREC=F,
+ SCALE_PRECIP_2D=F,
+ /
+ ==>Note from flux_exchange_mod(flux_exchange_init): Number of exchanged tracers =            1
+ Tracer field name :sphum
+
+================================================================================
+XGRID_MOD
+unknown
+&XGRID_NML
+ MAKE_EXCHANGE_REPRODUCE=F,
+ INTERP_METHOD="second_order                                                    ",
+ DEBUG_STOCKS=F,
+ XGRID_CLOCKS_ON=F,
+ MONOTONIC_EXCHANGE=F,
+ NSUBSET=0          ,
+ DO_ALLTOALL=T,
+ DO_ALLTOALLV=F,
+ USE_MPP_IO=F,
+ /
+
+================================================================================
+$Id$
+$Name$
+&SURFACE_FLUX_NML
+ NO_NEG_Q=F,
+ USE_VIRTUAL_TEMP=T,
+ ALT_GUSTINESS=F,
+ GUST_CONST=  1.0000000000000000     ,
+ GUST_MIN=  0.0000000000000000     ,
+ OLD_DTAUDV=F,
+ USE_MIXING_RATIO=F,
+ NCAR_OCEAN_FLUX=T,
+ NCAR_OCEAN_FLUX_ORIG=F,
+ NCAR_OCEAN_FLUX_MULTILEVEL=F,
+ BULK_ZU=  0.0000000000000000     ,
+ BULK_ZT=  0.0000000000000000     ,
+ BULK_ZQ=  0.0000000000000000     ,
+ RAOULT_SAT_VAP=T,
+ DO_SIMPLE=F,
+ /
+
+================================================================================
+MONIN_OBUKOV_MOD
+unknown
+&MONIN_OBUKHOV_NML
+ RICH_CRIT=  2.0000000000000000     ,
+ NEUTRAL=T,
+ DRAG_MIN_HEAT=  1.0000000000000001E-005,
+ DRAG_MIN_MOIST=  1.0000000000000001E-005,
+ DRAG_MIN_MOM=  1.0000000000000001E-005,
+ STABLE_OPTION=1          ,
+ ZETA_TRANS= 0.50000000000000000     ,
+ NEW_MO_OPTION=F,
+ /
+
+================================================================================
+STOCK_CONSTANTS_MOD
+unknown
+
+================================================================================
+$Id$
+$Name$
+&OCEAN_ALBEDO_NML
+ OCEAN_ALBEDO_OPTION=2          ,
+ CONST_ALB= 0.10000000000000001     ,
+ /
+
+================================================================================
+GET_CAL_TIME_MOD
+unknown
+&GET_CAL_TIME_NML
+ ALLOW_CALENDAR_CONVERSION=T,
+ /
+
+================================================================================
+$Id$
+$Name$
+&OCEAN_ROUGH_NML
+ ROUGHNESS_INIT=  4.4000000000000002E-004,
+ ROUGHNESS_HEAT=  5.8000000000000000E-005,
+ ROUGHNESS_MOM=  5.8000000000000000E-005,
+ ROUGHNESS_MOIST=  5.8000000000000000E-005,
+ ROUGHNESS_MIN=  9.9999999999999995E-007,
+ CHARNOCK=  3.2000000000000001E-002,
+ ROUGH_SCHEME="beljaars                        ",
+ DO_HIGHWIND=F,
+ DO_CAP40=F,
+ ZCOH1=  0.0000000000000000     ,
+ ZCOQ1=  0.0000000000000000     ,
+ V10M=  32.500000000000000     ,
+ V10N=  17.500000000000000     ,
+ /
+
+namelist option USE_FIXED_ROUGH is no longer supported
+use variable ROUGH_SCHEME instead
+
+================================================================================
+DIAG_OUTPUT_MOD
+2020.03
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+                                     time
+Total runtime                      1714.658977
+Initialization                        3.557458
+  Init: atmos_model_init              0.006953
+  Init: land_model_init               0.006820
+  Init: ice_model_init                0.047563
+  Init: ocean_model_init              3.329646
+  Init: flux_exchange_init            0.033753
+Main loop                          1710.969087
+Termination                           0.130208
+(Ocean continuity update)             0.808907
+(Ocean continuity correction)        37.685325
+(Ocean advect tracer)               204.834905
+(Ocean tracer halo updates)          44.284170
+(Ocean tracer global synch)           0.023112
+  Ice: slow: dynamics                42.501629
+  Ice: slow: transport                0.907995
+  Ice: slow: thermodyn diags          0.902696
+Ice                                  48.354850
+Ice Fast                              1.515344
+Ice Slow                             46.813654
+Ice Fast/Slow Exchange                0.007517
+Ocean Initialization                  3.314458
+Ocean                              1594.248374
+Ocean dynamics                      159.425240
+Ocean thermodynamics and tracers   1365.903224
+Ocean Other                          67.946123
+(Ocean tracer advection)            205.178294
+(Ocean diabatic driver)            1160.709129
+(Ocean continuity equation *)         0.000000
+(Ocean set BBL viscosity)             2.050423
+(Ocean message passing *)             6.988415
+(Ocean MOM_initialize_state)          0.145692
+(Ocean init message passing *)        0.000260
+(Ocean mixed layer restrat)           0.000000
+(Ocean collective diagnostics)       58.037843
+(Ocean Z-space diagnostics)           0.000000
+(Ocean ALE)                         165.911107
+(Stochastic EOS)                      0.001993
+(SGS Temperature Variance)            0.001861
+(Cobalt: carbon calcs)               97.774456
+(Cobalt: phytoplankton growth ca    147.764044
+(Cobalt: bacteria growth calcs)       3.317495
+(Cobalt: zooplankton calculation     37.564424
+(Cobalt: other losses)               24.533126
+(Cobalt: production loop)            31.321552
+(Cobalt: ballasting loops)           17.065494
+(Cobalt: source/sink loop 1)          5.667656
+(Cobalt: source/sink loop 2)          9.789778
+(Cobalt: source/sink loop 3)          7.178500
+(Cobalt: source/sink loop 4)          1.245760
+(Cobalt: source/sink loop 5)          2.791290
+(Cobalt: source/sink loop 6)          9.209607
+(Cobalt: send diagnostics)          282.162818
+(Cobalt: calculate diagnostics)      44.699424
+(Initialize from Z)                   0.136663
+(Ocean diagnostics framework)       432.831965
+(Ocean diagnostics remapping)       343.032672
+(Ocean diagnostics grid updates)      3.785132
+(Ocean porous barrier)                0.593078
+(Ocean init message passing)          0.000111
+(Ocean continuity reconstruction     11.905961
+(Ocean BT pre-calcs only)             4.965253
+(Ocean BT pre-step halo updates)      1.689655
+(Ocean BT stepping calcs only)        4.420175
+(Ocean BT stepping halo updates)      1.064609
+(Ocean BT post-calcs only)            0.888077
+(Ocean BT post-step halo updates      0.348562
+(Ocean BT global synch)               0.013796
+(Ocean Coriolis & mom advection)      7.950894
+(Ocean continuity equation)          50.850997
+(Ocean pressure force)               29.370014
+(Ocean vertical viscosity)           19.059050
+(Ocean horizontal viscosity)         13.153997
+(Ocean momentum increments)           0.657593
+(Ocean message passing)              12.583572
+(Ocean barotropic mode calc)          0.136976
+(Ocean barotropic mode stepping)     14.510501
+(Ocean barotropic forcing calc)       1.198526
+(Ocean kappa_shear)                  21.680141
+(Ocean diabatic entrain)              0.000000
+(Ocean vert remap)                   46.780910
+(Ocean geothermal)                    0.021956
+(Ocean set_diffusivity)              27.703378
+(Ocean KPP)                           0.000000
+(Ocean tracer_columns)              898.979927
+(Ocean diabatic tridiag)              4.506863
+(Ocean diabatic message passing)      0.492159
+(Ocean find_uv_at_h)                  0.722280
+(Ocean frazil)                        0.000000
+(Ocean diffuse tracer)                0.000000
+(Ocean epipycnal diffuse tracer)      0.000000
+(Initialize tracer from Z)            1.608016
+Ocean surface forcing                 1.095525
+(Ocean forcing diagnostics)           1.339105
+Land-ice-atm coupler                 62.066705
+SFC boundary layer                   34.758607
+Flux DN from atm                     26.848568
+XGrid generation                      0.096936
+Flux UP to atm                        0.177231
+Flux land to ice                      0.161167
+Ice-ocean coupler                     0.195783
+Flux ice to ocean                     0.134088
+Flux ocean to ice                     0.052916
+generate_sfc_xgrid                    0.116444
+flux_ocean_to_ice                     0.064059
+flux_ice_to_ocean                     0.142758
+ATM                                 111.201703
+ ATM: atmos loop                     63.873244
+  A-L: atmos_tracer_driver_gathe      0.000000
+  A-L: sfc_boundary_layer            34.884655
+  A-L: update_atmos_model_dynami      0.000000
+  A-L: serial radiation               0.003231
+  A-L: update_atmos_model_down        0.000000
+  A-L: flux_down_from_atmos          26.887334
+  A-L: update_land_model_fast         0.001288
+  A-L: update_ice_model_fast          1.035320
+  A-L: flux_up_to_atmos               0.201886
+  A-L: update_atmos_model_up          0.000882
+  A-L: update_atmos_model_state       0.001350
+ ATM: update_land_model_slow          0.001181
+ ATM: flux_land_to_ice                0.178771
+ Ice: set_ice_surface fast            0.500229
+ Ice: update_ice_model_slow fast      0.582776
+ Ice: set_ice_surface slow            0.630363
+ Ice: update_ice_model_slow slow     46.388714
+ Ice: flux_ice_to_ocean_stocks        0.027268
+ Ice: set_ice_surface exchange        0.012085
+ Ice: update_ice_model_slow exch      0.010163
+OCN                                1598.019687
+flux_check_stocks                     0.000000
+intermediate restart                  0.000000
+final flux_check_stocks               0.005248
