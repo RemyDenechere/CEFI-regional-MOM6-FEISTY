@@ -17,6 +17,7 @@ OM4_single_column
 "ocean_feisty_tracers",         24, "hours",  1, "days", "time",
 "ocean_feisty_fluxes",          24, "hours",  1, "days", "time",
 "ocean_feisty_forcing_offline", 24, "hours",  1, "days", "time", 
+"ocean_feisty_forcing_offline_detritus", 24, "hours",  1, "days", "time", 
 #
 #======================
 # GENERIC OCEAN COBALT DIAGNOSTICS
@@ -918,6 +919,10 @@ OM4_single_column
 "generic_cobalt", "jhploss_n_Lgz", "jhploss_n_Lgz",    "ocean_feisty_forcing_offline",  "all", "mean", "none",2
 "generic_cobalt", "nmdz",          "nmdz",             "ocean_feisty_forcing_offline",  "all", "mean", "none",2
 "generic_cobalt", "nlgz",          "nlgz",             "ocean_feisty_forcing_offline",  "all", "mean", "none",2
+#
+# FEISTY detritus:
+"ocean_model",    "volcello",     "volcello",         "ocean_feisty_forcing_offline_detritus",  "all", "mean", "none",2
+"generic_feisty", "Pop_btm",      "Pop_btm",          "ocean_feisty_forcing_offline_detritus",  "all", "mean", "none",2
 #
 # MOM6 ocean diagnostics files
 "ocean_daily",            1, "days",   1, "days", "time"

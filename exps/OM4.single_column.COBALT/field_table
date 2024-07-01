@@ -746,7 +746,19 @@ irr_aclm_sfc_valid_min = 0.0
 # _src_var_record = 1
 # _src_var_gridspec = NONE
 # _valid_min = 0.0
-
+###.................................................
+"namelists", "ocean_mod", "generic_feisty" 
+#Sf_B_requires_restart = f
+#Sp_B_requires_restart = f
+#Sd_B_requires_restart = f
+#Mf_B_requires_restart = f
+#Mp_B_requires_restart = f
+#Md_B_requires_restart = f
+#Lp_B_requires_restart = f
+#Ld_B_requires_restart = f
+#BE_B_requires_restart = f
+enforce_src_info = t
+#
 Sf_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 Sf_B_src_var_name = Sf_B
 Sf_B_src_var_unit = none
@@ -755,7 +767,7 @@ Sf_B_dest_var_unit = gWW m-3
 Sf_B_src_var_record = 1
 Sf_B_src_var_gridspec = NONE
 Sf_B_valid_min = 0.0
-
+#
 Mf_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 Mf_B_src_var_name = Mf_B
 Mf_B_src_var_unit = none
@@ -764,7 +776,7 @@ Mf_B_dest_var_unit = gWW m-3
 Mf_B_src_var_record = 1
 Mf_B_src_var_gridspec = NONE
 Mf_B_valid_min = 0.0
-
+#
 Sp_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 Sp_B_src_var_name = Sp_B
 Sp_B_src_var_unit = none
@@ -773,7 +785,7 @@ Sp_B_dest_var_unit = gWW m-3
 Sp_B_src_var_record = 1
 Sp_B_src_var_gridspec = NONE
 Sp_B_valid_min = 0.0
-
+#
 Mp_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 Mp_B_src_var_name = Mp_B
 Mp_B_src_var_unit = none
@@ -782,7 +794,7 @@ Mp_B_dest_var_unit = gWW m-3
 Mp_B_src_var_record = 1
 Mp_B_src_var_gridspec = NONE
 Mp_B_valid_min = 0.0
-
+#
 Lp_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 Lp_B_src_var_name = Lp_B
 Lp_B_src_var_unit = none
@@ -791,7 +803,7 @@ Lp_B_dest_var_unit = gWW m-3
 Lp_B_src_var_record = 1
 Lp_B_src_var_gridspec = NONE
 Lp_B_valid_min = 0.0
-
+#
 Sd_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 Sd_B_src_var_name = Sd_B
 Sd_B_src_var_unit = none
@@ -800,7 +812,7 @@ Sd_B_dest_var_unit = gWW m-3
 Sd_B_src_var_record = 1
 Sd_B_src_var_gridspec = NONE
 Sd_B_valid_min = 0.0
-
+#
 Md_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 Md_B_src_var_name = Md_B
 Md_B_src_var_unit = none
@@ -809,7 +821,7 @@ Md_B_dest_var_unit = gWW m-3
 Md_B_src_var_record = 1
 Md_B_src_var_gridspec = NONE
 Md_B_valid_min = 0.0
-
+#
 Ld_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 Ld_B_src_var_name = Ld_B
 Ld_B_src_var_unit = none
@@ -818,7 +830,7 @@ Ld_B_dest_var_unit = gWW m-3
 Ld_B_src_var_record = 1
 Ld_B_src_var_gridspec = NONE
 Ld_B_valid_min = 0.0
-
+#
 BE_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 BE_B_src_var_name = BE_B
 BE_B_src_var_unit = none
@@ -827,15 +839,5 @@ BE_B_dest_var_unit = gWW m-3
 BE_B_src_var_record = 1
 BE_B_src_var_gridspec = NONE
 BE_B_valid_min = 0.0
-
-# "namelists","ocean_mod","generic_cobalt" 
-Sf_B_requires_restart = f
-Sp_B_requires_restart = f
-Sd_B_requires_restart = f
-Mf_B_requires_restart = f
-Mp_B_requires_restart = f
-Md_B_requires_restart = f
-Lp_B_requires_restart = f
-Ld_B_requires_restart = f
-BE_B_requires_restart = f
+# 
 /
