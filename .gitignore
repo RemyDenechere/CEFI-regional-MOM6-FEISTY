@@ -3,13 +3,20 @@
 *~
 html
 *.pdf
-*.m
+*.mat
+*.png
+*.jpeg
 
 # Ignore the database
 exps/datasets/
 exps/OM4.single_column.COBALT/*.nc
 exps/OM4.single_column.COBALT/INPUT/*.nc
+exps/OM4.single_column.COBALT/RESTART/*.nc
+exps/NWA12.COBALT/
+exps/OM4.single_column.COBALT/RESTART/
 
 # Ignore the programs produced
-/builds/build/redhat580-linux-gnu/ocean_ice/debug/MOM6SIS2
-/builds/build/redhat580-linux-gnu/ocean_ice/prod/MOM6SIS2
+/builds/build/
+
+# Other files to ignore 
+# src/MOM6/pkg/GSW-Fortran/test/

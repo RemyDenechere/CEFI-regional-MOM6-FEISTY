@@ -5,7 +5,7 @@ rdenechere 11/21/2023
 The Openmpi library, especially mpirun is not in the path, need to run
 ```
 PATH=$PATH:/usr/lib64/openmpi/bin/
-```
+``` 
 
 The command `miprun` should now return
 ```
@@ -56,8 +56,15 @@ To run the model:
 ```
 cd /project/CEFI-regional-MOM6/exps/OM4.single_column.COBALT/
 PATH=$PATH:/usr/lib64/openmpi/bin/
+PATH=$PATH:/usr/local/src/ncview-2.1.7/
 source ../../builds/redhat580/linux-gnu.env 
 ../../builds/build/redhat580-linux-gnu/ocean_ice/prod/MOM6SIS2 |& tee stdout.redhat
+```
+
+Copy FEISTY output to an other directory: 
+```
+cd /project/CEFI-regional-MOM6/exps/OM4.single_column.COBALT/
+yes | cp -i *feisty*.nc ../../../rdenechere/COBALT_output/COBALT_FEISTY/
 ```
 
 # Run COBALT with FEISTY: 
