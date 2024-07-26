@@ -59,7 +59,7 @@ HOMOGENIZE_IOB_FORCINGS = True
 #override USE_OCMIP2_CFC = False
 #override USE_IDEAL_AGE_TRACER = False
 #override USE_generic_tracer = True
-GENERIC_TRACER_IC_FILE = "MOM_GENERICS.res.nc"
+!GENERIC_TRACER_IC_FILE = "MOM_GENERICS.res.nc"
 !#override VAR_PEN_SW = True
 !#override PEN_SW_NBANDS = 3               ! default = 1
 !#override CHL_FROM_FILE = False
