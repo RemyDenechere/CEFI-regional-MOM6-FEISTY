@@ -133,9 +133,6 @@ USE_generic_tracer = True       !   [Boolean] default = False
                                 ! MOM_generic_tracer packages.
 
 ! === module register_MOM_generic_tracer ===
-GENERIC_TRACER_IC_FILE = "MOM_GENERICS.res.nc" ! default = ""
-                                ! The file in which the generic trcer initial values can be found, or an empty
-                                ! string for internal initialization.
 TRACERS_MAY_REINIT = True       !   [Boolean] default = False
                                 ! If true, tracers may go through the initialization code if they are not found
                                 ! in the restart files.  Otherwise it is a fatal error if tracers are not found

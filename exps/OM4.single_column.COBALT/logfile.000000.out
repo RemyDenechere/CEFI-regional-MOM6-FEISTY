@@ -785,135 +785,135 @@ ice model domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
                                      time
-Total runtime                      2233.679050
-Initialization                        4.449204
-  Init: atmos_model_init              0.033228
-  Init: land_model_init               0.006976
-  Init: ice_model_init                0.061885
-  Init: ocean_model_init              4.051765
-  Init: flux_exchange_init            0.070492
-Main loop                          2229.138280
-Termination                           0.087262
-(Ocean continuity update)             0.848693
-(Ocean continuity correction)        38.838726
-(Ocean advect tracer)               244.051169
-(Ocean tracer halo updates)          51.315146
-(Ocean tracer global synch)           0.048228
-  Ice: slow: dynamics                42.853027
-  Ice: slow: transport                1.248345
-  Ice: slow: thermodyn diags          1.147048
-Ice                                  51.099352
-Ice Fast                              2.219237
-Ice Slow                             48.839777
-Ice Fast/Slow Exchange                0.022836
-Ocean Initialization                  4.040193
-Ocean                              2071.466487
-Ocean dynamics                      166.933271
-Ocean thermodynamics and tracers   1835.111902
-Ocean Other                          68.285840
-(Ocean tracer advection)            244.496524
-(Ocean diabatic driver)            1590.593320
+Total runtime                      2280.531543
+Initialization                        4.925862
+  Init: atmos_model_init              0.008485
+  Init: land_model_init               0.006902
+  Init: ice_model_init                0.199286
+  Init: ocean_model_init              4.165730
+  Init: flux_exchange_init            0.171178
+Main loop                          2275.494498
+Termination                           0.109507
+(Ocean continuity update)             0.835265
+(Ocean continuity correction)        38.619766
+(Ocean advect tracer)               247.199956
+(Ocean tracer halo updates)          52.636076
+(Ocean tracer global synch)           0.028566
+  Ice: slow: dynamics                42.342007
+  Ice: slow: transport                0.905682
+  Ice: slow: thermodyn diags          0.900987
+Ice                                  48.460745
+Ice Fast                              1.697033
+Ice Slow                             46.737277
+Ice Fast/Slow Exchange                0.009354
+Ocean Initialization                  4.175835
+Ocean                              2077.446671
+Ocean dynamics                      163.860758
+Ocean thermodynamics and tracers   1844.497376
+Ocean Other                          67.932763
+(Ocean tracer advection)            247.595577
+(Ocean diabatic driver)            1596.882320
 (Ocean continuity equation *)         0.000000
-(Ocean set BBL viscosity)             2.410091
-(Ocean message passing *)             7.677364
-(Ocean MOM_initialize_state)          0.440921
-(Ocean init message passing *)        0.000273
+(Ocean set BBL viscosity)             2.074704
+(Ocean message passing *)             7.303657
+(Ocean MOM_initialize_state)          0.531694
+(Ocean init message passing *)        0.000255
 (Ocean mixed layer restrat)           0.000000
-(Ocean collective diagnostics)       56.061268
+(Ocean collective diagnostics)       55.560462
 (Ocean Z-space diagnostics)           0.000000
-(Ocean ALE)                         195.052573
-(Stochastic EOS)                      0.002360
-(SGS Temperature Variance)            0.001931
-(Cobalt: carbon calcs)               98.780556
-(Cobalt: phytoplankton growth ca    163.770754
-(Cobalt: bacteria growth calcs)       3.610709
-(Cobalt: zooplankton calculation    246.804366
-(Cobalt: other losses)               30.217952
-(Cobalt: production loop)            38.770958
-(Cobalt: ballasting loops)           19.832086
-(Cobalt: source/sink loop 1)          6.892695
-(Cobalt: source/sink loop 2)         11.087922
-(Cobalt: source/sink loop 3)          7.805244
-(Cobalt: source/sink loop 4)          1.323691
-(Cobalt: source/sink loop 5)          3.245151
-(Cobalt: source/sink loop 6)         10.179768
-(Cobalt: send diagnostics)          402.514242
-(Cobalt: calculate diagnostics)      49.490176
-(Initialize from Z)                   0.434949
-(Ocean diagnostics framework)       547.974628
-(Ocean diagnostics remapping)       343.198598
-(Ocean diagnostics grid updates)      3.887630
-(Ocean porous barrier)                0.697719
-(Ocean init message passing)          0.000118
-(Ocean continuity reconstruction     12.014824
-(Ocean BT pre-calcs only)             5.715720
-(Ocean BT pre-step halo updates)      1.916624
-(Ocean BT stepping calcs only)        4.757590
-(Ocean BT stepping halo updates)      1.081068
-(Ocean BT post-calcs only)            0.979757
-(Ocean BT post-step halo updates      0.417994
-(Ocean BT global synch)               0.031280
-(Ocean Coriolis & mom advection)      8.482088
-(Ocean continuity equation)          52.276101
-(Ocean pressure force)               29.955872
-(Ocean vertical viscosity)           20.222862
-(Ocean horizontal viscosity)         13.274026
-(Ocean momentum increments)           0.713763
-(Ocean message passing)              13.260919
-(Ocean barotropic mode calc)          0.193795
-(Ocean barotropic mode stepping)     16.129339
-(Ocean barotropic forcing calc)       1.314402
-(Ocean kappa_shear)                  22.326637
+(Ocean ALE)                         200.262765
+(Stochastic EOS)                      0.002046
+(SGS Temperature Variance)            0.001771
+(Cobalt: carbon calcs)               98.015497
+(Cobalt: phytoplankton growth ca    162.369640
+(Cobalt: bacteria growth calcs)       3.653057
+(Cobalt: zooplankton calculation    255.480337
+(Cobalt: other losses)               29.965399
+(Cobalt: production loop)            37.033915
+(Cobalt: ballasting loops)           20.333794
+(Cobalt: source/sink loop 1)          6.518677
+(Cobalt: source/sink loop 2)         11.529537
+(Cobalt: source/sink loop 3)          7.802773
+(Cobalt: source/sink loop 4)          1.389554
+(Cobalt: source/sink loop 5)          3.220284
+(Cobalt: source/sink loop 6)         10.259684
+(Cobalt: send diagnostics)          401.240427
+(Cobalt: calculate diagnostics)      50.051044
+(Initialize from Z)                   0.522509
+(Ocean diagnostics framework)       548.350291
+(Ocean diagnostics remapping)       340.776651
+(Ocean diagnostics grid updates)      4.157831
+(Ocean porous barrier)                0.633184
+(Ocean init message passing)          0.000121
+(Ocean continuity reconstruction     11.938735
+(Ocean BT pre-calcs only)             5.330454
+(Ocean BT pre-step halo updates)      1.843358
+(Ocean BT stepping calcs only)        4.399361
+(Ocean BT stepping halo updates)      1.089201
+(Ocean BT post-calcs only)            0.904240
+(Ocean BT post-step halo updates      0.400408
+(Ocean BT global synch)               0.012851
+(Ocean Coriolis & mom advection)      8.187779
+(Ocean continuity equation)          51.931048
+(Ocean pressure force)               29.862016
+(Ocean vertical viscosity)           19.634101
+(Ocean horizontal viscosity)         13.097106
+(Ocean momentum increments)           0.661110
+(Ocean message passing)              13.299785
+(Ocean barotropic mode calc)          0.139434
+(Ocean barotropic mode stepping)     15.196110
+(Ocean barotropic forcing calc)       1.502639
+(Ocean kappa_shear)                  21.778140
 (Ocean diabatic entrain)              0.000000
-(Ocean vert remap)                   47.530993
-(Ocean geothermal)                    0.046359
-(Ocean set_diffusivity)              28.982160
+(Ocean vert remap)                   46.581866
+(Ocean geothermal)                    0.023944
+(Ocean set_diffusivity)              27.833196
 (Ocean KPP)                           0.000000
-(Ocean tracer_columns)             1297.098432
-(Ocean diabatic tridiag)              4.112189
-(Ocean diabatic message passing)      0.877472
-(Ocean find_uv_at_h)                  0.847838
+(Ocean tracer_columns)             1301.182640
+(Ocean diabatic tridiag)              4.016264
+(Ocean diabatic message passing)      0.774341
+(Ocean find_uv_at_h)                  0.817488
 (Ocean frazil)                        0.000000
 (Ocean diffuse tracer)                0.000000
 (Ocean epipycnal diffuse tracer)      0.000000
-(Initialize tracer from Z)            1.761931
-Ocean surface forcing                 1.431762
-(Ocean forcing diagnostics)           1.509435
-Land-ice-atm coupler                 98.268649
-SFC boundary layer                   56.895999
-Flux DN from atm                     40.662568
-XGrid generation                      0.211444
-Flux UP to atm                        0.284393
-Flux land to ice                      0.189469
-Ice-ocean coupler                     0.234813
-Flux ice to ocean                     0.157752
-Flux ocean to ice                     0.068826
-generate_sfc_xgrid                    0.241809
-flux_ocean_to_ice                     0.087140
-flux_ice_to_ocean                     0.173032
-ATM                                 149.978696
- ATM: atmos loop                    100.503265
+(Initialize tracer from Z)            1.841755
+Ocean surface forcing                 1.067705
+(Ocean forcing diagnostics)           1.368225
+Land-ice-atm coupler                143.237415
+SFC boundary layer                   82.423751
+Flux DN from atm                     60.317342
+XGrid generation                      0.104115
+Flux UP to atm                        0.194570
+Flux land to ice                      0.173814
+Ice-ocean coupler                     0.191887
+Flux ice to ocean                     0.128818
+Flux ocean to ice                     0.054495
+generate_sfc_xgrid                    0.125536
+flux_ocean_to_ice                     0.067522
+flux_ice_to_ocean                     0.136788
+ATM                                 192.490310
+ ATM: atmos loop                    145.232800
   A-L: atmos_tracer_driver_gathe      0.000000
-  A-L: sfc_boundary_layer            57.037599
+  A-L: sfc_boundary_layer            82.553085
   A-L: update_atmos_model_dynami      0.000000
-  A-L: serial radiation               0.017191
+  A-L: serial radiation               0.001340
   A-L: update_atmos_model_down        0.000000
-  A-L: flux_down_from_atmos          40.702150
-  A-L: update_land_model_fast         0.001361
-  A-L: update_ice_model_fast          1.432594
-  A-L: flux_up_to_atmos               0.321377
-  A-L: update_atmos_model_up          0.000950
-  A-L: update_atmos_model_state       0.003662
- ATM: update_land_model_slow          0.001167
- ATM: flux_land_to_ice                0.219728
- Ice: set_ice_surface fast            0.817415
- Ice: update_ice_model_slow fast      0.758080
- Ice: set_ice_surface slow            1.055329
- Ice: update_ice_model_slow slow     48.152300
- Ice: flux_ice_to_ocean_stocks        0.063173
- Ice: set_ice_surface exchange        0.027263
- Ice: update_ice_model_slow exch      0.023146
-OCN                                2076.642373
+  A-L: flux_down_from_atmos          60.355364
+  A-L: update_land_model_fast         0.001440
+  A-L: update_ice_model_fast          1.191910
+  A-L: flux_up_to_atmos               0.220245
+  A-L: update_atmos_model_up          0.000885
+  A-L: update_atmos_model_state       0.001380
+ ATM: update_land_model_slow          0.001244
+ ATM: flux_land_to_ice                0.187857
+ Ice: set_ice_surface fast            0.522298
+ Ice: update_ice_model_slow fast      0.592181
+ Ice: set_ice_surface slow            0.668710
+ Ice: update_ice_model_slow slow     46.284754
+ Ice: flux_ice_to_ocean_stocks        0.024110
+ Ice: set_ice_surface exchange        0.013204
+ Ice: update_ice_model_slow exch      0.011135
+OCN                                2081.317548
 flux_check_stocks                     0.000000
 intermediate restart                  0.000000
-final flux_check_stocks               0.008213
+final flux_check_stocks               0.006549

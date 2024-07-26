@@ -45,16 +45,15 @@ To turn it off put imbalance_tolerance to 1.0e+9
 
 
 # Building and Runing CEFI: 
-
 To build the model:
 ```
-cd /project/CEFI-regional-MOM6/builds
+cd /project/CEFI-regional-MOM6-FEISTY/builds
 ./linux-build.bash -m redhat580 -p linux-gnu -t prod -f mom6sis2
 ```
 
 To run the model: 
 ```
-cd /project/CEFI-regional-MOM6/exps/OM4.single_column.COBALT/
+cd /project/CEFI-regional-MOM6-FEISTY/exps/OM4.single_column.COBALT/
 PATH=$PATH:/usr/lib64/openmpi/bin/
 PATH=$PATH:/usr/local/src/ncview-2.1.7/
 source ../../builds/redhat580/linux-gnu.env 
@@ -63,8 +62,12 @@ source ../../builds/redhat580/linux-gnu.env
 
 Copy FEISTY output to an other directory: 
 ```
-cd /project/CEFI-regional-MOM6/exps/OM4.single_column.COBALT/
-yes | cp -i *feisty*.nc ../../../rdenechere/COBALT_output/COBALT_FEISTY/
+yes | cp -i /project/CEFI-regional-MOM6-FEISTY/exps/OM4.single_column.COBALT/*feisty*.nc ../../../rdenechere/COBALT_output/COBALT_FEISTY/
+```
+
+Copy IC to INPUTs
+```
+yes | cp -i /project/rdenechere/FEISTY-fortran/output/FEISTY_2023_10_spinup_subset.nc /project/CEFI-regional-MOM6-FEISTY/exps/OM4.single_column.COBALT/INPUT/
 ```
 
 # Run COBALT with FEISTY: 
@@ -179,20 +182,6 @@ make install
 
 PATH=$PATH:/usr/include/
 
-
-# MOM6 on rockfish
-To build the model, run the following command lines:
-```
-cd /project/MOM6_OBGC_examples/builds
-./linux-build.bash -m redhat850 -p linux-gnu -t prod -f mom6sis2`
-```
-
-To run the model, run the following command lines:
-```
-cd /project/MOM6_OBGC_examples/exps/OM4.single_column.COBALT  # and make sure that a directory called "RESTART" is there.
-source ../../builds/redhat850/linux-gnu.env                   # which should not return anything. 
-mpirun -n 1 ../../builds/build/redhat850-linux-gnu/ocean_ice/prod/MOM6SIS2 |& tee stdout.redhat
-```
 
 ## New experiment 
 ```
