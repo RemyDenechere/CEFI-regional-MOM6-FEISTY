@@ -124,7 +124,7 @@ DTFREEZE_DP = -7.75E-08         !   [degC Pa-1] default = 0.0
                                 ! temperature with pressure.
 
 ! === module MOM_restart ===
-MAX_FIELDS = 103                ! default = 100
+MAX_FIELDS = 104                ! default = 100
                                 ! The maximum number of restart fields that can be used.
 
 ! === module MOM_tracer_flow_control ===
@@ -183,30 +183,6 @@ REMAPPING_SCHEME = "PPM_H4"     ! default = "PLM"
                                 ! PQM_IH6IH5  (5th-order accurate)
 
 ! === module MOM_state_initialization ===
-INIT_LAYERS_FROM_Z_FILE = True  !   [Boolean] default = False
-                                ! If true, initialize the layer thicknesses, temperatures, and salinities from a
-                                ! Z-space file on a latitude-longitude grid.
-
-! === module MOM_initialize_layers_from_Z ===
-TEMP_SALT_Z_INIT_FILE = ""      ! default = "temp_salt_z.nc"
-                                ! The name of the z-space input file used to initialize temperatures (T) and
-                                ! salinities (S). If T and S are not in the same file, TEMP_Z_INIT_FILE and
-                                ! SALT_Z_INIT_FILE must be set.
-TEMP_Z_INIT_FILE = "woa13_decav_ptemp_monthly_fulldepth_01.nc" ! default = ""
-                                ! The name of the z-space input file used to initialize temperatures, only.
-SALT_Z_INIT_FILE = "woa13_decav_s_monthly_fulldepth_01.nc" ! default = ""
-                                ! The name of the z-space input file used to initialize temperatures, only.
-Z_INIT_FILE_PTEMP_VAR = "ptemp_an" ! default = "ptemp"
-                                ! The name of the potential temperature variable in TEMP_Z_INIT_FILE.
-Z_INIT_FILE_SALT_VAR = "s_an"   ! default = "salt"
-                                ! The name of the salinity variable in SALT_Z_INIT_FILE.
-Z_INIT_HOMOGENIZE = True        !   [Boolean] default = False
-                                ! If True, then horizontally homogenize the interpolated initial conditions.
-Z_INIT_ALE_REMAPPING = True     !   [Boolean] default = False
-                                ! If True, then remap straight to model coordinate from file.
-Z_INIT_REMAP_OLD_ALG = True     !   [Boolean] default = False
-                                ! If false, uses the preferred remapping algorithm for initialization. If true,
-                                ! use an older, less robust algorithm for remapping.
 
 ! === module MOM_diag_mediator ===
 NUM_DIAG_COORDS = 2             ! default = 1

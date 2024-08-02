@@ -2551,6 +2551,103 @@
     ! units: m s-1
     ! cell_methods: xh:mean yh:mean zl:sum area:mean
     ! variants: {vert_remap_h_tendency,vert_remap_h_tendency_xyave}
+"Ld_Repro"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
+    ! long_name: Reproduction of Large Demersal at bottom layer
+    ! units: g m-3 d-1
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {Ld_Repro,Ld_Repro_xyave}
+"Ld_Repro_taup1"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
+    ! long_name: Reproduction of Large Demersal at bottom layer at taup1
+    ! units: g m-3 d-1
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {Ld_Repro_taup1,Ld_Repro_taup1_xyave}
+"Ld_Repro_aux"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
+    ! long_name: Ld_Repro_aux
+    ! units: g m-3 d-1
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {Ld_Repro_aux,Ld_Repro_aux_xyave}
+"Ld_Repro_vmove"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
+    ! long_name: vertical movement
+    ! units: m/s
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {Ld_Repro_vmove,Ld_Repro_vmove_xyave}
+"Ld_Repro_vdiffuse_impl"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
+    ! long_name: Implicit vertical diffusion of Ld_Repro
+    ! units: mole/m^2/s
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {Ld_Repro_vdiffuse_impl,Ld_Repro_vdiffuse_impl_xyave}
+"Ld_Repro_tendency"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
+    ! long_name: Generic tracer tendency of Ld_Repro
+    ! units: mole/m^2/s
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {Ld_Repro_tendency,Ld_Repro_tendency_xyave}
+"Ld_Repro_vdiff"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
+    ! long_name: random movement
+    ! units: m/s
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {Ld_Repro_vdiff,Ld_Repro_vdiff_xyave}
+"Ld_Repro_stf"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Total flux of Ld_Repro into Ocean Surface
+    ! units: mole/m^2/sec
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_stf_gas"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Gas exchange flux of Ld_Repro into Ocean Surface
+    ! units: mole/m^2/sec
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_stf_gas_aux"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Auxilliary Gas exchange flux of Ld_Repro into Ocean Surface
+    ! units: mole/m^2/sec
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_deltap"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Ocn minus Atm pressure of Ld_Repro
+    ! units: uatm
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_kw"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Gas Exchange piston velocity for Ld_Repro
+    ! units: m/sec
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_btf"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Total flux of Ld_Repro into Ocean Bottom
+    ! units: mole/m^2/sec
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_btm_reservoir"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Bottom reservoir of Ld_Repro
+    ! units: g m-3 d-1
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_trunoff"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: River concentration of Ld_Repro
+    ! units: g m-3 d-1
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_alpha"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Atmospheric saturation for Ld_Repro
+    ! units: g m-3 d-1
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_csurf"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Ocean surface gas concentration of Ld_Repro
+    ! units: g m-3 d-1
+    ! cell_methods: xh:mean yh:mean area:mean
+"Ld_Repro_sc_no"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_d2}
+    ! long_name: Ocean surface Schmidt Number for Ld_Repro
+    ! units: g m-3 d-1
+    ! cell_methods: xh:mean yh:mean area:mean
 "BE_B"  [Used]
     ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
     ! long_name: Benthic invertebrate biomass
