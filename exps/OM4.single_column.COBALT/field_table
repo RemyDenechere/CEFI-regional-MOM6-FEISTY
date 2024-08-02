@@ -832,12 +832,21 @@ Ld_B_src_var_gridspec = NONE
 Ld_B_valid_min = 0.0
 #
 BE_B_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
-BE_B_src_var_name = BE_B
+BE_B_src_var_name = Sd_B
 BE_B_src_var_unit = none
 BE_B_dest_var_name = BE_B
 BE_B_dest_var_unit = gWW m-3
 BE_B_src_var_record = 1
 BE_B_src_var_gridspec = NONE
 BE_B_valid_min = 0.0
+#
+Ld_Repro_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
+Ld_Repro_src_var_name = BE_B
+Ld_Repro_src_var_unit = none
+Ld_Repro_dest_var_name = Ld_Repro
+Ld_Repro_dest_var_unit = gWW m-3
+Ld_Repro_src_var_record = 1
+Ld_Repro_src_var_gridspec = NONE
+Ld_Repro_valid_min = 0.0
 # 
 /
