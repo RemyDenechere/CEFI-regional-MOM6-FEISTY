@@ -73,7 +73,7 @@ yes | cp -i /project/rdenechere/FEISTY-fortran/output/FEISTY_2023_10_spinup_subs
 # Run COBALT with FEISTY: 
 
 ## Things changed to make COBALT running with FEISTY
-    - MOM input file : MAX_FIELDS = 103
+    - MOM input file in MOM_override : MAX_FIELDS = 104
 
 ## move outputs  
 First save the former COBALT output in "COBALT_output/COBALT_no_FEISTY/":
