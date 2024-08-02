@@ -370,7 +370,7 @@ PARALLEL_RESTARTFILES = False   !   [Boolean] default = False
                                 ! false, a single restart file is generated combining output from all PEs.
 RESTARTFILE = "MOM.res"         ! default = "MOM.res"
                                 ! The name-root of the restart file.
-MAX_FIELDS = 103                ! default = 100
+MAX_FIELDS = 104                ! default = 100
                                 ! The maximum number of restart fields that can be used.
 RESTART_CHECKSUMS_REQUIRED = True !   [Boolean] default = True
                                 ! If true, require the restart checksums to match and error out otherwise. Users
@@ -551,81 +551,6 @@ FATAL_INCONSISTENT_RESTART_TIME = False !   [Boolean] default = False
                                 ! If true and a time_in value is provided to MOM_initialize_state, verify that
                                 ! the time read from a restart file is the same as time_in, and issue a fatal
                                 ! error if it is not.  Otherwise, simply set the time to time_in if present.
-INIT_LAYERS_FROM_Z_FILE = True  !   [Boolean] default = False
-                                ! If true, initialize the layer thicknesses, temperatures, and salinities from a
-                                ! Z-space file on a latitude-longitude grid.
-
-! === module MOM_initialize_layers_from_Z ===
-TEMP_SALT_Z_INIT_FILE = ""      ! default = "temp_salt_z.nc"
-                                ! The name of the z-space input file used to initialize temperatures (T) and
-                                ! salinities (S). If T and S are not in the same file, TEMP_Z_INIT_FILE and
-                                ! SALT_Z_INIT_FILE must be set.
-TEMP_Z_INIT_FILE = "woa13_decav_ptemp_monthly_fulldepth_01.nc" ! default = ""
-                                ! The name of the z-space input file used to initialize temperatures, only.
-SALT_Z_INIT_FILE = "woa13_decav_s_monthly_fulldepth_01.nc" ! default = ""
-                                ! The name of the z-space input file used to initialize temperatures, only.
-Z_INIT_FILE_PTEMP_VAR = "ptemp_an" ! default = "ptemp"
-                                ! The name of the potential temperature variable in TEMP_Z_INIT_FILE.
-Z_INIT_FILE_SALT_VAR = "s_an"   ! default = "salt"
-                                ! The name of the salinity variable in SALT_Z_INIT_FILE.
-Z_INIT_HOMOGENIZE = True        !   [Boolean] default = False
-                                ! If True, then horizontally homogenize the interpolated initial conditions.
-Z_INIT_ALE_REMAPPING = True     !   [Boolean] default = False
-                                ! If True, then remap straight to model coordinate from file.
-Z_INIT_REMAPPING_SCHEME = "PPM_IH4" ! default = "PPM_IH4"
-                                ! The remapping scheme to use if using Z_INIT_ALE_REMAPPING is True.
-Z_INIT_REMAP_GENERAL = False    !   [Boolean] default = False
-                                ! If false, only initializes to z* coordinates. If true, allows initialization
-                                ! directly to general coordinates.
-Z_INIT_REMAP_FULL_COLUMN = False !   [Boolean] default = False
-                                ! If false, only reconstructs profiles for valid data points. If true, inserts
-                                ! vanished layers below the valid data.
-Z_INIT_REMAP_OLD_ALG = True     !   [Boolean] default = False
-                                ! If false, uses the preferred remapping algorithm for initialization. If true,
-                                ! use an older, less robust algorithm for remapping.
-TEMP_SALT_INIT_VERTICAL_REMAP_ONLY = False !   [Boolean] default = False
-                                ! If true, initial conditions are on the model horizontal grid. Extrapolation
-                                ! over missing ocean values is done using an ICE-9 procedure with vertical ALE
-                                ! remapping .
-HOR_REGRID_ANSWER_DATE = 99991231 ! default = 99991231
-                                ! The vintage of the order of arithmetic for horizontal regridding.  Dates
-                                ! before 20190101 give the same answers as the code did in late 2018, while
-                                ! later versions add parentheses for rotational symmetry.  Dates after 20230101
-                                ! use reproducing sums for global averages.
-LAND_FILL_TEMP = 0.0            !   [degC] default = 0.0
-                                ! A value to use to fill in ocean temperatures on land points.
-LAND_FILL_SALIN = 35.0          !   [ppt] default = 35.0
-                                ! A value to use to fill in ocean salinities on land points.
-HORIZ_INTERP_TOL_TEMP = 0.001   !   [degC] default = 0.001
-                                ! The tolerance in temperature changes between iterations when interpolating
-                                ! from an input dataset using horiz_interp_and_extrap_tracer.  This routine
-                                ! converges slowly, so an overly small tolerance can get expensive.
-HORIZ_INTERP_TOL_SALIN = 0.001  !   [ppt] default = 0.001
-                                ! The tolerance in salinity changes between iterations when interpolating from
-                                ! an input dataset using horiz_interp_and_extrap_tracer.  This routine converges
-                                ! slowly, so an overly small tolerance can get expensive.
-DEPRESS_INITIAL_SURFACE = False !   [Boolean] default = False
-                                ! If true,  depress the initial surface to avoid huge tsunamis when a large
-                                ! surface pressure is applied.
-TRIM_IC_FOR_P_SURF = False      !   [Boolean] default = False
-                                ! If true, cuts way the top of the column for initial conditions at the depth
-                                ! where the hydrostatic pressure matches the imposed surface pressure which is
-                                ! read from file.
-REGRID_ACCELERATE_INIT = False  !   [Boolean] default = False
-                                ! If true, runs REGRID_ACCELERATE_ITERATIONS iterations of the regridding
-                                ! algorithm to push the initial grid to be consistent with the initial
-                                ! condition. Useful only for state-based and iterative coordinates.
-VELOCITY_CONFIG = "zero"        ! default = "zero"
-                                ! A string that determines how the initial velocities are specified for a new
-                                ! run:
-                                !     file - read velocities from the file specified
-                                !       by (VELOCITY_FILE).
-                                !     zero - the fluid is initially at rest.
-                                !     uniform - the flow is uniform (determined by
-                                !       parameters INITIAL_U_CONST and INITIAL_V_CONST).
-                                !     rossby_front - a mixed layer front in thermal wind balance.
-                                !     soliton - Equatorial Rossby soliton.
-                                !     USER - call a user modified routine.
 ODA_INCUPD = False              !   [Boolean] default = False
                                 ! If true, oda incremental updates will be applied everywhere in the domain.
 SPONGE = False                  !   [Boolean] default = False
