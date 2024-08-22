@@ -27,7 +27,7 @@ mkdir -p "$station_name"
 cd "$station_name"
 
 # Create the super-grid based on user input
-make_hgrid --grid_type regular_lonlat_grid \
+/project/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_hgrid --grid_type regular_lonlat_grid \
            --nxbnd 2 --nybnd 2 \
            --xbnd "$xbnd_min,$xbnd_max" \
            --ybnd "$ybnd_min,$ybnd_max" \
@@ -35,10 +35,10 @@ make_hgrid --grid_type regular_lonlat_grid \
            --grid_name ocean_hgrid
 
 
-make_solo_mosaic --num_tiles 1 --dir ./ --mosaic_name ocean_mosaic --tile_file ocean_hgrid.nc
-make_solo_mosaic --num_tiles 1 --dir ./ --mosaic_name atmos_mosaic --tile_file ocean_hgrid.nc
-make_solo_mosaic --num_tiles 1 --dir ./ --mosaic_name land_mosaic --tile_file ocean_hgrid.nc
+/project/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_solo_mosaic --num_tiles 1 --dir ./ --mosaic_name ocean_mosaic --tile_file ocean_hgrid.nc
+/project/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_solo_mosaic --num_tiles 1 --dir ./ --mosaic_name atmos_mosaic --tile_file ocean_hgrid.nc
+/project/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_solo_mosaic --num_tiles 1 --dir ./ --mosaic_name land_mosaic --tile_file ocean_hgrid.nc
 
-make_topog --mosaic ocean_mosaic.nc --topog_type  rectangular_basin --bottom_depth 4000 --output ocean_topog
+/project/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_topog --mosaic ocean_mosaic.nc --topog_type  rectangular_basin --bottom_depth 4000 --output ocean_topog
 
-make_coupler_mosaic --atmos_mosaic atmos_mosaic.nc --land_mosaic land_mosaic.nc --ocean_mosaic ocean_mosaic.nc --ocean_topog ocean_topog.nc --mosaic_name grid_spec --check --verbose
+/project/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_coupler_mosaic --atmos_mosaic atmos_mosaic.nc --land_mosaic land_mosaic.nc --ocean_mosaic ocean_mosaic.nc --ocean_topog ocean_topog.nc --mosaic_name grid_spec --check --verbose
