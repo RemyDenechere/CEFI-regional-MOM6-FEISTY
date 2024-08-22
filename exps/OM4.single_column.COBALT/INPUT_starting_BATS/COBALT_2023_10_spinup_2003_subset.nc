@@ -1,1 +1,0 @@
-../../datasets/OceanBGC_dataset/COBALT_2023_10_spinup_2003_subset.nc
