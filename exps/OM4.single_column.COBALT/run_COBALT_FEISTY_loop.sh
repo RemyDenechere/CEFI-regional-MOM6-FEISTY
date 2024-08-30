@@ -2,8 +2,10 @@
 #
 # This script allows to loop the 1D colunm run of the online COBALT-FEISTY over a given number of years <nbr_year_to_run>
 # contact: remy denechere <rdenechere@ucsd.edu>
-# usage: ./run_COBALT_FEISTY_loop.sh BATS 10 test
+# usage: ./run_COBALT_FEISTY_loop.sh BATS 20 nonFmort_00
 #        ./run_COBALT_FEISTY_loop.sh CCE 20 baseparam
+# baseparam : Petrik 2019 param
+# mortZ_00  : non-fish mortality = 0.0
 
 
 # Check if the correct number of arguments are provided
@@ -43,13 +45,13 @@ source ../../builds/redhat580/linux-gnu.env
 ../../builds/build/redhat580-linux-gnu/ocean_ice/prod/MOM6SIS2 |& tee stdout.redhat
 
 ## move the data to a new folder: 
-folder_save_loc="../../../rdenechere/COBALT_output/COBALT_FEISTY/${station_name}"
+folder_save_loc="../../../COBALT_output/COBALT_FEISTY/${station_name}/${experimentation_ref}/"
 if [ -d "$folder_save_loc" ]; then
     echo "$folder_save_loc" exist 
 else 
     mkdir "$folder_save_loc"
 fi
-folder_save_exp="$folder_save_loc/${station_name}_${experimentation_ref}_yr_1"
+folder_save_exp="$folder_save_loc/${station_name}_${experimentation_ref}_yr_1/"
 if [ -d "$folder_save_exp" ]; then 
     rm -rf "$folder_save_exp"/*
 else 
