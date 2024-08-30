@@ -13,7 +13,10 @@ exps/OM4.single_column.COBALT/*.nc
 exps/OM4.single_column.COBALT/INPUT/*.nc
 exps/OM4.single_column.COBALT/RESTART/*.nc
 exps/NWA12.COBALT/
-exps/OM4.single_column.COBALT/RESTART/
+exps/OM4.single_column.COBALT/BATS/
+exps/OM4.single_column.COBALT/CCE/
+exps/OM4.single_column.COBALT/BATS_restart/
+exps/OM4.single_column.COBALT/CCE_restart/
 
 # Ignore the programs produced
 /builds/build/
