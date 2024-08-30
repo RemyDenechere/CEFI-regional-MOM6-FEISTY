@@ -34,3 +34,6 @@
 	path = src/MOM6
 	url = https://github.com/NOAA-CEFI-Regional-Ocean-Modeling/MOM6.git
 	branch = dev/cefi
+[submodule "work/FRE-NCtools"]
+	path = work/FRE-NCtools
+	url = https://github.com/NOAA-GFDL/FRE-NCtools.git

@@ -86,8 +86,14 @@ done
 
 # End the experiment: -----------------------------------------------------------------------------
 ## save the restart files of last year for potential resimulation: 
-# folder_save_restart = "${station_name}_exps_restart/${station_name}_${experimentation_ref}_yr_${nbr_year_to_run}/"
-# yes | cp -i RESTART/*.nc "$folder_save_restart"/
+folder_save_restart="${station_name}_restart/${station_name}_${experimentation_ref}_yr_${nbr_year_to_run}/"
+if [ ! -d "${station_name}_restart/" ]; then
+    mkdir ${station_name}_restart/
+fi
+if [ ! -d "$folder_save_restart" ]; then
+    mkdir $folder_save_restart
+fi
+yes | cp -i RESTART/*.nc "$folder_save_restart"/
 
 ## set up back to the original configuration
 sed -i "s/input_filename = 'r'/input_filename = 'n'/g" input.nml
