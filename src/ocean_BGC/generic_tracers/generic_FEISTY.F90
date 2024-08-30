@@ -1970,15 +1970,22 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     ! calcul the flux of biomass out of a size class for each fish group  
     !:======================================================================
  
-    fish(SF)%Fout(i,j,k) = ((FEISTY%kappa_l * fish(SF)%E_A(i,j,k)) - fish(SF)%mu ) / (1 - (FEISTY%Z_s ** (1 - (fish(SF)%mu / (FEISTY%kappa_l * fish(SF)%E_A(i,j,k))))) + FEISTY%eps)
-    fish(SP)%Fout(i,j,k) = ((FEISTY%kappa_l * fish(SP)%E_A(i,j,k)) - fish(SP)%mu ) / (1 - (FEISTY%Z_s ** (1 - (fish(SP)%mu / (FEISTY%kappa_l * fish(SP)%E_A(i,j,k))))) + FEISTY%eps)
-    fish(SD)%Fout(i,j,k) = ((FEISTY%kappa_l * fish(SD)%E_A(i,j,k)) - fish(SD)%mu ) / (1 - (FEISTY%Z_s ** (1 - (fish(SD)%mu / (FEISTY%kappa_l * fish(SD)%E_A(i,j,k))))) + FEISTY%eps)
-    fish(MF)%Fout(i,j,k) = ((FEISTY%kappa_a * fish(MF)%E_A(i,j,k)) - fish(MF)%mu ) / (1 - (FEISTY%Z_m ** (1 - (fish(MF)%mu / (FEISTY%kappa_a * fish(MF)%E_A(i,j,k))))) + FEISTY%eps)
-    fish(MP)%Fout(i,j,k) = ((FEISTY%kappa_j * fish(MP)%E_A(i,j,k)) - fish(MP)%mu ) / (1 - (FEISTY%Z_m ** (1 - (fish(MP)%mu / (FEISTY%kappa_j * fish(MP)%E_A(i,j,k))))) + FEISTY%eps)
-    fish(MD)%Fout(i,j,k) = ((FEISTY%kappa_j * fish(MD)%E_A(i,j,k)) - fish(MD)%mu ) / (1 - (FEISTY%Z_m ** (1 - (fish(MD)%mu / (FEISTY%kappa_j * fish(MD)%E_A(i,j,k))))) + FEISTY%eps)
-    fish(LP)%Fout(i,j,k) = ((FEISTY%kappa_a * fish(LP)%E_A(i,j,k)) - fish(LP)%mu ) / (1 - (FEISTY%Z_l ** (1 - (fish(LP)%mu / (FEISTY%kappa_a * fish(LP)%E_A(i,j,k))))) + FEISTY%eps)
-    fish(LD)%Fout(i,j,k) = ((FEISTY%kappa_a * fish(LD)%E_A(i,j,k)) - fish(LD)%mu ) / (1 - (FEISTY%Z_l ** (1 - (fish(LD)%mu / (FEISTY%kappa_a * fish(LD)%E_A(i,j,k))))) + FEISTY%eps)
-
+    fish(SF)%Fout(i,j,k) = ((FEISTY%kappa_l * fish(SF)%E_A(i,j,k)) - fish(SF)%mu ) /&
+        (1 - (FEISTY%Z_s ** (1 - (fish(SF)%mu / (FEISTY%kappa_l * fish(SF)%E_A(i,j,k)+ FEISTY%eps)))) + FEISTY%eps)
+    fish(SP)%Fout(i,j,k) = ((FEISTY%kappa_l * fish(SP)%E_A(i,j,k)) - fish(SP)%mu ) /&
+        (1 - (FEISTY%Z_s ** (1 - (fish(SP)%mu / (FEISTY%kappa_l * fish(SP)%E_A(i,j,k)+ FEISTY%eps)))) + FEISTY%eps)
+    fish(SD)%Fout(i,j,k) = ((FEISTY%kappa_l * fish(SD)%E_A(i,j,k)) - fish(SD)%mu ) /&
+        (1 - (FEISTY%Z_s ** (1 - (fish(SD)%mu / (FEISTY%kappa_l * fish(SD)%E_A(i,j,k)+ FEISTY%eps)))) + FEISTY%eps)
+    fish(MF)%Fout(i,j,k) = ((FEISTY%kappa_a * fish(MF)%E_A(i,j,k)) - fish(MF)%mu ) /&
+        (1 - (FEISTY%Z_m ** (1 - (fish(MF)%mu / (FEISTY%kappa_a * fish(MF)%E_A(i,j,k)+ FEISTY%eps)))) + FEISTY%eps)
+    fish(MP)%Fout(i,j,k) = ((FEISTY%kappa_j * fish(MP)%E_A(i,j,k)) - fish(MP)%mu ) /&
+        (1 - (FEISTY%Z_m ** (1 - (fish(MP)%mu / (FEISTY%kappa_j * fish(MP)%E_A(i,j,k)+ FEISTY%eps)))) + FEISTY%eps)
+    fish(MD)%Fout(i,j,k) = ((FEISTY%kappa_j * fish(MD)%E_A(i,j,k)) - fish(MD)%mu ) /&
+        (1 - (FEISTY%Z_m ** (1 - (fish(MD)%mu / (FEISTY%kappa_j * fish(MD)%E_A(i,j,k)+ FEISTY%eps)))) + FEISTY%eps)
+    fish(LP)%Fout(i,j,k) = ((FEISTY%kappa_a * fish(LP)%E_A(i,j,k)) - fish(LP)%mu ) /&
+        (1 - (FEISTY%Z_l ** (1 - (fish(LP)%mu / (FEISTY%kappa_a * fish(LP)%E_A(i,j,k)+ FEISTY%eps)))) + FEISTY%eps)
+    fish(LD)%Fout(i,j,k) = ((FEISTY%kappa_a * fish(LD)%E_A(i,j,k)) - fish(LD)%mu ) /&
+        (1 - (FEISTY%Z_l ** (1 - (fish(LD)%mu / (FEISTY%kappa_a * fish(LD)%E_A(i,j,k)+ FEISTY%eps)))) + FEISTY%eps)
     ! If Fout is higher than E_a take E_a, and 0 is negative: 
     do m = 1, FEISTY%nFishGroup
         fish(m)%Fout(i,j,k) = max(min(fish(m)%Fout(i,j,k), fish(m)%E_A(i,j,k)), FEISTY%zero)
