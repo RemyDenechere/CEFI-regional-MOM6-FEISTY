@@ -1,5 +1,5 @@
 #!/bin/bash -x                                     
-machine_name="gaea" 
+machine_name="rockfish" 
 platform="ncrc5.intel23"
 #machine_name="tiger" 
 #platform="intel18"
