@@ -207,8 +207,11 @@ module generic_COBALT
   logical :: do_14c             = .false.
   logical :: debug              = .false.
   logical :: do_nh3_atm_ocean_exchange = .false.
+
+  ! FEISTY namelist 
   logical :: do_FEISTY                  = .true.   
   logical :: do_print_FEISTY_diagnostic = .false.
+  real    :: nonFmort = 0.10
   
   ! namelist capabilities for half-sats not used in this run
   logical :: do_vertfill_pre = .false.
@@ -235,7 +238,7 @@ module generic_COBALT
 namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange, scheme_nitrif, &
      k_nh4_small,k_nh4_large,k_nh4_diazo,scheme_no3_nh4_lim,k_no3_small,k_no3_large,k_no3_diazo, &
      o2_min_nit,k_o2_nit,irr_inhibit,k_nh3_nitrif,gamma_nitrif,do_vertfill_pre,imbalance_tolerance, &
-     do_FEISTY,do_print_FEISTY_diagnostic
+     do_FEISTY,do_print_FEISTY_diagnostic, nonFmort
 
   ! Declare phytoplankton, zooplankton and cobalt variable types, which contain
   ! the vast majority of all variables used in this module.
@@ -9273,10 +9276,10 @@ contains
           hp_pa_vec(8) = hp_ipa_vec(8)*(food2**cobalt%nswitch_hp / &
                     (sw_fac_denom+epsln) )**(1.0/cobalt%mswitch_hp)
           tot_prey_hp = hp_pa_vec(7)*prey_vec(7) + hp_pa_vec(8)*prey_vec(8)
-          hp_ingest_vec(7) = cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)* 0.1*cobalt%imax_hp* &
+          hp_ingest_vec(7) = hp_ingest_vec(7) + cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)* nonFmort *cobalt%imax_hp* &
                               hp_pa_vec(7)*prey_vec(7)*tot_prey_hp**(cobalt%coef_hp-1.0)/ &
                               (cobalt%ki_hp+tot_prey_hp)
-          hp_ingest_vec(8) = cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)* 0.1*cobalt%imax_hp* &
+          hp_ingest_vec(8) = hp_ingest_vec(8) + cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)* nonFmort *cobalt%imax_hp* &
                               hp_pa_vec(8)*prey_vec(8)*tot_prey_hp**(cobalt%coef_hp-1.0)/ &
                               (cobalt%ki_hp+tot_prey_hp)
 
