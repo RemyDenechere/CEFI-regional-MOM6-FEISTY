@@ -20,8 +20,10 @@
 #
 #
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <Unique Name> <number of iterations (years)> < reference number >"
+MPI_COMMAND="mpiexec --cpu-set # --bind-to core --report-bindings -np 1"
+
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 <Unique Name> <number of iterations (years)> < reference number > <cpu_core>"
     exit 1
 fi
 
@@ -45,7 +47,8 @@ fi
 # ASSIGN ARGUMENTS TO VARIABLES
 UNIQUE_NAME="$1"
 NUM_ITERATIONS="$2"
-EXP_REF="$3"
+NONFMORT="$3"
+CPU_CORE="$4"
 
 # SET HOME DIRECTORY
 HOME_DIR=$(pwd)
@@ -54,14 +57,22 @@ HOME_DIR=$(pwd)
 UNIQUE_ID=10
 
 # SETUP FOLDER FOR PARALLES RUNS
-
-WORK_DIR="${SCRATCH_DIR}/${EXP_REF}"
+LONG_NAME="nonFmort_${NONFMORT}"
+WORK_DIR="${SCRATCH_DIR}/${LONG_NAME}"
 if [ -d "$WORK_DIR" ]; then
     echo "$WORK_DIR" exists 
 else 
-    cd "$SCRATCH_DIR"
-    mkdir "$EXP_REF"
-    cd "$HOME_DIR"
+    cd "${SCRATCH_DIR}"
+    mkdir "${LONG_NAME}"
+    cd "${HOME_DIR}"
+fi
+
+
+if [ -d "$WORK_DIR" ]; then
+	echo "${WORK_DIR} exists, continuing..."
+else
+	echo "${WORKDIR} does not exist, exiting..."
+	exit 1
 fi
 
 # COPY EVERYTHING TO THE SCRATCH DIRECTORY
@@ -72,6 +83,11 @@ cd "${WORK_DIR}"
 
 # MAKE THE RUNS DIRECTORY
 mkdir RUNS
+
+# EDIT THE INPUT FILE FOR nonFmort
+NEW_LINE="nonFmort = ${NONFMORT}"
+sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
+
 
 ####################################################
 ## Do we need to resetup this over and over?
@@ -89,8 +105,9 @@ mkdir RUNS
 #  RUN THE MODEL 
 ####################################################
 cp "${CEFI_EXECUTABLE_LOC}" . 
- 
-./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
+
+mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
+#mpirun -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
 
 ####################################################
 # MOVE THE DATA TO A NEW FOLDER: 
@@ -104,7 +121,7 @@ else
 fi
 
 # SAVE YEAR 1!!
-YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${UNIQUE_NAME}_${EXP_REF}_yr_1"
+YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${UNIQUE_NAME}_nonFmort${NONFMORT}_yr_1"
 if [ -d "$YEAR_FOLDER_PATH" ]; then 
     rm -rf "$YEAR_FOLDER_PATH"/*
 else 
@@ -121,7 +138,7 @@ yes | cp -i RESTART/*.nc INPUT/
 for ((i=2; i<=NUM_ITERATIONS; i++))
 do
     # Create a new folder to save the data of that year: 
-    YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${UNIQUE_NAME}_${EXP_REF}_yr_${i}"
+    YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${UNIQUE_NAME}_nonFmort${NONFMORT}_yr_${i}"
     if [ -d "$YEAR_FOLDER_PATH" ]; then 
         rm -rf "$YEAR_FOLDER_PATH"/*
     else 
@@ -129,7 +146,8 @@ do
     fi
 
     # Run the model and save the outputs in $folder_save_exp
-    ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
+    mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
+    #mpirun -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
     yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
 
     # get restart files: 
@@ -138,7 +156,7 @@ done
 
 # End the experiment: -----------------------------------------------------------------------------
 ## save the restart files of last year for potential resimulation: 
-FOLDER_SAVE_RESTART="${UNIQUE_NAME}_exps_restart_${EXP_REF}_yr_${NUM_ITERATIONS}"
+FOLDER_SAVE_RESTART="${UNIQUE_NAME}_restart_nonFmort${NONFMORT}_yr_${NUM_ITERATIONS}"
 
 mkdir "$FOLDER_SAVE_RESTART"
 
