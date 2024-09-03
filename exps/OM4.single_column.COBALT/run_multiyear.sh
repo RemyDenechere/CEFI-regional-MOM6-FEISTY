@@ -6,8 +6,8 @@
 # CONTACT: REMY DENECHERE <RDENECHERE@UCSD.EDU>
 #        : JARED BRZENSKI <JABRZENSKI@UCSD.EDU>
 #
-# usage: ./run_COBALT_FEISTY_loop.sh BATS 10 test
-#        ./run_COBALT_FEISTY_loop.sh CCE 20 baseparam
+# usage: ./run_COBALT_FEISTY_loop.sh BATS 10 test core#
+#        ./run_COBALT_FEISTY_loop.sh CCE 20 baseparam core#
 #
 # RUN THIS SCRIPT FROM THE CEFI/EXPS/OM4 DIRECTORY
 #
@@ -19,14 +19,19 @@
 # SAVE_DIR             -> location of the final saved files. 
 #
 #
+#
+# Example MPI command to run this:
+# MPI_COMMAND="mpiexec --cpu-set # --bind-to core --report-bindings -np 1"
+#
+###############################################################################
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
-MPI_COMMAND="mpiexec --cpu-set # --bind-to core --report-bindings -np 1"
 
 if [ "$#" -ne 4 ]; then
     echo "Usage: $0 <Unique Name> <number of iterations (years)> < reference number > <cpu_core>"
     exit 1
 fi
 
+###############################################################################
 # CHECK TO SEE IF OTHER ENVIRONMENTAL VARIABLES ARE SET
 if [ -z "${CEFI_DATASET_LOC}" ]; then
     echo "CEFI_DATASET_LOC is not set, exiting"
@@ -44,12 +49,14 @@ else
     echo "Found all environmental variables, continuing..."
 fi
 
+###############################################################################
 # ASSIGN ARGUMENTS TO VARIABLES
 UNIQUE_NAME="$1"
 NUM_ITERATIONS="$2"
 NONFMORT="$3"
 CPU_CORE="$4"
 
+###############################################################################
 # SET HOME DIRECTORY
 HOME_DIR=$(pwd)
 
@@ -75,6 +82,7 @@ else
 	exit 1
 fi
 
+###############################################################################
 # COPY EVERYTHING TO THE SCRATCH DIRECTORY
 cp -rf * "${WORK_DIR}"
 
@@ -130,7 +138,8 @@ fi
 
 yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
 
-# Loop after 1st year: -----------------------------------------------------------------------------
+###############################################################################
+# Loop after 1st year: --------------------------------------------------------
 ## Set up restart in input.nml file and get restart files: 
 sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
 yes | cp -i RESTART/*.nc INPUT/
@@ -154,7 +163,8 @@ do
     yes | cp -i RESTART/*.nc INPUT/
 done
 
-# End the experiment: -----------------------------------------------------------------------------
+###############################################################################
+# End the experiment: ---------------------------------------------------------
 ## save the restart files of last year for potential resimulation: 
 FOLDER_SAVE_RESTART="${UNIQUE_NAME}_restart_nonFmort${NONFMORT}_yr_${NUM_ITERATIONS}"
 
@@ -173,6 +183,7 @@ cp -r RUNS/* "$SAVE_DIR"
 cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${UNIQUE_NAME}"
 
 cd "$HOME_DIR"
+# REMOVE WORKING DIRECTORY AND FOLDERS, ETC...
 rm -r "$WORK_DIR"
 
 echo "Simulation done!"
