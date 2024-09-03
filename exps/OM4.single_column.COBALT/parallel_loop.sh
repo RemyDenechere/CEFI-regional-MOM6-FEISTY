@@ -56,6 +56,7 @@ UNIQUE_NAME="$2"
 NUM_ITERATIONS="$3"
 EXP_REF="$4"
 
+###############################################################################
 # CHECK TO MAKE SURE NUM LOOPS IS A NUMBER, >= 1
 if [[ "$NUM_LOOPS" =~ ^[0-9]+$ ]] && (( NUM_LOOPS >= 1 )); then
     echo "Running run_multiyear $NUM_LOOPS times..."
@@ -64,6 +65,7 @@ else
     exit 1
 fi
 
+###############################################################################
 # Check if the argument is a number between 0 and 1 (inclusive)
 if [[ "$EXP_REF" =~ ^0(\.[0-9]+)?$|^1(\.0+)?$ ]]; then
     echo "Fmort value $EXP_REF is between 0 and 1 (inclusive)"
@@ -72,6 +74,9 @@ else
     exit 1
 fi
 
+###############################################################################
+# SETUP nonFmort VARIABLE TO UNIQUE VALUE EACH LOOP
+# CURRENTLY IT WILL STEP BY VALUES OF 0.01
 for i in $(seq 1 $NUM_LOOPS); do
     #./test.sh "$i" &
     #echo "${EXP_REF}.$i"
@@ -81,14 +86,14 @@ for i in $(seq 1 $NUM_LOOPS); do
     CPU_CORE=$((i+10))
     echo "This will run on CPU_CORE ${CPU_CORE}"
 
+    # ACTUAL COMMAND TO RUN THE MULTIYEAR BASH SCRIPT.
+    # & SYBMOL AT THE END MEANS IT WILL NOT WAIT FOR THE PROGRAM TO FINISH BEFORE 
+    # CONTINUING THROUGH THIS LOOP
     ./run_multiyear.sh "${UNIQUE_NAME}" "${NUM_ITERATIONS}" "${NONFMORT}" "${CPU_CORE}"&
     
-    #NEW_LINE="nonFmort = ${NONFMORT}"
-    #sed -i "/nonFmort/c\\ ${NEW_LINE}" test_input.nml > test_input${i}.nml
-
 done
 
-# WAIT FOR ALL OF THE COMMANDS TO COMPLETE
+# WAIT FOR ALL OF THE COMMANDS TO COMPLETE, THIS OVERRULES THE & SYMBOL
 wait
 
 echo "All ${NUM_LOOPS} simulations finished!"
