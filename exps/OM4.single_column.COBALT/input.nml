@@ -142,7 +142,7 @@
        co2_calc = 'mocsy'
        debug = .false.
        imbalance_tolerance=1.0e+9
-       do_FEISTY                  = .true.
+       do_FEISTY                  = .false.
        do_print_FEISTY_diagnostic = .false.
        nonFmort                   = 0.1
 !      do_nh3_atm_ocean_exchange  = .true.  !turn on exchange of NH3

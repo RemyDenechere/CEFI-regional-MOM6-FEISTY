@@ -1,0 +1,66 @@
+'\" t
+.\"     Title: combine_restarts
+.\"    Author: [see the "AUTHORS" section]
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: 08/30/2024
+.\"    Manual: FRE Utility
+.\"    Source: FRE 2024.02
+.\"  Language: English
+.\"
+.TH "COMBINE_RESTARTS" "1" "08/30/2024" "FRE 2024\&.02" "FRE Utility"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+combine_restarts \- simple script to combine restart files
+.SH "SYNOPSIS"
+.sp
+.nf
+combine_restarts [options]
+.fi
+.SH "DESCRIPTION"
+.sp
+\fBcombine_restarts\fR will use the correct combine utility (\fBmppnccombine\fR, \fBcombine\-ncc\fR, or \fBiceberg_comb\&.sh\fR) to combine any restart files that reside in the currrent working directory\&. \fBcombine_restarts\fR uses the same options used in the FRE workflow\&.
+.SH "OPTIONS"
+.PP
+\fB\-h\fR
+.RS 4
+Print the help message
+.RE
+.PP
+\fB\-v\fR
+.RS 4
+Increase verbosity\&. Can be repeated\&.
+.RE
+.SH "SEE ALSO"
+.sp
+\fBmppnccombine\fR(1), \fBcombine\-ncc\fR(1)
+.SH "BUGS"
+.sp
+Send bug reports to GFDL\(cqs Helpdesk <oar\&.gfdl\&.help@noaa\&.gov>
+.SH "AUTHORS"
+.sp
+Designed and written by Seth Underwood\&.
+.SH "COPYRIGHT AND LICENSE"
+.sp
+Copyright 2015 Geophysical Fluid Dynamics Laboratory
+.sp
+The Flexible Modeling System (FMS) is free software; you can redistribute it and/or modify it and are expected to follow the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version\&.
+.sp
+FMS is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\&. See the GNU General Public License for more details\&.
