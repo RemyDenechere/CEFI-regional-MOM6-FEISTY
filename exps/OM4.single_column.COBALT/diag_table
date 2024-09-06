@@ -922,7 +922,8 @@ OM4_single_column
 #
 # FEISTY detritus:
 "ocean_model",    "volcello",     "volcello",         "ocean_feisty_forcing_detritus",  "all", "mean", "none",2
-"generic_feisty", "Pop_btm",      "Pop_btm",          "ocean_feisty_forcing_detritus",  "all", "mean", "none",2
+"ocean_model",    "thetao",        "thetao",           "ocean_feisty_forcing_detritus",  "all", "mean", "none",2  
+"generic_cobalt", "Pop_btm",      "Pop_btm",          "ocean_feisty_forcing_detritus",  "all", "mean", "none",2
 #
 # MOM6 ocean diagnostics files
 "ocean_daily",            1, "days",   1, "days", "time"
