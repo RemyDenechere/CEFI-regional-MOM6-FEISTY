@@ -6,6 +6,9 @@ export FCFLAGS=-I/usr/include
 export LIBS=-lnetcdf
 autoreconf -i
 mkdir build && cd build
-../configure --prefix=/project/MOM6_OBGC_examples/work/FRE-NCtools-FEISTY
+mkdir ../../fre-nc/
+../configure --prefix=/project/rdenechere/CEFI-regional-MOM6-FEISTY/work/fre-nc 
 make
+make install
+export PATH=$PATH:/project/rdenechere/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/ 
 ```

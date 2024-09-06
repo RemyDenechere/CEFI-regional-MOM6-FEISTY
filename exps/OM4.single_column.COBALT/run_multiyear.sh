@@ -107,7 +107,12 @@ sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
 # cd INPUT/ && ../../../link_database.sh && cd ..
 # #yes | cp -i "$build_name"/* INPUT/
 
-
+####################################################
+# LINK DATA SET
+####################################################
+cd INPUT/
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/link_database.sh
+cd ..
 
 ####################################################
 #  RUN THE MODEL 
@@ -184,6 +189,6 @@ cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${UNIQUE_NAME}"
 
 cd "$HOME_DIR"
 # REMOVE WORKING DIRECTORY AND FOLDERS, ETC...
-rm -r "$WORK_DIR"
+# rm -r "$WORK_DIR"
 
 echo "Simulation done!"
