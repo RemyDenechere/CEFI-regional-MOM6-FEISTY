@@ -747,6 +747,7 @@ namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange
           hp_ipa_lgz,       & ! "  "  "  "  "  "  "  "  "   large zooplankton to hp
           hp_ipa_det,       & ! "  "  "  "  "  "  "  "  "   detritus to hp
           hp_phi_det          ! fraction of ingested N to detritus
+          
 
      real, dimension(3)                    :: total_atm_co2
 
@@ -964,7 +965,9 @@ namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange
           remoc, &
           tot_layer_int_doc,&
           tot_layer_int_poc,&
-          tot_layer_int_dic
+          tot_layer_int_dic,&
+          ! FEISTY variables 
+          Pop_btm                  ! Detritus flux to bottom used by Benthic communitites in FEISTY
 
 !==============================================================================================================
 
@@ -1731,7 +1734,11 @@ namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange
           id_fbddtdip           = -1, &
           id_fbddtdife          = -1, &
           id_fbddtdisi          = -1, &
-          id_fbddtalk           = -1
+          id_fbddtalk           = -1,&
+! ================================================
+          ! FEISTY: 
+          id_Pop_btm            = -1  ! Detritus flux to bottom used by Benthic communitites in FEISTY
+
 
 !==============================================================================================================
   end type generic_COBALT_type
@@ -6109,6 +6116,13 @@ contains
          cmor_standard_name="integral_wrt_depth_of_tendency_of_sea_water_alkalinity_expressed_as_mole_equivalent_due_to_biological_processes", &
          cmor_long_name="Rate of Change of Biological Alkalinity due to Biological Activity")
 
+!==============================================================================================================
+!  09/05/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run
+     vardesc_temp = vardesc("Pop_btm", "Detritus flux to sea floor",'h','L','s','g WW m-3 d-1','f')
+     cobalt%id_Pop_btm = register_diag_field(package_name, vardesc_temp%name, axes(1:3), &
+        init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
+
+
 !------------------------------------------------------------------------------------------------------------------
 ! 2-D fields (from Oday)
 
@@ -9967,6 +9981,8 @@ contains
                if (do_FEISTY) then 
                   call generic_FEISTY_benthic_update_from_source(fn_residual_btm(i, j), i, j, nk, dt)
                end if
+               ! Save flux of detritus to sea bed 
+               cobalt%Pop_btm(i,j,nk) = fn_residual_btm(i, j)
 
 
              if (cobalt%btm_o2(i,j) .gt. cobalt%o2_min) then  !{
@@ -14625,6 +14641,13 @@ contains
         is_in=isc, js_in=jsc, ie_in=iec, je_in=jec)
 
 !==============================================================================================================
+!  09/05/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run       
+     if (cobalt%id_Pop_btm .gt. 0)          &
+        used = g_send_data(cobalt%id_Pop_btm, cobalt%Pop_btm ,           &
+        model_time, rmask = grid_tmask,&
+        is_in=isc, js_in=jsc, ks_in=1,ie_in=iec, je_in=jec, ke_in=nk)
+
+!==============================================================================================================
 
     call mpp_clock_end(id_clock_cobalt_send_diagnostics)
 
@@ -15441,6 +15464,10 @@ contains
     allocate(cobalt%wc_vert_int_jno3_iceberg(isd:ied, jsd:jed))  ; cobalt%wc_vert_int_jno3_iceberg=0.0
     allocate(cobalt%wc_vert_int_jpo4_iceberg(isd:ied, jsd:jed))  ; cobalt%wc_vert_int_jpo4_iceberg=0.0
 !==============================================================================================================
+!  09/05/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run
+    allocate(cobalt%Pop_btm(isd:ied,jsd:jed,1:nk));  cobalt%Pop_btm  = 0.0 ! 
+    
+!==============================================================================================================
     !
     ! allocate 100m integrated quantities
     !
@@ -16075,6 +16102,13 @@ contains
     deallocate(cobalt%wc_vert_int_jfe_iceberg)
     deallocate(cobalt%wc_vert_int_jno3_iceberg)
     deallocate(cobalt%wc_vert_int_jpo4_iceberg)
+
+!==============================================================================================================
+!  09/05/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run
+    deallocate(cobalt%Pop_btm) 
+    
+!==============================================================================================================
+
 !==============================================================================================================
 
     do n = 1, NUM_PHYTO
