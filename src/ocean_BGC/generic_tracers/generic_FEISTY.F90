@@ -15,18 +15,6 @@
 !
 !</DESCRIPTION>
 
-! REMY's TO DO : 
-! 1) time step as generic from FEISTY
-! 2) Creating a common index for FEISTY zooplantkon and FEISTY resources?
-! 3) Vector containing all the functional groups. 
-! 4) Calculate total consumption of functional groups. 
-! 5) add procedure to type
-! 6) what are the units of hp_ingest_vec? 
-! 7) grid_tmask for the derivative
-! 8) is nk the bottom depth.
-! 9) Check the FEISTY tags in generic_cobalt copy
-! 10) define M0 Minf and use them for w calculation: (FEISTY init)
-
 module generic_FEISTY
 
     use field_manager_mod,  only: fm_string_len, fm_path_name_len, fm_field_name_len
@@ -177,8 +165,7 @@ type, public :: fish_type
         id_prod         = -1, &
         id_Fout         = -1, &
         id_rho          = -1, &
-        id_yield        = -1, &
-        id_Pop_btm      = -1
+        id_yield        = -1
 end type fish_type
 
 
@@ -289,8 +276,8 @@ type, public :: FEISTY_type
                                             Lp_B,  &
                                             Ld_B,  &
                                             BE_B,  &
-                                            Pop_btm, &       ! Detritus flux to sea floor
-                                            dBdt_BE         ! Not a tracer
+                                            ! Pop_btm, &       ! Detritus flux to sea floor Not a tracer
+                                            dBdt_BE          ! Not a tracer
     ! Non-prognostic tracers:                                             
     real, dimension(:,:,:), allocatable :: Ld_Repro
 
@@ -304,7 +291,7 @@ integer ::  id_Sf_B = -1,       &
             id_Lp_B = -1,       &
             id_Ld_B = -1,       &
             id_BE_B = -1,       &
-            id_Pop_btm = -1,    &        !    detritus flux to sea floor, not a tracer
+            ! id_Pop_btm = -1,    &        !    detritus flux to sea floor, not a tracer
             id_Ld_Repro = -1
 
     ! pointers of the tracers: 
@@ -1200,10 +1187,10 @@ subroutine generic_FEISTY_register_diag(diag_list)
         fish(LD)%id_yield = register_diag_field(package_name, vardesc_temp%name, axes(1:3),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
-        ! LD:
-        vardesc_temp = vardesc("Pop_btm","Detritus flux to sea floor",'h','L','s','g WW m-3 d-1','f')
-        FEISTY%id_Pop_btm = register_diag_field(package_name, vardesc_temp%name, axes(1:3), &
-        init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)   
+        ! ! Pop:
+        ! vardesc_temp = vardesc("Pop_btm","Detritus flux to sea floor",'h','L','s','g WW m-3 d-1','f')
+        ! FEISTY%id_Pop_btm = register_diag_field(package_name, vardesc_temp%name, axes(1:3), &
+        ! init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)   
     
 end subroutine generic_FEISTY_register_diag
 
@@ -1333,7 +1320,7 @@ subroutine user_add_params_FEISTY
 
     ! Conversion from cobalt zooplankton and detritus to FEISTY  
     call g_tracer_add_param('convers_Mz', FEISTY%convers_Mz, 6.625*12.01*9.0 * 1000.0)       ! zooplankton biomass unit conversion conversion 
-    call g_tracer_add_param('convers_det', FEISTY%convers_det, 6.625*12.01*9.0*FEISTY%d2s)   ! detritus unit conversion
+    call g_tracer_add_param('convers_det', FEISTY%convers_det, 6.625*12.01*9.0*FEISTY%d2s * 1000.0)   ! detritus unit conversion
    
 	! Stop param list:    
     call g_tracer_end_param_list(package_name)
@@ -1364,7 +1351,7 @@ subroutine user_allocate_arrays_FEISTY
     allocate(FEISTY%Ld_B(isd:ied,jsd:jed,1:nk));     
     allocate(FEISTY%BE_B(isd:ied,jsd:jed,1:nk));     
     allocate(FEISTY%dBdt_BE(isd:ied,jsd:jed,1:nk));  FEISTY%dBdt_BE  = 0.0 ! Derivative for Benthic resource
-    allocate(FEISTY%Pop_btm(isd:ied,jsd:jed,1:nk));  FEISTY%Pop_btm  = 0.0 ! 
+    ! allocate(FEISTY%Pop_btm(isd:ied,jsd:jed,1:nk));  FEISTY%Pop_btm  = 0.0 ! 
 
     ! Non-prognostic tracers: 
     allocate(FEISTY%Ld_Repro(isd:ied,jsd:jed,1:nk)); FEISTY%Ld_Repro = 0.0 
@@ -1415,7 +1402,7 @@ subroutine user_deallocate_arrays_FEISTY
     deallocate(FEISTY%Ld_B)
     deallocate(FEISTY%BE_B)
     deallocate(FEISTY%dBdt_BE)
-    deallocate(FEISTY%Pop_btm)
+    ! deallocate(FEISTY%Pop_btm)
 
     deallocate(FEISTY%Ld_Repro)
 
@@ -1904,8 +1891,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     hp_ingest_vec(idx_Lz) = (fish(MF)%cons_Lz(i,j,k) * fish(MF)%B + fish(MP)%cons_Lz(i,j,k) * fish(MP)%B)
 	
 	! Converting zooplankton back to [mol N m-3] and back to hp_ingest_vec time unit [s ??]
-	hp_ingest_vec(idx_Mz) = hp_ingest_vec(idx_Mz) * (1.0/FEISTY%convers_Mz) * FEISTY%d2s
-	hp_ingest_vec(idx_Lz) = hp_ingest_vec(idx_Lz) * (1.0/FEISTY%convers_Mz) * FEISTY%d2s
+	hp_ingest_vec(idx_Mz) = hp_ingest_vec(idx_Mz) * (1.0/FEISTY%convers_Mz) * (1.0/FEISTY%d2s)
+	hp_ingest_vec(idx_Lz) = hp_ingest_vec(idx_Lz) * (1.0/FEISTY%convers_Mz) * (1.0/FEISTY%d2s)
     
     ! The folowing groups don't feed on zooplankton: ------------------------------------
     ! Calculate diagnostic total consumption
@@ -2237,7 +2224,7 @@ subroutine generic_FEISTY_benthic_update_from_source(det, i, j, nk, dt)
 
     ! Set up values
     FEISTY%det = det * FEISTY%convers_det       ! Convert in the right unit (g ww m-3 d-1)
-    FEISTY%Pop_btm(i,j,nk) = FEISTY%det         ! Save detritus to sea floor!
+    ! FEISTY%Pop_btm(i,j,nk) = FEISTY%det       ! Save detritus to sea floor!
     FEISTY%BE = FEISTY%BE_B(i, j, nk)           ! Using biomass at bottom depth
      
     ! Check for negative value! 
@@ -2271,6 +2258,10 @@ subroutine generic_FEISTY_update_pointer(i, j, k, tau, dt)
     real,    intent(in) :: dt
     real                :: Delta_t
 
+    ! FEISTY%d2s: Conversion from Day to second
+    ! FEISTY dBdt, variation of fish per time, has a dt in day. However, COBALT runs un unit of second (dt)
+    ! Therefore we need to convert FEISTY derivativve from d to second, i.e., 
+    ! dBdt in g ww C d-1 in g ww C s-1 
     Delta_t = dt / FEISTY%d2s
 
     FEISTY%p_Sf_B(i,j,k,tau) = FEISTY%p_Sf_B(i,j,k,tau) +  fish(SF)%dBdt_fish(i,j,k) * Delta_t 
@@ -2415,10 +2406,10 @@ subroutine generic_FEISTY_send_diagnostic_data(model_time)
                     used = g_send_data(fish(m)%id_yield, fish(m)%yield ,           &
                     model_time, rmask = grid_tmask,&
                     is_in=isc, js_in=jsc, ks_in=1,ie_in=iec, je_in=jec, ke_in=nk)
-        if (FEISTY%id_Pop_btm .gt. 0)          &
-                    used = g_send_data(FEISTY%id_Pop_btm, FEISTY%Pop_btm ,           &
-                    model_time, rmask = grid_tmask,&
-                    is_in=isc, js_in=jsc, ks_in=1,ie_in=iec, je_in=jec, ke_in=nk)
+        ! if (FEISTY%id_Pop_btm .gt. 0)          &
+        !             used = g_send_data(FEISTY%id_Pop_btm, FEISTY%Pop_btm ,           &
+        !             model_time, rmask = grid_tmask,&
+        !             is_in=isc, js_in=jsc, ks_in=1,ie_in=iec, je_in=jec, ke_in=nk)
     end do
 
 end subroutine generic_FEISTY_send_diagnostic_data

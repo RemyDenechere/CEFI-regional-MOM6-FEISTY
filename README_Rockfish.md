@@ -171,6 +171,8 @@ mkdir work
 cd work
 git clone https://github.com/NOAA-GFDL/FRE-NCtools.git
 cd FRE-NCtools
+export FCFLAGS=-I/usr/include
+export LIBS=-lnetcdf
 autoreconf -i
 mkdir build && cd build
 ../configure --prefix=/project/MOM6_OBGC_examples/work/FRE-NCtools

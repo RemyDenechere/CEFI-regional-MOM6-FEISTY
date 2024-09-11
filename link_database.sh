@@ -58,7 +58,7 @@ else
 	ln -fs ${CEFI_DATASET_LOC}/OM4_025.JRA.single_column/woa13_decav_ptemp_monthly_fulldepth_01.nc ./woa13_decav_ptemp_monthly_fulldepth_01.nc
 	ln -fs ${CEFI_DATASET_LOC}/OM4_025.JRA.single_column/woa13_decav_s_monthly_fulldepth_01.nc ./woa13_decav_s_monthly_fulldepth_01.nc
 	ln -fs ${CEFI_DATASET_LOC}/OM4_025.JRA.single_column/woa13_decav_s_monthly_fulldepth_01.nc ./woa13_decav_s_monthly_fulldepth_01.nc
-	ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc ./FEISTY_2023_10_spinup_subset.nc
+	# ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc ./FEISTY_2023_10_spinup_subset.nc
 fi
 
 
