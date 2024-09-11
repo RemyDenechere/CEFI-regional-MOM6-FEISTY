@@ -3,7 +3,7 @@
 # This script allows to loop the 1D colunm run of the online COBALT-FEISTY over a given number of years <nbr_year_to_run>
 # contact: remy denechere <rdenechere@ucsd.edu>
 # usage: ./run_COBALT_FEISTY_loop.sh BATS 20 nonFmort_00
-#        ./run_COBALT_FEISTY_loop.sh CCE 20 baseparam
+#        ./run_COBALT_FEISTY_loop.sh CCE 20 F_pred_Z
 # baseparam : Petrik 2019 param
 # mortZ_00  : non-fish mortality = 0.0
 
