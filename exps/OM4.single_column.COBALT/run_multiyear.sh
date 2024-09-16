@@ -98,6 +98,7 @@ sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
 
 
 ####################################################
+<<<<<<< HEAD
 ## Do we need to resetup this over and over?
 ####################################################
 # Seems like if one works, they will all work ??
