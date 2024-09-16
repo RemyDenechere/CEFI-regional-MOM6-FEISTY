@@ -57,8 +57,8 @@ UNIQUE_ID=10
 
 WORK_DIR="${SCRATCH_DIR}/${EXP_REF}"
 if [ -d "$WORK_DIR" ]; then
-    echo "$WORK_DIR" exists 
-else 
+    echo "$WORK_DIR" exists
+else
     cd "$SCRATCH_DIR"
     mkdir "$EXP_REF"
     cd "$HOME_DIR"
