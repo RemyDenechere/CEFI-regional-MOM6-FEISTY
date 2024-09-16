@@ -1,7 +1,8 @@
 #!/bin/bash
 #
 # THIS SCRIPT ALLOWS TO LOOP THE 1D COLUNM RUN OF THE ONLINE 
-# COBALT-FEISTY OVER A GIVEN NUMBER OF ITERATIONS <NUM_ITERATIONS>
+# COBALT-FEISTY OVER A GIVEN NUMBER OF YEARS <NUM_ITERATIONS>
+# WITH A SPECIFIC PARAMETER VALUE FOR NONFMORT.
 # 
 # CONTACT: REMY DENECHERE <RDENECHERE@UCSD.EDU>
 #        : JARED BRZENSKI <JABRZENSKI@UCSD.EDU>
@@ -20,14 +21,14 @@
 #
 #
 #
-# Example MPI command to run this:
+# Example MPI command to run this without this script:
 # MPI_COMMAND="mpiexec --cpu-set # --bind-to core --report-bindings -np 1"
 #
 ###############################################################################
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
 
 if [ "$#" -ne 4 ]; then
-    echo "Usage: $0 <Unique Name> <number of iterations (years)> < reference number > <cpu_core>"
+    echo "Usage: $0 <Unique Name> <number of iterations (years)> <nonFmort Value> <cpu_core>"
     exit 1
 fi
 
@@ -98,24 +99,6 @@ sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
 
 
 ####################################################
-<<<<<<< HEAD
-## Do we need to resetup this over and over?
-####################################################
-# Seems like if one works, they will all work ??
-# ## SET UP THE INPUT FILE FOR THE EXPERIMENT: 
-# #cd ../exps/OM4.single_column.COBALT/
-# rm -rf INPUT/*
-# cd INPUT/ && ../../../link_database.sh && cd ..
-# #yes | cp -i "$build_name"/* INPUT/
-
-####################################################
-# LINK DATA SET
-####################################################
-cd INPUT/
-/project/rdenechere/CEFI-regional-MOM6-FEISTY/link_database.sh
-cd ..
-
-####################################################
 #  RUN THE MODEL 
 ####################################################
 cp "${CEFI_EXECUTABLE_LOC}" . 
@@ -162,7 +145,6 @@ do
 
     # Run the model and save the outputs in $folder_save_exp
     mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
-    #mpirun -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
     yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
 
     # get restart files: 
