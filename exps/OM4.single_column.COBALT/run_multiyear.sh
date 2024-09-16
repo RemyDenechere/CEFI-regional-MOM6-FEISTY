@@ -20,7 +20,11 @@
 # SAVE_DIR             -> location of the final saved files. 
 #
 #
-#
+# CEFI_DATASET_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/
+# CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/rockfish-linux-gnu/ocean_ice/prod/MOM6SIS2
+# SCRATCH_DIR=/scratch/
+# SAVE_DIR=/project/rdenechere/COBALT_output/parallel/
+# 
 # Example MPI command to run this without this script:
 # MPI_COMMAND="mpiexec --cpu-set # --bind-to core --report-bindings -np 1"
 #
@@ -96,6 +100,10 @@ mkdir RUNS
 # EDIT THE INPUT FILE FOR nonFmort
 NEW_LINE="nonFmort = ${NONFMORT}"
 sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
+
+cd INPUT/
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/link_database.sh
+cd ..
 
 
 ####################################################
