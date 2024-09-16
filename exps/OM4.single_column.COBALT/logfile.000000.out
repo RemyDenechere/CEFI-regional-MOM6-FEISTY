@@ -6,7 +6,7 @@ READ_INPUT_NML: unknown
 READ_INPUT_NML: input.nml 
   &MOM_input_nml
           output_directory = '.',
-          input_filename = 'n'
+          input_filename = 'r'
           restart_input_dir = 'INPUT',
           restart_output_dir = 'RESTART',
           parameter_filename = 'MOM_input',
@@ -17,7 +17,7 @@ READ_INPUT_NML: input.nml
  
   &SIS_input_nml
          output_directory = './',
-         input_filename = 'n'
+         input_filename = 'r'
          restart_input_dir = 'INPUT/',
          restart_output_dir = 'RESTART/',
          parameter_filename = 'SIS_input',
@@ -542,12 +542,6 @@ MOM_MOSAIC domain decomposition:     1 X    1
 MOM_MOSAIC domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
-ice model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
 ice model aux domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
@@ -559,16 +553,12 @@ ice_nohalo domain decomposition:     1 X    1
 
 ice_nohalo domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-&DATA_OVERRIDE_NML
- DEBUG_DATA_OVERRIDE=F,
- GRID_CENTER_BUG=F,
- REPRODUCE_NULL_CHAR_BUG=F,
- /
-&DATA_OVERRIDE_NML
- DEBUG_DATA_OVERRIDE=F,
- GRID_CENTER_BUG=F,
- REPRODUCE_NULL_CHAR_BUG=F,
- /
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
 ================================================================================
 FMSConstants: GFDL
@@ -611,6 +601,12 @@ MOM_MOSAIC domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
 MOM_MOSAIC domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
 MOM_in domain decomposition:     1 X    1
