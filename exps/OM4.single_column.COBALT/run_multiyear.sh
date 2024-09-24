@@ -118,7 +118,7 @@ NEW_LINE="k_fct_tp = ${K_EXP}"
 sed -i "/k_fct_tp/c\\ ${NEW_LINE}" input.nml
 
 cd INPUT/
-/project/rdenechere/CEFI-regional-MOM6-FEISTY/link_database.sh
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/link_database.sh "${LOC_NAME}"
 cd ..
 
 
