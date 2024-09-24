@@ -144,7 +144,14 @@
        imbalance_tolerance=1.0e+9
        do_FEISTY                  = .false.
        do_print_FEISTY_diagnostic = .false.
-       nonFmort                   = 0.1
+       nonFmort                   = [0 - 1]
+       Fnt_type_resp              = [2 3]
+       if Fnt_type_resp == 2 
+              a_enc               = [30 - 110]
+              mid_sat             = 0 
+       elseif Fnt_type_resp == 3 
+              a_enc               = 70
+              mid_sat             =  [0 - 1]
 !      do_nh3_atm_ocean_exchange  = .true.  !turn on exchange of NH3
 !      scheme_no3_nh4_lim         = 2       !update nh4/no3 uptake scheme
 !      scheme_nitrif              = 3       !new nitrification scheme
