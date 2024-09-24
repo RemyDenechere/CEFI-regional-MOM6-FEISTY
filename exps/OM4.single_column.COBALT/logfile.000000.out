@@ -6,7 +6,7 @@ READ_INPUT_NML: unknown
 READ_INPUT_NML: input.nml 
   &MOM_input_nml
           output_directory = '.',
-          input_filename = 'r'
+          input_filename = 'n'
           restart_input_dir = 'INPUT',
           restart_output_dir = 'RESTART',
           parameter_filename = 'MOM_input',
@@ -17,7 +17,7 @@ READ_INPUT_NML: input.nml
  
   &SIS_input_nml
          output_directory = './',
-         input_filename = 'r'
+         input_filename = 'n'
          restart_input_dir = 'INPUT/',
          restart_output_dir = 'RESTART/',
          parameter_filename = 'SIS_input',
@@ -542,6 +542,12 @@ MOM_MOSAIC domain decomposition:     1 X    1
 MOM_MOSAIC domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
 ice model aux domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
@@ -553,12 +559,16 @@ ice_nohalo domain decomposition:     1 X    1
 
 ice_nohalo domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+&DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE=F,
+ GRID_CENTER_BUG=F,
+ REPRODUCE_NULL_CHAR_BUG=F,
+ /
+&DATA_OVERRIDE_NML
+ DEBUG_DATA_OVERRIDE=F,
+ GRID_CENTER_BUG=F,
+ REPRODUCE_NULL_CHAR_BUG=F,
+ /
 
 ================================================================================
 FMSConstants: GFDL
@@ -601,12 +611,6 @@ MOM_MOSAIC domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
 MOM_MOSAIC domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_in domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
 MOM_in domain decomposition:     1 X    1
@@ -763,3 +767,155 @@ use variable ROUGH_SCHEME instead
 ================================================================================
 DIAG_OUTPUT_MOD
 2020.03
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+ice model domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+                                     time
+Total runtime                      2090.775692
+Initialization                        4.543053
+  Init: atmos_model_init              0.007192
+  Init: land_model_init               0.006853
+  Init: ice_model_init                0.130542
+  Init: ocean_model_init              4.107006
+  Init: flux_exchange_init            0.034870
+Main loop                          2086.101967
+Termination                           0.128900
+(Ocean continuity update)             0.818745
+(Ocean continuity correction)        37.349909
+(Ocean advect tracer)               218.051810
+(Ocean tracer halo updates)          43.139888
+(Ocean tracer global synch)           0.025778
+  Ice: slow: dynamics                42.708373
+  Ice: slow: transport                0.890526
+  Ice: slow: thermodyn diags          0.871853
+Ice                                  48.568015
+Ice Fast                              1.571729
+Ice Slow                             46.969490
+Ice Fast/Slow Exchange                0.010266
+Ocean Initialization                  4.113689
+Ocean                              1973.851683
+Ocean dynamics                      161.011804
+Ocean thermodynamics and tracers   1735.509424
+Ocean Other                          76.293410
+(Ocean tracer advection)            218.441954
+(Ocean diabatic driver)            1517.048785
+(Ocean continuity equation *)         0.000000
+(Ocean set BBL viscosity)             2.144941
+(Ocean message passing *)             7.513984
+(Ocean MOM_initialize_state)          0.542242
+(Ocean init message passing *)        0.000260
+(Ocean mixed layer restrat)           0.000000
+(Ocean collective diagnostics)       56.387238
+(Ocean Z-space diagnostics)           0.000000
+(Ocean ALE)                         168.278567
+(Stochastic EOS)                      0.001934
+(SGS Temperature Variance)            0.001920
+(Cobalt: carbon calcs)               96.597412
+(Cobalt: phytoplankton growth ca    166.899557
+(Cobalt: bacteria growth calcs)       3.591938
+(Cobalt: zooplankton calculation    254.670787
+(Cobalt: other losses)               30.553570
+(Cobalt: production loop)            32.326645
+(Cobalt: ballasting loops)           19.661134
+(Cobalt: source/sink loop 1)          7.460564
+(Cobalt: source/sink loop 2)          9.806288
+(Cobalt: source/sink loop 3)          6.975438
+(Cobalt: source/sink loop 4)          1.165920
+(Cobalt: source/sink loop 5)          2.966877
+(Cobalt: source/sink loop 6)          9.046180
+(Cobalt: send diagnostics)          395.986637
+(Cobalt: calculate diagnostics)      46.128335
+(Initialize from Z)                   0.532334
+(Ocean diagnostics framework)       544.551230
+(Ocean diagnostics remapping)       343.727301
+(Ocean diagnostics grid updates)      3.828114
+(Ocean porous barrier)                0.659119
+(Ocean init message passing)          0.000114
+(Ocean continuity reconstruction     11.956469
+(Ocean BT pre-calcs only)             5.168620
+(Ocean BT pre-step halo updates)      1.782026
+(Ocean BT stepping calcs only)        4.308716
+(Ocean BT stepping halo updates)      1.051340
+(Ocean BT post-calcs only)            0.888662
+(Ocean BT post-step halo updates      0.372416
+(Ocean BT global synch)               0.012708
+(Ocean Coriolis & mom advection)      8.302582
+(Ocean continuity equation)          50.609397
+(Ocean pressure force)               29.906725
+(Ocean vertical viscosity)           19.563443
+(Ocean horizontal viscosity)         12.524193
+(Ocean momentum increments)           0.660787
+(Ocean message passing)              12.998938
+(Ocean barotropic mode calc)          0.148340
+(Ocean barotropic mode stepping)     14.586955
+(Ocean barotropic forcing calc)       1.323147
+(Ocean kappa_shear)                  19.408643
+(Ocean diabatic entrain)              0.000000
+(Ocean vert remap)                   29.179799
+(Ocean geothermal)                    0.028420
+(Ocean set_diffusivity)              25.517641
+(Ocean KPP)                           0.000000
+(Ocean tracer_columns)             1272.482517
+(Ocean diabatic tridiag)              3.997059
+(Ocean diabatic message passing)      0.845037
+(Ocean find_uv_at_h)                  0.809999
+(Ocean frazil)                        0.000000
+(Ocean diffuse tracer)                0.000000
+(Ocean epipycnal diffuse tracer)      0.000000
+(Initialize tracer from Z)            1.759742
+Ocean surface forcing                 1.023179
+(Ocean forcing diagnostics)           1.314538
+Land-ice-atm coupler                 57.662579
+SFC boundary layer                   32.077260
+Flux DN from atm                     25.139782
+XGrid generation                      0.094546
+Flux UP to atm                        0.166153
+Flux land to ice                      0.157885
+Ice-ocean coupler                     0.182590
+Flux ice to ocean                     0.123395
+Flux ocean to ice                     0.048933
+generate_sfc_xgrid                    0.113524
+flux_ocean_to_ice                     0.062582
+flux_ice_to_ocean                     0.132203
+ATM                                 106.955458
+ ATM: atmos loop                     59.508487
+  A-L: atmos_tracer_driver_gathe      0.000000
+  A-L: sfc_boundary_layer            32.209508
+  A-L: update_atmos_model_dynami      0.000000
+  A-L: serial radiation               0.003272
+  A-L: update_atmos_model_down        0.000000
+  A-L: flux_down_from_atmos          25.176595
+  A-L: update_land_model_fast         0.001209
+  A-L: update_ice_model_fast          1.094185
+  A-L: flux_up_to_atmos               0.188685
+  A-L: update_atmos_model_up          0.000899
+  A-L: update_atmos_model_state       0.001959
+ ATM: update_land_model_slow          0.001241
+ ATM: flux_land_to_ice                0.178446
+ Ice: set_ice_surface fast            0.494442
+ Ice: update_ice_model_slow fast      0.561161
+ Ice: set_ice_surface slow            0.635084
+ Ice: update_ice_model_slow slow     46.537447
+ Ice: flux_ice_to_ocean_stocks        0.018240
+ Ice: set_ice_surface exchange        0.014048
+ Ice: update_ice_model_slow exch      0.009940
+OCN                                1977.540763
+flux_check_stocks                     0.000000
+intermediate restart                  0.000000
+final flux_check_stocks               0.006053
