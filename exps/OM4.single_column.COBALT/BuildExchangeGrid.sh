@@ -5,8 +5,8 @@
 # Usage: ./BuildExchangeGrid.sh BATS 31.6667 -64.1667
 
 # Check if the correct number of arguments are provided
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <station_name> <latitude> <longitude>"
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 <station_name> <latitude> <longitude> <depth (meter)>"
     exit 1
 fi
 
@@ -14,6 +14,7 @@ fi
 station_name="$1"
 latitude="$2"
 longitude="$3"
+depth="$4"
 
 # Calculate the bounds for the grid
 xbnd_min=$(awk -v lon="$longitude" 'BEGIN { printf "%.4f", lon - 0.2 }')
@@ -39,6 +40,6 @@ cd "$station_name"
 /project/rdenechere/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_solo_mosaic --num_tiles 1 --dir ./ --mosaic_name atmos_mosaic --tile_file ocean_hgrid.nc
 /project/rdenechere/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_solo_mosaic --num_tiles 1 --dir ./ --mosaic_name land_mosaic --tile_file ocean_hgrid.nc
 
-/project/rdenechere/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_topog --mosaic ocean_mosaic.nc --topog_type  rectangular_basin --bottom_depth 4000 --output ocean_topog
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_topog --mosaic ocean_mosaic.nc --topog_type  rectangular_basin --bottom_depth $depth --output ocean_topog
 
 /project/rdenechere/CEFI-regional-MOM6-FEISTY/work/fre-nc/bin/make_coupler_mosaic --atmos_mosaic atmos_mosaic.nc --land_mosaic land_mosaic.nc --ocean_mosaic ocean_mosaic.nc --ocean_topog ocean_topog.nc --mosaic_name grid_spec --check --verbose
