@@ -166,6 +166,8 @@ module generic_COBALT
   use generic_FEISTY,  only : generic_FEISTY_end
   use generic_FEISTY,  only : generic_FEISTY_update_pointer, generic_FEISTY_send_diagnostic_data
 
+  
+
   implicit none ; private
 !-----------------------------------------------------------------------
   character(len=128) :: version = '$Id: generic_COBALT.F90,v 20.0.2.1.2.1 2014/09/29 16:40:08 Niki.Zadeh Exp $'
@@ -212,6 +214,8 @@ module generic_COBALT
   logical :: do_FEISTY                  = .true.   
   logical :: do_print_FEISTY_diagnostic = .false.
   real    :: nonFmort = 0.10
+  real    :: a_enc = 70.0
+  real    :: k_fct_tp = 1.0
   
   ! namelist capabilities for half-sats not used in this run
   logical :: do_vertfill_pre = .false.
@@ -238,7 +242,7 @@ module generic_COBALT
 namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange, scheme_nitrif, &
      k_nh4_small,k_nh4_large,k_nh4_diazo,scheme_no3_nh4_lim,k_no3_small,k_no3_large,k_no3_diazo, &
      o2_min_nit,k_o2_nit,irr_inhibit,k_nh3_nitrif,gamma_nitrif,do_vertfill_pre,imbalance_tolerance, &
-     do_FEISTY,do_print_FEISTY_diagnostic, nonFmort
+     do_FEISTY, do_print_FEISTY_diagnostic, nonFmort
 
   ! Declare phytoplankton, zooplankton and cobalt variable types, which contain
   ! the vast majority of all variables used in this module.
@@ -1900,7 +1904,7 @@ contains
 
     ! Initialiser FEISTY: Add parameters and allocate arrays! 
     if (do_FEISTY) then
-          call generic_FEISTY_init(tracer_list)
+          call generic_FEISTY_init(tracer_list, a_enc, k_fct_tp)
     end if 
 
   end subroutine generic_COBALT_init

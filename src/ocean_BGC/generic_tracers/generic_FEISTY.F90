@@ -28,6 +28,9 @@ module generic_FEISTY
     use g_tracer_utils,     only: g_send_data
     use g_tracer_utils,     only: g_diag_type, g_diag_field_add
 
+    use fm_util_mod,        only: fm_util_start_namelist, fm_util_end_namelist
+    use fms_mod,            only: open_namelist_file, close_file
+
 implicit none; private  
 
 character(len=128) :: version = '$FEISTY_setupbasic2$'
@@ -50,13 +53,12 @@ public generic_FEISTY_end
 public generic_FEISTY_update_pointer
 public generic_FEISTY_send_diagnostic_data
 
-! The following subroutin are only used by generic_FEISTY subroutines: 
-!  user_add_params_FEISTY
-!  user_add_tracers_FEISTY
-!  user_allocate_arrays_FEISTY
-!  user_deallocate_arrays_FEISTY
+!#########################################################################################!  
+!                                       FEISTY namelist 
+real :: a_enc = 70.0
+real :: k_fct_tp = 1.0
 
-
+namelist /generic_FEISTY_nml/ a_enc, k_fct_tp
 
 
 !#########################################################################################!  
@@ -169,7 +171,6 @@ type, public :: fish_type
 end type fish_type
 
 
-
 !------------------------------------
 ! Structure type of the FEISTY
 ! containing all the fish functinal group and their structure 
@@ -210,6 +211,7 @@ type, public :: FEISTY_type
     ! Parameters physiology: ------------------------------------------
     real :: ke              ! [°c-1]                Temperature correction for cmax and encounter
     real :: kmet            ! [°c-1]                Temperature correction for Metabolic cost cost
+    real :: k_fct_tp
     real :: a_enc           ! []                    Coeff for mass-specific Encounter rate             
     real :: b_enc           ! [m-3 g^(b_enc−1) d−1] Exponent for mass-specific Encounter rate 
     real :: a_cmax          ! [d g^(b_cmax)]        Coeff for Cmax 
@@ -309,7 +311,6 @@ integer ::  id_Sf_B = -1,       &
 end type FEISTY_type
 
 
-
 !-----------------------------------
 ! An auxiliary type for storing varible names
 !-----------------------------------
@@ -322,7 +323,6 @@ type, public :: vardesc
    character(len=fm_string_len) :: units    ! The dimensions of the variable.
    character(len=1)  :: mem_size ! The size in memory: d or f.
 end type vardesc
-
 
 
 ! Indexes for fish type: 
@@ -1267,7 +1267,8 @@ subroutine user_add_params_FEISTY
     ! Parameters physiology: ------------------------------------------
     call g_tracer_add_param('ke', FEISTY%ke, 0.0630)                ! [°c-1]                Temperature correction for cmax and encounter
     call g_tracer_add_param('kmet', FEISTY%kmet, 0.08550)           ! [°c-1]                Temperature correction for Metabolic cost cost
-    call g_tracer_add_param('a_enc', FEISTY%a_enc, 70.0)     !      ! []                    Coeff for mass-specific Encounter rate             
+    call g_tracer_add_param('a_enc', FEISTY%a_enc, a_enc)     !      ! []                   Coeff for mass-specific Encounter rate             
+    call g_tracer_add_param('k_fct_tp', FEISTY%k_fct_tp, k_fct_tp)                       ! []                    Coefficient for the functional response type! if k =1 then type 2 if k .gt. 1 type 3 
     call g_tracer_add_param('b_enc', FEISTY%b_enc, 0.20)            ! [m-3 g^(b_enc−1) d−1] Exponent for mass-specific Encounter rate 
     call g_tracer_add_param('a_cmax', FEISTY%a_cmax, 20.0)          ! [d g^(b_cmax)]        Coeff for Cmax 
     call g_tracer_add_param('b_cmax', FEISTY%b_cmax, 0.250)         ! []                    Exponent for Cmax 
