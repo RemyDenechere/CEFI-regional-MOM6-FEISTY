@@ -58,6 +58,7 @@ else
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/woa13_decav_ptemp_monthly_fulldepth_01.nc ./woa13_decav_ptemp_monthly_fulldepth_01.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/woa13_decav_s_monthly_fulldepth_01.nc ./woa13_decav_s_monthly_fulldepth_01.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/woa13_decav_s_monthly_fulldepth_01.nc ./woa13_decav_s_monthly_fulldepth_01.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/mosaic.nc ./mosaic.nc
 fi
 
 if [ -z "${CEFI_DATASET_LOC}" ]; then
@@ -65,7 +66,7 @@ if [ -z "${CEFI_DATASET_LOC}" ]; then
 else
     echo "CEFI_DATASET_LOC is set to '${CEFI_DATASET_LOC}'."
 
-	ln -fs ${CEFI_DATASET_LOC}/mosaic.nc ./mosaic.nc
+	
 	ln -fs ${CEFI_DATASET_LOC}/grid_spec.nc ./grid_spec.nc
 	ln -fs ${CEFI_DATASET_LOC}/land_mosaic_tile1Xocean_mosaic_tile1.nc ./land_mosaic_tile1Xocean_mosaic_tile1.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_mosaic.nc ./ocean_mosaic.nc
