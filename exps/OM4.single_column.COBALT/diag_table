@@ -913,16 +913,19 @@ OM4_single_column
 "generic_feisty", "LD_yield",    "LD_yield",        "ocean_feisty_fluxes","all","mean","none",2
 #
 # FEISTY forcing files for offline simulation:
-"ocean_model",    "volcello",      "volcello",         "ocean_feisty_forcing",  "all", "mean", "none",2
-"ocean_model",    "thetao",        "thetao",           "ocean_feisty_forcing",  "all", "mean", "none",2  
-"generic_cobalt", "jhploss_n_Mdz", "jhploss_n_Mdz",    "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "jhploss_n_Lgz", "jhploss_n_Lgz",    "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "nmdz",          "nmdz",             "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "nlgz",          "nlgz",             "ocean_feisty_forcing",  "all", "mean", "none",2
+"ocean_model",    "volcello",      "volcello",          "ocean_feisty_forcing",  "all", "mean", "none",2
+"ocean_model",    "thetao",        "thetao",            "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "jprod_nmdz",    "jprod_nmdz",        "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "jprod_nlgz",    "jprod_nlgz",        "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "jhploss_n_Mdz", "jhploss_n_Mdz",     "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "jhploss_n_Lgz", "jhploss_n_Lgz",     "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "nmdz",          "nmdz",              "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "nlgz",          "nlgz",              "ocean_feisty_forcing",  "all", "mean", "none",2
+#"ocean_model",    "eta",           "eta",               "ocean_feisty_forcing",  "all", "mean", "none",2
 #
 # FEISTY detritus:
 "ocean_model",    "volcello",     "volcello",         "ocean_feisty_forcing_detritus",  "all", "mean", "none",2
-"ocean_model",    "thetao",        "thetao",           "ocean_feisty_forcing_detritus",  "all", "mean", "none",2  
+"ocean_model",    "thetao",        "thetao",          "ocean_feisty_forcing_detritus",  "all", "mean", "none",2  
 "generic_cobalt", "Pop_btm",      "Pop_btm",          "ocean_feisty_forcing_detritus",  "all", "mean", "none",2
 #
 # MOM6 ocean diagnostics files
