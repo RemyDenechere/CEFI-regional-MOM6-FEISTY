@@ -71,7 +71,7 @@ HOME_DIR=$(pwd)
 UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}"
 
 # SETUP FOLDER FOR PARALLES RUNS
-LONG_NAME="nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}"
+LONG_NAME="${LOC_NAME}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}"
 WORK_DIR="${SCRATCH_DIR}/${LONG_NAME}"
 if [ -d "$WORK_DIR" ]; then
     echo "$WORK_DIR" exists 
@@ -169,16 +169,16 @@ do
 
     # Run the model and save the outputs in $folder_save_exp
     mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
-    #yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
+    yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
 
     # get restart files: 
     yes | cp -i RESTART/*.nc INPUT/
-done
+
 
 ###############################################################################
 # End the experiment: ---------------------------------------------------------
 ## save the restart files of last year for potential resimulation: 
-FOLDER_SAVE_RESTART="${LONG_NAME}_yr_${NUM_YEARS}"
+FOLDER_SAVE_RESTART="${LONG_NAME}_yr_RESTART${NUM_YEARS}"
 
 mkdir "$FOLDER_SAVE_RESTART"
 

@@ -46,7 +46,7 @@
 export CEFI_DATASET_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/
 export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/rockfish-linux-gnu/ocean_ice/prod/MOM6SIS2
 export SCRATCH_DIR=/scratch/
-#export SAVE_DIR=/project/rdenechere/COBALT_output/parallel/
+export SAVE_DIR=/project/rdenechere/COBALT_output/parallel/
 #
 ########################################################################################
 # FUNCTIONS USED BY SCRIPT
