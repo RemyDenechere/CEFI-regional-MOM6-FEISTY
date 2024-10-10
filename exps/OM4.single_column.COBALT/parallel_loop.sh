@@ -45,8 +45,8 @@
 # YOU CAN ALSO SET THEM HERE, UNCOMMENT THE FOUR FOLLOWING LINES AND SET:
 export CEFI_DATASET_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/
 export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/rockfish-linux-gnu/ocean_ice/prod/MOM6SIS2
-export SCRATCH_DIR=/scratch/
-export SAVE_DIR=/project/rdenechere/COBALT_output/parallel/
+export SCRATCH_DIR=/scratch/jared
+#export SAVE_DIR=/project/rdenechere/COBALT_output/parallel/
 #
 ########################################################################################
 # FUNCTIONS USED BY SCRIPT
@@ -81,15 +81,15 @@ isnum_Case() { case ${1#[-+]} in ''|.|*[!0-9.]*|*.*.*) return 1;; esac ;}
 ########################################################################################
 
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
-if [ "$#" -ne 9 ] && [ "$#" -ne 11 ]; then
+if [ "$#" -ne 14 ]; then
     echo "Usage: $0 <LocationName> <number of years> 
     <number of fmort discretizations> <nonFmort Starting Value> <nonFmort Ending Value>
     <Number of encounter_coefficient discretizations> <encouter_coef start value> <encounter_coef end value>
-    <K discretizations> <K start value> <K end value>"
+    <K discretizations> <K start value> <K end value><K50 discretizations> <K50 start value> <K50 end value>"
+    echo "If any discretizations number == 1, only the starting value is used in the range."
     echo "If K is equal to 1, this is type 2 function."
     echo "If K is >= 1, this is a type 3 function."
     echo ""
-    echo "If <K discretizations> == 1, then K start value assumed == 1"
     echo ""
     exit 1
 fi
@@ -127,10 +127,12 @@ ENCOUNTER_DISC="$6"
 ENCOUNTER_START="$7"
 ENCOUNTER_END="$8"
 K_DISC="$9"
-if [ "$#" == 11 ]; then
-	K_START="${10}"
-	K_END="${11}"
-fi
+K_START="${10}"
+K_END="${11}"
+K50_DISC="${12}"
+K50_START="${13}"
+K50_END="${14}"
+
 
 ###############################################################################
 # CHECK TO MAKE SURE FMORT_DISC, THE NUMBER OF PARALLEL LOOPS TO
@@ -183,7 +185,7 @@ fi
 echo ""
 
 ###############################################################################
-# CHECK IF THE K Exponent ARGUMENT IS A NUMBER BETWEEN 0 AND 1 (INCLUSIVE)
+# CHECK IF THE K Exponent ARGUMENT IS A NUMBER BETWEEN 1 AND 10 (INCLUSIVE)
 if (( "$K_DISC" > 1 )); then
     echo "Checking K start and end values..."
     #if (( "$K_START" >= 1 && "$K_START" <= 20 )); then
@@ -195,20 +197,40 @@ if (( "$K_DISC" > 1 )); then
     fi
 
     if (( $(echo "$K_END > $K_START" | bc -l) )); then
-        echo "K end value $K_END is between $K_START  and 20 (inclusive)"
+        echo "K end value $K_END is between $K_START  and 10 (inclusive)"
     else
-        echo "K end value $K_END is not between $K_START and 20 (inclusive), exiting..."
+        echo "K end value $K_END is not between $K_START and 10 (inclusive), exiting..."
         exit 1
     fi
 else
     echo "K value of 1 used. Function type 2"
 fi
-
 echo ""
 
 ###############################################################################
+# CHECK IF THE K50 Exponent ARGUMENT IS A NUMBER BETWEEN 1 AND 20 (INCLUSIVE)
+if (( "$K50_DISC" > 1 )); then
+    echo "Checking K50 start and end values..."
+    if (( $(echo "$K50_START >= 1.0" | bc -l) )); then
+        echo "K50 start value $K50_START is >= 1 (inclusive)"
+    else
+        echo "K50 start value $K50_START is not between 1 and 20 (inclusive), exiting..."
+        exit 1
+    fi
+
+    if (( $(echo "$K50_END > $K50_START" | bc -l) )); then
+        echo "K50 end value $K50_END is between $K50_START  and 20 (inclusive)"
+    else
+        echo "K50 end value $K50_END is not between $K50_START and 20 (inclusive), exiting..."
+        exit 1
+    fi
+else
+    echo "K50, strange things happened? Check BASh logic please."
+fi
+echo ""
 ###############################################################################
-# GENERATE THE ARRAY OF VALUES TO TRY FOR PARAMETER
+###############################################################################
+# GENERATE THE ARRAY OF VALUES TO TRY FOR FMORT
 # Generate array
 if (( $FMORT_DISC > 1 )); then
     NONFMORT_ARRAY=($(generate_array $FMORT_START $FMORT_END $FMORT_DISC))
@@ -225,7 +247,7 @@ echo "nonFmort will use the following values: ${NONFMORT_ARRAY[@]}"
 echo ""
 
 ###############################################################################
-# GENERATE THE ARRAY OF VALUES TO TRY FOR PARAMETER
+# GENERATE THE ARRAY OF VALUES TO TRY FOR ENCOUNTER
 # Generate array
 if (( $ENCOUNTER_DISC > 1 )); then
     ENCOUNTER_ARRAY=($(generate_array $ENCOUNTER_START $ENCOUNTER_END $ENCOUNTER_DISC))
@@ -242,7 +264,7 @@ echo "Encounter will use the following values: ${ENCOUNTER_ARRAY[@]}"
 echo ""
 
 ###############################################################################
-# GENERATE THE ARRAY OF VALUES TO TRY FOR PARAMETER
+# GENERATE THE ARRAY OF VALUES TO TRY FOR K
 # Generate array
 if (( $K_DISC > 1 )); then 
     K_ARRAY=($(generate_array $K_START $K_END $K_DISC))
@@ -251,14 +273,30 @@ if (( $K_DISC > 1 )); then
     # Ensure the first and last values are the two desired values
     K_ARRAY[0]="$K_START"
     K_ARRAY[$last_index]=$K_END
-
-    echo "K will use the following values: ${K_ARRAY[@]}"
-    echo ""
-    echo "###############################################################################"
 else
-    K_ARRAY[0]=1
+    K_ARRAY[0]=$K_START
+fi
+echo "K will use the following values: ${K_ARRAY[@]}"
+echo ""
+echo "###############################################################################"
+
+###############################################################################
+# GENERATE THE ARRAY OF VALUES TO TRY FOR K50
+# Generate array
+if (( $K50_DISC > 1 )); then 
+    K50_ARRAY=($(generate_array $K50_START $K50_END $K50_DISC))
+    # find last index
+    last_index=$((${#K50_ARRAY[@]} - 1))
+    # Ensure the first and last values are the two desired values
+    K50_ARRAY[0]="$K50_START"
+    K50_ARRAY[$last_index]=$K50_END
+else
+    K50_ARRAY[0]=$K50_START
 fi
 
+echo "K50 will use the following values: ${K50_ARRAY[@]}"
+echo ""
+echo "###############################################################################"
 
 ###############################################################################
 # SETUP nonFmort VARIABLE TO UNIQUE VALUE EACH LOOP
@@ -270,34 +308,38 @@ for i in $(seq 1 $FMORT_DISC); do
 
         for k in $(seq 1 $K_DISC); do
 
-            # ADJUST FOR STARTING AND ENDING VALUES.
-            #NONFMORT_VAL=$(bc -l <<< "scale=2; $EXP_REF+(${i}-1)/100")
-            NONFMORT_VAL="${NONFMORT_ARRAY[$i-1]}"
-            ENCOUNTER_VAL="${ENCOUNTER_ARRAY[$j-1]}"
-            K_VAL="${K_ARRAY[$k-1]}"
+            for m in $(seq 1 $K50_DISC); do
 
-            # echo "The value generated by loop ${i} is ${NONFMORT_VAL}"
+                # ADJUST FOR STARTING AND ENDING VALUES.
+                #NONFMORT_VAL=$(bc -l <<< "scale=2; $EXP_REF+(${i}-1)/100")
+                NONFMORT_VAL="${NONFMORT_ARRAY[$i-1]}"
+                ENCOUNTER_VAL="${ENCOUNTER_ARRAY[$j-1]}"
+                K_VAL="${K_ARRAY[$k-1]}"
+                K50_VAL="${K50_ARRAY[$m-1]}"
 
-            # RUN ON SPECIFIC CPU CORE. START AT 10
-            echo "This will run on CPU_CORE ${CPU_CORE}"
+                # echo "The value generated by loop ${i} is ${NONFMORT_VAL}"
 
-            # ACTUAL COMMAND TO RUN THE MULTIYEAR BASH SCRIPT.
-            # & SYBMOL AT THE END MEANS IT WILL NOT WAIT FOR THE PROGRAM TO FINISH BEFORE 
-            # CONTINUING THROUGH THIS LOOP
-            if [ $LOCATION_NAME == "TEST" ]; then
-                echo "TEST -- Running./run_multiyear.sh ${LOCATION_NAME} ${NUM_YEARS} ${CPU_CORE} ${NONFMORT_VAL} ${ENCOUNTER_VAL} ${K_VAL}"
-        	echo ""
-            else
-                ./run_multiyear.sh "${LOCATION_NAME}" "${NUM_YEARS}" "${CPU_CORE}" "${NONFMORT_VAL}"  "${ENCOUNTER_VAL}" "${K_VAL}"&
-            fi
-            CPU_CORE=$((CPU_CORE + 1 ))
-            
-            if (( $CPU_CORE > 127 )); then
-                echo "!!"
-                echo "Too many cores used...exiting."
-                echo "!!"
-                exit 1
-            fi
+                # RUN ON SPECIFIC CPU CORE. START AT 10
+                echo "This will run on CPU_CORE ${CPU_CORE}"
+
+                # ACTUAL COMMAND TO RUN THE MULTIYEAR BASH SCRIPT.
+                # & SYBMOL AT THE END MEANS IT WILL NOT WAIT FOR THE PROGRAM TO FINISH BEFORE 
+                # CONTINUING THROUGH THIS LOOP
+                if [ $LOCATION_NAME == "TEST" ]; then
+                    echo "TEST -- Running./run_multiyear.sh ${LOCATION_NAME} ${NUM_YEARS} ${CPU_CORE} ${NONFMORT_VAL} ${ENCOUNTER_VAL} ${K_VAL} ${K50_VAL}"
+            	echo ""
+                else
+                    ./run_multiyear.sh "${LOCATION_NAME}" "${NUM_YEARS}" "${CPU_CORE}" "${NONFMORT_VAL}"  "${ENCOUNTER_VAL}" "${K_VAL}" "${K50_VAL}"&
+                fi
+                CPU_CORE=$((CPU_CORE + 1 ))
+                
+                if (( $CPU_CORE > 127 )); then
+                    echo "!!"
+                    echo "Too many cores used...exiting."
+                    echo "!!"
+                    exit 1
+                fi
+            done
         done
     done
 done

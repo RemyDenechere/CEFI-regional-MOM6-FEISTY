@@ -25,13 +25,32 @@
 # MPI_COMMAND="mpiexec --cpu-set # --bind-to core --report-bindings -np 1"
 #
 ###############################################################################
-# CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
+# NONFMORT_DEFAULT=0.3
+# ENCOUNTER_DEFAULT=70
+# K_EXP_DEFAULT=1
+# K50_EXP_DEFAULT=1
+DEFAULT_VALUES=false
 
-if [ "$#" -ne 6 ]; then
-    echo "Usage: $0 <Location Name> <number of (years)> <cpu_core> <nonFmort Value> <encounter_val> <k value>"
+# CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
+if [ "$#" -eq 2 ]; then
+    DEFAULT_VALUES=true
+    echo "Using default values for:"
+    echo "Fmort"
+    echo "Encounter"
+    echo "K"
+    echo "K50"
+    echo ""
+fi
+
+
+if [ "$#" -ne 7 ] && [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <Location Name> <number of (years)> <cpu_core> "
+    echo "<nonFmort Value> <encounter_val> <k value> <k50 value>"
+    echo ""
     echo "nonFmort: fish mortality"
     echo "encounter val: coefficient of encounters [ 30 - 110 ]"
     echo "k value: exponent, k==1 function of 2nd type, k>1, function of thrid type"
+    echo "k50 value: exponent, 1 < k50 < 20"
     echo ""
     exit 1
 fi
@@ -56,12 +75,20 @@ fi
 
 ###############################################################################
 # ASSIGN ARGUMENTS TO VARIABLES
-LOC_NAME="$1"
-NUM_YEARS="$2"
-CPU_CORE="$3"
-NONFMORT="$4"
-ENCOUNTER="$5"
-K_EXP="$6"
+
+if [ "$DEFAULT_VALUES" = true ]; then
+    LOC_NAME="$1"
+    NUM_YEARS="$2"
+    CPU_CORE=$((1 + $RANDOM % 20))
+else
+    LOC_NAME="$1"
+    NUM_YEARS="$2"
+    CPU_CORE="$3"
+    NONFMORT="$4"
+    ENCOUNTER="$5"
+    K_EXP="$6"
+    K50_EXP="$7"
+fi
 
 ###############################################################################
 # SET HOME DIRECTORY
@@ -71,7 +98,14 @@ HOME_DIR=$(pwd)
 UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}"
 
 # SETUP FOLDER FOR PARALLES RUNS
-LONG_NAME="${LOC_NAME}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}"
+if [ "$DEFAULT_VALUES" = true ]; then
+    UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_DEFAULT_encounter_DEFAULT_k_DEFAULT_k50_DEFAULT"
+    LONG_NAME="nonFmort_DEFAULT_encounter_DEFAULT_k_DEFAULT_k50_DEFAUlt"
+else
+    LONG_NAME="nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_k50_${K50_EXP}"
+    UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_k50_${K50_EXP}"
+fi
+
 WORK_DIR="${SCRATCH_DIR}/${LONG_NAME}"
 if [ -d "$WORK_DIR" ]; then
     echo "$WORK_DIR" exists 
@@ -105,17 +139,24 @@ else
 fi
 #mkdir RUNS
 
-# EDIT THE INPUT FILE FOR nonFmort
-NEW_LINE="nonFmort = ${NONFMORT}"
-sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
+if [ "$#" -eq 7 ]; then
+    # EDIT THE INPUT FILE FOR nonFmort
+    NEW_LINE="nonFmort = ${NONFMORT}"
+    sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
 
-# EDIT THE INPUT FILE FOR nonFmort
-NEW_LINE="a_enc = ${ENCOUNTER}"
-sed -i "/a_enc/c\\ ${NEW_LINE}" input.nml
+    # EDIT THE INPUT FILE FOR encounter
+    NEW_LINE="a_enc = ${ENCOUNTER}"
+    sed -i "/a_enc/c\\ ${NEW_LINE}" input.nml
 
-# EDIT THE INPUT FILE FOR nonFmort
-NEW_LINE="k_fct_tp = ${K_EXP}"
-sed -i "/k_fct_tp/c\\ ${NEW_LINE}" input.nml
+    # EDIT THE INPUT FILE FOR K
+    NEW_LINE="k_fct_tp = ${K_EXP}"
+    sed -i "/k_fct_tp/c\\ ${NEW_LINE}" input.nml
+
+    # EDIT THE INPUT FILE FOR K50
+    NEW_LINE="k50 = ${K50_EXP}"
+    sed -i "/k50/c\\ ${NEW_LINE}" input.nml
+fi
+
 
 cd INPUT/
 /project/rdenechere/CEFI-regional-MOM6-FEISTY/link_database.sh "${LOC_NAME}"
@@ -169,16 +210,16 @@ do
 
     # Run the model and save the outputs in $folder_save_exp
     mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
-    yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
+    #yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
 
     # get restart files: 
     yes | cp -i RESTART/*.nc INPUT/
-
+done
 
 ###############################################################################
 # End the experiment: ---------------------------------------------------------
 ## save the restart files of last year for potential resimulation: 
-FOLDER_SAVE_RESTART="${LONG_NAME}_yr_RESTART${NUM_YEARS}"
+FOLDER_SAVE_RESTART="${LONG_NAME}_yr_${NUM_YEARS}"
 
 mkdir "$FOLDER_SAVE_RESTART"
 
@@ -196,6 +237,6 @@ cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${LOC_NAME}"
 
 cd "$HOME_DIR"
 # REMOVE WORKING DIRECTORY AND FOLDERS, ETC...
-rm -r "$WORK_DIR"
+#rm -r "$WORK_DIR"
 
 echo "Simulation done!"
