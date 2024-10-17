@@ -1674,6 +1674,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     integer :: init = 1
     real ::  m2_to_m3 = 100.00
     real :: Ld_Repro_end
+    real, dimension(FEISTY%nFishGroup) :: Rtot ! total prey than a predator can encounter (used in type III functional response calculation)
+    real :: k50 = 1.00
 
     stdoutunit=stdout(); stdlogunit=stdlog()
     
@@ -1826,7 +1828,32 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
 
     fish(LP)%f_tot(i,j,k) = fish(LP)%f_Mf + fish(LP)%f_Mp
 
-     !:====================================================================================:!
+
+    ! If we use a functional type III response then we have to calculate the total resource encountered 
+    if (FEISTY%k_fct_tp .gt. 1.0 ) then 
+        Rtot(1) = FEISTY%pref_Mz * FEISTY%Mz
+        Rtot(2) = FEISTY%pref_Mz * FEISTY%Mz
+        Rtot(3) = FEISTY%pref_Mz * FEISTY%Mz
+        Rtot(4) = (FEISTY%pref_Mf_Mz * FEISTY%Mz + FEISTY%pref_Mf_Lz * FEISTY%Lz + & 
+                    FEISTY%pref_Mf_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))
+        Rtot(4) = (FEISTY%pref_Mp_Mz * FEISTY%Mz + FEISTY%pref_Mp_Lz *  &
+                    FEISTY%Lz + FEISTY%pref_Mp_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))
+        Rtot(5) = FEISTY%pref_Md_BE * FEISTY%BE
+        Rtot(6) = FEISTY%pref_Ld_Mf * fish(MF)%B + FEISTY%pref_Ld_Mp * fish(MP)%B + & 
+                    FEISTY%pref_Ld_Md * fish(MD)%B + FEISTY%pref_Ld_BE * FEISTY%BE
+        Rtot(7) = FEISTY%pref_Lp_Mf * fish(MF)%B + FEISTY%pref_Lp_Mp * fish(MP)%B
+
+        ! New Calculation of the feeding level ftot
+        do m = 1, FEISTY%nFishGroup
+            fish(m)%f_tot(i,j,k) = ((fish(m)%V * Rtot(m))**FEISTY%k_fct_tp)/ & 
+                                   ((fish(m)%V * Rtot(m))**FEISTY%k_fct_tp + (k50 * fish(m)%cmax)**FEISTY%k_fct_tp)
+        end do
+    else 
+
+    end if 
+    
+
+    !:====================================================================================:!
     !                             Encounter rate with each group                           !
     !   enc_i = V * B * pref  = f_i*cmax / (1-f_tot) 
     !:====================================================================================:!

@@ -1904,7 +1904,7 @@ contains
 
     ! Initialiser FEISTY: Add parameters and allocate arrays! 
     if (do_FEISTY) then
-          call generic_FEISTY_init(tracer_list, a_enc, k_fct_tp)
+          call generic_FEISTY_init(tracer_list)
     end if 
 
   end subroutine generic_COBALT_init
