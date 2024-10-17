@@ -100,9 +100,9 @@ UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_${NONFMORT}_encounter_${ENCOUNTE
 # SETUP FOLDER FOR PARALLES RUNS
 if [ "$DEFAULT_VALUES" = true ]; then
     UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_DEFAULT_encounter_DEFAULT_k_DEFAULT_k50_DEFAULT"
-    LONG_NAME="nonFmort_DEFAULT_encounter_DEFAULT_k_DEFAULT_k50_DEFAUlt"
+    LONG_NAME="${LOC_NAME}_nonFmort_DEFAULT_encounter_DEFAULT_k_DEFAULT_k50_DEFAUlt"
 else
-    LONG_NAME="nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_k50_${K50_EXP}"
+    LONG_NAME="${LOC_NAME}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_k50_${K50_EXP}"
     UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_k50_${K50_EXP}"
 fi
 

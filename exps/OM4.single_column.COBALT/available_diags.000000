@@ -11839,13 +11839,13 @@
     ! units: mol N m-2 s-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {jprod_nsmz,jprod_nsmz_xyave}
-"jprod_nmdz"  [Unused]
+"jprod_nmdz"  [Used]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
     ! long_name: Production of new biomass (nitrogen) by medium-sized zooplankton, layer integral
     ! units: mol N m-2 s-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {jprod_nmdz,jprod_nmdz_xyave}
-"jprod_nlgz"  [Unused]
+"jprod_nlgz"  [Used]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
     ! long_name: Production of new biomass (nitrogen) by large zooplankton, layer integral
     ! units: mol N m-2 s-1
