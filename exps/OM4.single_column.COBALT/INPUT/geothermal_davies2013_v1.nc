@@ -1,1 +1,1 @@
-../../datasets/OM4_025.JRA.single_column/geothermal_davies2013_v1.nc
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OM4_025.JRA.single_column/geothermal_davies2013_v1.nc

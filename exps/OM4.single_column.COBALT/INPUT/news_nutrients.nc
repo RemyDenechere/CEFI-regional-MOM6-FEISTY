@@ -1,1 +1,1 @@
-../../datasets/OceanBGC_dataset/news_nutrients.nc
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OceanBGC_dataset/news_nutrients.nc

@@ -1,1 +1,1 @@
-../../datasets/OceanBGC_dataset/init_ocean_cobalt_nh3.res.nc
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OceanBGC_dataset/init_ocean_cobalt_nh3.res.nc
