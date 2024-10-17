@@ -1,1 +1,1 @@
-../../datasets/OceanBGC_dataset/COBALT_2023_10_spinup_2003_subset.nc
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OceanBGC_dataset/COBALT_2023_10_spinup_2003_subset.nc

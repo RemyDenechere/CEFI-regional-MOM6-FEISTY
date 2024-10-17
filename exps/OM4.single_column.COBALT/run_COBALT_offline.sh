@@ -46,8 +46,8 @@ export PATH=$PATH:/usr/local/src/ncview-2.1.7/
 ## set up the input file for the experiment: (make this with symbolic links)
 dir_run
 rm -rf INPUT/*
-cd INPUT/ && ../../../gen_link.sh && cd ..
-yes | cp -i "$station_name"/* INPUT/
+cd INPUT/ && ../../../link_database.sh "$station_name" && cd ..
+# yes | cp -i "$station_name"/* INPUT/
 
 # ---------------------------------------------------------------------------------------
 ## Run the model 

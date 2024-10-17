@@ -1,1 +1,1 @@
-../../datasets/OM4_025.JRA.single_column/mosaic.nc
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/mosaic.nc

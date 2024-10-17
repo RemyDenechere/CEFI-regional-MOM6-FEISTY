@@ -1,1 +1,1 @@
-../../datasets/OceanBGC_dataset/atm_delta_13C_14C.nc
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OceanBGC_dataset/atm_delta_13C_14C.nc

@@ -35,8 +35,7 @@ cd ../../builds
 ## set up the input file for the experiment: 
 cd ../exps/OM4.single_column.COBALT/
 rm -rf INPUT/*
-cd INPUT/ && ../../../gen_link.sh && cd ..
-yes | cp -i "$station_name"/* INPUT/
+cd INPUT/ && ../../../link_database.sh "$station_name" && cd ..
 
 ## Run the model 
 PATH=$PATH:/usr/lib64/openmpi/bin/

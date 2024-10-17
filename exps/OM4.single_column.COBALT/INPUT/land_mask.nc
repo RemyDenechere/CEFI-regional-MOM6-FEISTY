@@ -1,1 +1,1 @@
-../../datasets/OM4_025.JRA.single_column/land_mask.nc
+../BATS/land_mask.nc
