@@ -78,8 +78,22 @@ generate_array() {
 # FUNCTION FOR CHECKING IF INPUT IS A NUMBER (DECIMAL)
 isnum_Case() { case ${1#[-+]} in ''|.|*[!0-9.]*|*.*.*) return 1;; esac ;}
 
-########################################################################################
+#FUNCTION TO KILL ALL SPAWNED PROCESSES
+cleanup() {
+  echo "Terminating all spawned processes..."
+  for pid in "${pids[@]}"; do
+    kill "$pid" 2>/dev/null
+  done
+  exit 0
+}
 
+# EMPTY ARRAY 
+pids=()
+
+# Trap Ctrl-C (SIGINT) and call cleanup function
+trap cleanup SIGINT
+
+########################################################################################
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
 if [ "$#" -ne 14 ]; then
     echo "Usage: $0 <LocationName> <number of years> 
@@ -331,6 +345,9 @@ for i in $(seq 1 $FMORT_DISC); do
                 else
                     ./run_multiyear.sh "${LOCATION_NAME}" "${NUM_YEARS}" "${CPU_CORE}" "${NONFMORT_VAL}"  "${ENCOUNTER_VAL}" "${K_VAL}" "${K50_VAL}"&
                 fi
+                # Store PID for the cleanup trap function
+                pids+=($!)
+
                 CPU_CORE=$((CPU_CORE + 1 ))
                 
                 if (( $CPU_CORE > 127 )); then
