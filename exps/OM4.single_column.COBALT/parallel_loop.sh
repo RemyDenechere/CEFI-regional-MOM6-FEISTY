@@ -81,6 +81,8 @@ isnum_Case() { case ${1#[-+]} in ''|.|*[!0-9.]*|*.*.*) return 1;; esac ;}
 #FUNCTION TO KILL ALL SPAWNED PROCESSES
 cleanup() {
   echo "Terminating all spawned processes..."
+  echo "Cehck the SCRATCH directory for any stray files."
+  echo "Killing processes DOES NOT clean up the file system."
   for pid in "${pids[@]}"; do
     kill "$pid" 2>/dev/null
   done
