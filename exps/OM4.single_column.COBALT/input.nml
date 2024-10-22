@@ -152,7 +152,8 @@
  &generic_FEISTY_nml
        a_enc                      = 70
        k_fct_tp                   = 1
-       k50 			  = 1	
+       k50 			      = 1	
+       FunctRspons_typeIII        = .true.
 /
 
 

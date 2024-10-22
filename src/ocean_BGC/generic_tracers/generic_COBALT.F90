@@ -214,8 +214,6 @@ module generic_COBALT
   logical :: do_FEISTY                  = .true.   
   logical :: do_print_FEISTY_diagnostic = .false.
   real    :: nonFmort = 0.10
-  real    :: a_enc = 70.0
-  real    :: k_fct_tp = 1.0
   
   ! namelist capabilities for half-sats not used in this run
   logical :: do_vertfill_pre = .false.
@@ -1812,7 +1810,7 @@ contains
     ioun = open_namelist_file()
     read  (ioun, generic_COBALT_nml,iostat=io_status)
     ierr = check_nml_error(io_status,'generic_COBALT_nml')
-    call close_file (ioun)
+    call close_file(ioun)
 #endif
 
     write (stdoutunit,'(/)')
