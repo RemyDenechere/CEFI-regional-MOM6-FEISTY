@@ -19,7 +19,7 @@
 # SCRATCH_DIR          -> location you want to work from, must exist!!!
 # SAVE_DIR             -> location of the final saved files. 
 #
-#
+# RUN DEFAULT WITH PARAMETER: ./parallel_loop.sh BATS 10 1 0.1 0.1 1 70 70 1 1 1 1 1 1
 # 
 # Example MPI command to run this without this script:
 # MPI_COMMAND="mpiexec --cpu-set # --bind-to core --report-bindings -np 1"
@@ -210,7 +210,7 @@ do
 
     # Run the model and save the outputs in $folder_save_exp
     mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
-    #yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
+    yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
 
     # get restart files: 
     yes | cp -i RESTART/*.nc INPUT/
@@ -219,7 +219,7 @@ done
 ###############################################################################
 # End the experiment: ---------------------------------------------------------
 ## save the restart files of last year for potential resimulation: 
-FOLDER_SAVE_RESTART="${LONG_NAME}_yr_${NUM_YEARS}"
+FOLDER_SAVE_RESTART="${LONG_NAME}_yr_${NUM_YEARS}_RESTART"
 
 mkdir "$FOLDER_SAVE_RESTART"
 
@@ -237,6 +237,6 @@ cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${LOC_NAME}"
 
 cd "$HOME_DIR"
 # REMOVE WORKING DIRECTORY AND FOLDERS, ETC...
-#rm -r "$WORK_DIR"
+rm -r "$WORK_DIR"
 
 echo "Simulation done!"
