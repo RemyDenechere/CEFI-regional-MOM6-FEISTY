@@ -143,17 +143,17 @@
        debug = .false.
        imbalance_tolerance=1.0e+9
        do_FEISTY                  = .true.
-       do_print_FEISTY_diagnostic = .false.
        nonFmort                   = 0.1
 !      do_nh3_atm_ocean_exchange  = .true.  !turn on exchange of NH3
 !      scheme_no3_nh4_lim         = 2       !update nh4/no3 uptake scheme
 !      scheme_nitrif              = 3       !new nitrification scheme
 /
  &generic_FEISTY_nml
-       a_enc                      = 70
-       k_fct_tp                   = 1
-       k50 			      = 1	
+       do_print_FEISTY_diagnostic = .false.
        FunctRspons_typeIII        = .true.
+       a_enc                      = 70.0
+       k_fct_tp                   = 1.0
+       k50 			      = 1.0     
 /
 
 
