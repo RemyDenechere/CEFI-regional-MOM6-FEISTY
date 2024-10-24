@@ -15151,12 +15151,6 @@
     ! units: mol m-2 s-1
     ! cell_methods: xh:mean yh:mean area:mean
     ! variants: {fbddtalk_raw,fbddtalk}
-"Pop_btm"  [Used]
-    ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
-    ! long_name: Detritus flux to sea floor
-    ! units: g WW m-3 d-1
-    ! cell_methods: xh:mean yh:mean zl:mean area:mean
-    ! variants: {Pop_btm,Pop_btm_xyave}
 "Sf_met"  [Used]
     ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
     ! long_name: Metabolic losses of small forage fish
@@ -16165,6 +16159,12 @@
     ! units: g WW m-3 d-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {LD_yield,LD_yield_xyave}
+"Pop_btm"  [Unused]
+    ! modules: {generic_feisty,generic_feisty_z,generic_feisty_rho2,generic_feisty_d2,generic_feisty_z_d2,generic_feisty_rho2_d2}
+    ! long_name: Detritus flux to sea floor
+    ! units: g WW m-3 d-1
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {Pop_btm,Pop_btm_xyave}
 "taux"  [Used] (CMOR equivalent is "tauuo")
     ! modules: {ocean_model,ocean_model_d2}
     ! long_name: Zonal surface stress from ocean interactions with atmos and ice
