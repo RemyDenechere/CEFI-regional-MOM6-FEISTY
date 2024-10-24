@@ -29,7 +29,29 @@
 # ENCOUNTER_DEFAULT=70
 # K_EXP_DEFAULT=1
 # K50_EXP_DEFAULT=1
+
+
+#FUNCTION TO KILL ALL SPAWNED PROCESSES
+cleanup() {
+  echo "Terminating all spawned processes..."
+  echo "Check the SCRATCH directory for any stray files."
+  echo "Killing processes DOES NOT clean up the file system."
+  for pid in "${pids[@]}"; do
+    kill "$pid" 2>/dev/null
+  done
+  exit 0
+}
+
+# EMPTY ARRAY 
+pids=()
+
+# Trap Ctrl-C (SIGINT) and call cleanup function
+trap cleanup SIGINT
+
+
 DEFAULT_VALUES=false
+
+
 
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
 if [ "$#" -eq 2 ]; then
@@ -170,7 +192,10 @@ cd ..
 echo "Copying executable from ${CEFI_EXECUTABLE_LOC} to here"
 cp "${CEFI_EXECUTABLE_LOC}" . 
 
-mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
+mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+pids+=($1)
+wait
+
 #mpirun -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
 
 ####################################################
@@ -212,7 +237,11 @@ do
     fi
 
     # Run the model and save the outputs in $folder_save_exp
-    mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
+    mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+    # 
+    pids+=($!)
+    wait
+
     echo "Copying feisty files to YEAR_FOLDER_PATH"
     yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
 
