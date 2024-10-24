@@ -19,7 +19,7 @@
 # SCRATCH_DIR          -> location you want to work from, must exist!!!
 # SAVE_DIR             -> location of the final saved files. 
 #
-#
+# RUN DEFAULT WITH PARAMETER: ./parallel_loop.sh BATS 10 1 0.1 0.1 1 70 70 1 1 1 1 1 1
 # 
 # Example MPI command to run this without this script:
 # MPI_COMMAND="mpiexec --cpu-set # --bind-to core --report-bindings -np 1"
