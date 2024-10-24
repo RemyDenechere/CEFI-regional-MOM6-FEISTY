@@ -9276,8 +9276,7 @@ contains
        if ( do_FEISTY ) then
           ! FEISTY calculation: 
           call generic_FEISTY_fish_update_from_source(tracer_list, Temp(i,j,k), prey_vec, hp_ingest_vec, &
-                                                      i, j, k, nk, NUM_PREY, dt, tau, &
-                                                      do_print_FEISTY_diagnostic)
+                                                      i, j, k, nk, NUM_PREY, dt, tau)
                ! prey_vec remain unchanged from FEISTY 
                ! hp_ipa_vec(7:8) is calculated from FEISTY 
           
@@ -9983,6 +9982,8 @@ contains
                if (do_FEISTY) then 
                   call generic_FEISTY_benthic_update_from_source(fn_residual_btm(i, j), i, j, nk, dt)
                end if
+              
+
                ! Save flux of detritus to sea bed 
                cobalt%Pop_btm(i,j,nk) = fn_residual_btm(i, j)
 

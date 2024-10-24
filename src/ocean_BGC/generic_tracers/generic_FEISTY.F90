@@ -56,12 +56,13 @@ public generic_FEISTY_send_diagnostic_data
 
 !#########################################################################################!  
 !                                       FEISTY namelist 
+logical :: FunctRspons_typeIII = .false.
+logical :: do_print_FEISTY_diagnostic = .false.
 real    :: a_enc = 70.0
 real    :: k_fct_tp = 1.0
 real    :: k50 = 1.0
-logical :: FunctRspons_typeIII = .false. 
 
-namelist /generic_FEISTY_nml/ a_enc, k_fct_tp, k50, FunctRspons_typeIII
+namelist /generic_FEISTY_nml/ do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, k_fct_tp, k50
 
 
 !#########################################################################################!  
@@ -312,7 +313,7 @@ type, public :: FEISTY_type
                                             p_BE_B,  &
                                             p_Ld_Repro
     
-    real, dimension(8, 11) :: Pref_mat
+    real, dimension(8, 11) :: Pref_mat, Resource_mat, Resource_Pref
 
 end type FEISTY_type
 
@@ -447,7 +448,6 @@ subroutine generic_FEISTY_init(tracer_list)
     end do    
 
     ! Matrix of preferences:
-    ! allocate(Pref_mat(11, 8))
     ! Resource:                             Medium Zoo         Large Zoo          Benthic            Small Forage        Small Pelagic       Small Demersal      Med Forage          Med Pel             Med Demersl         LP   LD     ! Predators: 
     FEISTY%Pref_mat = transpose(reshape([   FEISTY%pref_Mz,    0.0,               0.0,               0.0,                0.0,                0.0,                0.0,                0.0,                0.0,                0.0, 0.0, & ! Small Forage
                                             FEISTY%pref_Mz,    0.0,               0.0,               0.0,                0.0,                0.0,                0.0,                0.0,                0.0,                0.0, 0.0, & ! Small Pelagic
@@ -1679,8 +1679,7 @@ end subroutine generic_FEISTY_tracer_get_pointer
 ! 
 ! </DESCRIPTION>
 subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
-                                                  hp_ingest_vec, i, j, k, nk, NUM_PREY, dt, tau, &
-                                                  do_print_FEISTY_diagnostic)
+                                                  hp_ingest_vec, i, j, k, nk, NUM_PREY, dt, tau)
 
     type(g_tracer_type),               pointer :: tracer_list
     real,                           intent(in) :: Temp
@@ -1689,8 +1688,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     real, dimension(1:NUM_PREY), intent(inout) :: hp_ingest_vec 
     integer,                        intent(in) :: i, j, k, nk, tau
                   
-    real,                           intent(in) :: dt
-    logical,                        intent(in) :: do_print_FEISTY_diagnostic                     
+    real,                           intent(in) :: dt         
    
     ! Internal variables : ---------------------------------------------------
     real :: T_e, T_met          ! Storing variables for the effect of temperature on physiological effect 
@@ -1703,13 +1701,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     real ::  m2_to_m3 = 100.00
     real :: Ld_Repro_end
     real, dimension(11) :: Resource ! total prey than a predator can encounter (used in type III functional response calculation)
-    real, dimension(11, 8) :: Resource_Pref = 0.0
     real :: k50 = 1.00
-
-    print *, "a_enc = ", a_enc
-    print *, "k_fct_tp = ",  k_fct_tp
-    print *, "k50 = ", k50
-    print *, "FunctRspons_typeIII = ", FunctRspons_typeIII
 
     stdoutunit=stdout(); stdlogunit=stdlog()
     
@@ -1784,37 +1776,35 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
 
     if (FunctRspons_typeIII) then 
     ! If we use a functional type III response then we have to calculate the total resource encountered 
+    ! dimensions: (8, 11)
         Resource(1) = FEISTY%Mz
         Resource(2) = FEISTY%Lz
         Resource(3) = FEISTY%BE
         do m = 1, FEISTY%nFishGroup
             Resource(3 + m) =  fish(m)%B
         end do 
-
+        
+        ! Make the resource as matrix for matrix calculation: 
+        FEISTY%Resource_mat = spread(Resource, 1, 8)
         ! Calculate the matrix of prefered resource: 
-        ! Resource_Pref = FEISTY%Pref_mat * Resource
-        do m = 1, 8
-            print*, FEISTY%Pref_mat(m, :)
-        end do
-        print*, "Pref_mat dimensions", size(FEISTY%Pref_mat, [1, 2])
-        stop
-
+        FEISTY%Resource_Pref = FEISTY%Resource_mat * FEISTY%Pref_mat
+        
         ! New Calculation of the feeding level ftot
         do m = 1, FEISTY%nFishGroup
-            fish(m)%f_tot(i,j,k) = ((fish(m)%V * SUM(Resource_Pref(:, m)))**FEISTY%k_fct_tp)/ & 
-                                   ((fish(m)%V * SUM(Resource_Pref(:, m)))**FEISTY%k_fct_tp + (k50 * fish(m)%cmax)**FEISTY%k_fct_tp)
             
+            fish(m)%f_tot(i,j,k) = ((fish(m)%V * SUM(FEISTY%Resource_Pref(m, :)))**FEISTY%k_fct_tp)/ & 
+                                   ((fish(m)%V * SUM(FEISTY%Resource_Pref(m, :)))**FEISTY%k_fct_tp + (k50 * fish(m)%cmax)**FEISTY%k_fct_tp)
             
             ! Estimate feeding level per resource based on proportion of resource over total resource encounter for each fish
-            fish(m)%f_Mz = fish(m)%f_tot(i,j,k) * Resource_Pref(1, m) / SUM(Resource_Pref(:, m))
-            fish(m)%f_Lz = fish(m)%f_tot(i,j,k) * Resource_Pref(2, m) / SUM(Resource_Pref(:, m))
-            fish(m)%f_BE = fish(m)%f_tot(i,j,k) * Resource_Pref(3, m) / SUM(Resource_Pref(:, m))
-            fish(m)%f_Sf = fish(m)%f_tot(i,j,k) * Resource_Pref(4, m) / SUM(Resource_Pref(:, m))
-            fish(m)%f_Sp = fish(m)%f_tot(i,j,k) * Resource_Pref(5, m) / SUM(Resource_Pref(:, m))
-            fish(m)%f_Sd = fish(m)%f_tot(i,j,k) * Resource_Pref(6, m) / SUM(Resource_Pref(:, m))
-            fish(m)%f_Mf = fish(m)%f_tot(i,j,k) * Resource_Pref(7, m) / SUM(Resource_Pref(:, m))
-            fish(m)%f_Mp = fish(m)%f_tot(i,j,k) * Resource_Pref(8, m) / SUM(Resource_Pref(:, m))
-            fish(m)%f_Md = fish(m)%f_tot(i,j,k) * Resource_Pref(9, m) / SUM(Resource_Pref(:, m))
+            fish(m)%f_Mz = fish(m)%f_tot(i,j,k) * FEISTY%Resource_Pref(m, 1) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
+            fish(m)%f_Lz = fish(m)%f_tot(i,j,k) * FEISTY%Resource_Pref(m, 2) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
+            fish(m)%f_BE = fish(m)%f_tot(i,j,k) * FEISTY%Resource_Pref(m, 3) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
+            fish(m)%f_Sf = fish(m)%f_tot(i,j,k) * FEISTY%Resource_Pref(m, 4) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
+            fish(m)%f_Sp = fish(m)%f_tot(i,j,k) * FEISTY%Resource_Pref(m, 5) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
+            fish(m)%f_Sd = fish(m)%f_tot(i,j,k) * FEISTY%Resource_Pref(m, 6) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
+            fish(m)%f_Mf = fish(m)%f_tot(i,j,k) * FEISTY%Resource_Pref(m, 7) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
+            fish(m)%f_Mp = fish(m)%f_tot(i,j,k) * FEISTY%Resource_Pref(m, 8) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
+            fish(m)%f_Md = fish(m)%f_tot(i,j,k) * FEISTY%Resource_Pref(m, 9) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
 
             ! Calculate consumption: 
             fish(m)%cons_Mz(i,j,k) = fish(m)%f_Mz * fish(m)%cmax
@@ -1831,18 +1821,16 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
             fish(m)%cons_d(i,j,k) = (fish(m)%f_Sd + fish(m)%f_Md)* fish(m)%cmax
 
             ! Calculate encounter rate:  enc_i = V * B * pref  = f_i*cmax / (1-f_tot) 
-            fish(m)%enc_Mz(i,j,k) = fish(m)%V * Resource_Pref(1, m)
-            fish(m)%enc_Lz(i,j,k) = fish(m)%V * Resource_Pref(2, m)
-            fish(m)%enc_BE(i,j,k) = fish(m)%V * Resource_Pref(3, m)
-            fish(m)%enc_f(i,j,k)  = fish(m)%V * SUM(Resource_Pref([4, 7]    , m))
-            fish(m)%enc_p(i,j,k)  = fish(m)%V * SUM(Resource_Pref([5, 8, 10], m))
-            fish(m)%enc_d(i,j,k)  = fish(m)%V * SUM(Resource_Pref([6, 9, 11], m))
+            fish(m)%enc_Mz(i,j,k) = fish(m)%V * FEISTY%Resource_Pref(m, 1)
+            fish(m)%enc_Lz(i,j,k) = fish(m)%V * FEISTY%Resource_Pref(m, 2)
+            fish(m)%enc_BE(i,j,k) = fish(m)%V * FEISTY%Resource_Pref(m, 3)
+            fish(m)%enc_f(i,j,k)  = fish(m)%V * SUM(FEISTY%Resource_Pref(m, [4, 7]))
+            fish(m)%enc_p(i,j,k)  = fish(m)%V * SUM(FEISTY%Resource_Pref(m, [5, 8, 10]))
+            fish(m)%enc_d(i,j,k)  = fish(m)%V * SUM(FEISTY%Resource_Pref(m, [6, 9, 11]))
 
             ! Calculate total consumption: 
             fish(m)%cons_tot(i,j,k) = fish(m)%f_tot(i,j,k) * fish(m)%cmax
-
         end do
-
     else ! Former calculation of the feeding level with a type II functional response 
         
         ! Calcul feeding level of MesoZoo prey: -------------------------------------------------
@@ -1994,10 +1982,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
         fish(LD)%cons_tot(i,j,k) = fish(LD)%f_tot(i,j,k)* fish(LP)%cmax
 
     end if  
-   
-
-   
-
     ! Fraction of zooplankton biomass consumed:----------------------------------------
     ! Calcul total consumption for each Zooplankton group:
     hp_ingest_vec(idx_Mz) = (fish(SF)%cons_Mz(i,j,k) * fish(SF)%B + fish(SP)%cons_Mz(i,j,k) * fish(SP)%B + & 
@@ -2049,7 +2033,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     ! tcorr_met    : temperature correction                            []
     ! alpha        : Assimilation efficiency                           []
     !:======================================================================
-    
     do m = 1, FEISTY%nFishGroup
         fish(m)%yield(i,j,k) = fish(m)%mu_f * fish(m)%B                                      ! Fishing Yield 
         fish(m)%mu = fish(m)%mu_p(i,j,k) + fish(m)%mu_a + fish(m)%mu_f                       ! Total mortality 
@@ -2170,6 +2153,36 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
         end do 
 
         write (outunit,*)  '-------------- Non diagnostic parameters --------------'
+
+        if (FunctRspons_typeIII) then 
+            write (outunit,*)  '-------------- Functional type matrixes --------------'
+            
+            write (outunit,*)  '-------------- Pref_mat --------------'
+            write (outunit,*) "Pref_mat dimensions:", SHAPE(FEISTY%Pref_mat)
+            write (outunit,*) "Pref_mat values: "
+            do m = 1, FEISTY%nFishGroup
+                write (outunit, '(11(F6.2, 1X))') FEISTY%Pref_mat
+            end do
+
+            write (outunit,*)  '-------------- Resource_mat --------------'
+            write (outunit,*) "Resource_mat dimensions:", SHAPE(FEISTY%Resource_mat)
+            write (outunit,*) "Resource_mat values: "
+            do m = 1, FEISTY%nFishGroup
+                write (outunit, '(11(F6.2, 1X))') FEISTY%Resource_mat
+            end do 
+
+            write (outunit,*)  '-------------- Resource_Pref --------------'
+            write (outunit,*) "Resource_Pref dimensions:", SHAPE(FEISTY%Pref_mat)
+            write (outunit,*) "Resource_Pref values: "
+            do m = 1, FEISTY%nFishGroup
+                write (outunit, '(11(F6.2, 1X))') FEISTY%Resource_Pref
+            end do 
+            FEISTY%Resource_mat = spread(Resource, 1, 8)
+
+        ! Calculate the matrix of prefered resource: 
+        FEISTY%Resource_Pref = FEISTY%Resource_mat * FEISTY%Pref_mat
+        end if 
+
         write (outunit,*)  '-------------- cmax  --------------'
         do m = 1, FEISTY%nFishGroup
             write (outunit,*)  fish(m)%cmax
@@ -2294,7 +2307,9 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     	do m = 1, FEISTY%nFishGroup
             write (outunit,*)  fish(m)%yield(i,j,k)
         end do 
+
         STOP
+
     end if
 
 end subroutine generic_FEISTY_fish_update_from_source
@@ -2326,7 +2341,6 @@ subroutine generic_FEISTY_benthic_update_from_source(det, i, j, nk, dt)
     integer :: stdoutunit, stdlogunit, outunit
 
     stdoutunit=stdout(); stdlogunit=stdlog()
-
     ! Set up values
     FEISTY%det = det * FEISTY%convers_det       ! Convert in the right unit (g ww m-3 d-1)
     ! FEISTY%Pop_btm(i,j,nk) = FEISTY%det       ! Save detritus to sea floor!
@@ -2341,7 +2355,7 @@ subroutine generic_FEISTY_benthic_update_from_source(det, i, j, nk, dt)
     pred_BE = fish(MD)%cons_BE(i,j,nk) * FEISTY%Md_B(i,j,nk) + fish(LD)%cons_BE(i,j,nk) * FEISTY%Ld_B(i,j,nk)
     r_BE = FEISTY%Bent_eff * FEISTY%det / (FEISTY%BE + FEISTY%eps)
     FEISTY%dBdt_BE(i,j,nk) = (r_BE * FEISTY%BE * (1 - FEISTY%BE/FEISTY%CC) - pred_BE)
-
+   
     ! Calcul of the detritus after consumption from benthic organism - off 
     if (do_Benthic_pred_detritus) then 
         det = (FEISTY%det - pred_BE * FEISTY%BE) / FEISTY%convers_det
