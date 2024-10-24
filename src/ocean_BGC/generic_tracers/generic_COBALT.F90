@@ -214,8 +214,6 @@ module generic_COBALT
   logical :: do_FEISTY                  = .true.   
   logical :: do_print_FEISTY_diagnostic = .false.
   real    :: nonFmort = 0.10
-  real    :: a_enc = 70.0
-  real    :: k_fct_tp = 1.0
   
   ! namelist capabilities for half-sats not used in this run
   logical :: do_vertfill_pre = .false.
@@ -1812,7 +1810,7 @@ contains
     ioun = open_namelist_file()
     read  (ioun, generic_COBALT_nml,iostat=io_status)
     ierr = check_nml_error(io_status,'generic_COBALT_nml')
-    call close_file (ioun)
+    call close_file(ioun)
 #endif
 
     write (stdoutunit,'(/)')
@@ -9278,8 +9276,7 @@ contains
        if ( do_FEISTY ) then
           ! FEISTY calculation: 
           call generic_FEISTY_fish_update_from_source(tracer_list, Temp(i,j,k), prey_vec, hp_ingest_vec, &
-                                                      i, j, k, nk, NUM_PREY, dt, tau, &
-                                                      do_print_FEISTY_diagnostic)
+                                                      i, j, k, nk, NUM_PREY, dt, tau)
                ! prey_vec remain unchanged from FEISTY 
                ! hp_ipa_vec(7:8) is calculated from FEISTY 
           
@@ -9985,6 +9982,8 @@ contains
                if (do_FEISTY) then 
                   call generic_FEISTY_benthic_update_from_source(fn_residual_btm(i, j), i, j, nk, dt)
                end if
+              
+
                ! Save flux of detritus to sea bed 
                cobalt%Pop_btm(i,j,nk) = fn_residual_btm(i, j)
 
