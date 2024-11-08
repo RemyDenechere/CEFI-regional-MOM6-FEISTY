@@ -2,8 +2,9 @@
 #	Generate grid files for several test location in the
 #		Californie Current Ecosystem
 ######################################################################
-# Default BATS location: 
-./BuildExchangeGrid.sh BATS 31.6667 -64.1667
+# Default location: 
+./BuildExchangeGrid.sh BATS 31.6667 -64.1667 4000
+#./BuildExchangeGrid.sh CCE
 
 # CCE locations: 
 ./BuildExchangeGrid.sh CCE_loc1  34.2781 -120.6810 30

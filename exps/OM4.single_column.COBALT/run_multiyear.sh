@@ -19,7 +19,6 @@
 # SCRATCH_DIR          -> location you want to work from, must exist!!!
 # SAVE_DIR             -> location of the final saved files. 
 #
-# RUN DEFAULT WITH PARAMETER: ./parallel_loop.sh BATS 10 1 0.1 0.1 1 70 70 1 1 1 1 1 1
 # 
 # Example MPI command to run this without this script:
 # MPI_COMMAND="mpiexec --cpu-set # --bind-to core --report-bindings -np 1"
@@ -43,14 +42,15 @@ if [ "$#" -eq 2 ]; then
 fi
 
 
-if [ "$#" -ne 7 ] && [ "$#" -ne 2 ]; then
+if [ "$#" -ne 8 ] && [ "$#" -ne 2 ]; then
     echo "Usage: $0 <Location Name> <number of (years)> <cpu_core> "
-    echo "<nonFmort Value> <encounter_val> <k value> <k50 value>"
+    echo "<nonFmort Value> <encounter_val> <k value> <k50 value> <Experimentation Name>"
     echo ""
     echo "nonFmort: fish mortality"
     echo "encounter val: coefficient of encounters [ 30 - 110 ]"
     echo "k value: exponent, k==1 function of 2nd type, k>1, function of thrid type"
     echo "k50 value: exponent, 1 < k50 < 20"
+    echo "Experimentation Name: subfolder to save data"
     echo ""
     exit 1
 fi
@@ -80,6 +80,7 @@ if [ "$DEFAULT_VALUES" = true ]; then
     LOC_NAME="$1"
     NUM_YEARS="$2"
     CPU_CORE=$((1 + $RANDOM % 20))
+    EXP_NAME="DEFAULT_VALUE"
 else
     LOC_NAME="$1"
     NUM_YEARS="$2"
@@ -88,6 +89,7 @@ else
     ENCOUNTER="$5"
     K_EXP="$6"
     K50_EXP="$7"
+    EXP_NAME="$8"
 fi
 
 ###############################################################################
@@ -174,12 +176,19 @@ mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS
 ####################################################
 # MOVE THE DATA TO A NEW FOLDER: 
 ####################################################
-FOLDER_SAVE_LOC="RUNS/${LOC_NAME}"
+FOLDER_SAVE_LOC="RUNS/${EXP_NAME}/${LOC_NAME}"
 
 if [ -d "$FOLDER_SAVE_LOC" ]; then
     echo "$FOLDER_SAVE_LOC" exist 
 else 
-    mkdir "$FOLDER_SAVE_LOC"
+    if [ -d "$EXP_NAME" ]; then # test subfolder EXP_NAME
+        cd "${EXP_NAME}"     
+        mkdir "${LOC_NAME}"
+    else 
+        mkdir "${EXP_NAME}"
+        cd "${EXP_NAME}"
+        mkdir "${LOC_NAME}"
+    fi 
 fi
 
 # SAVE YEAR 1!!
