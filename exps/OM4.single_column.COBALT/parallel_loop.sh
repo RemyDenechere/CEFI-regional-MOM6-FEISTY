@@ -15,7 +15,7 @@
 # This is a parallel driver for run_multiyear.sh, which can be run independant of this script.
 # 
 #
-# usage: ./parallel_loop <LocationName> <number of years> <number of discretizations> <nonFmort Starting Value> <nonFmort Ending Value>
+# usage: ./parallel_loop <LocationName> <number of years> <number of discretizations> <nonFmort Starting Value> <nonFmort Ending Value>  <experimentation name>
 # 
 # INPUTS:
 #       LocationName: Location of simulation, should match environmental variable for sanity.
@@ -97,11 +97,12 @@ trap cleanup SIGINT
 
 ########################################################################################
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
-if [ "$#" -ne 14 ]; then
+if [ "$#" -ne 15 ]; then
     echo "Usage: $0 <LocationName> <number of years> 
     <number of fmort discretizations> <nonFmort Starting Value> <nonFmort Ending Value>
     <Number of encounter_coefficient discretizations> <encouter_coef start value> <encounter_coef end value>
-    <K discretizations> <K start value> <K end value><K50 discretizations> <K50 start value> <K50 end value>"
+    <K discretizations> <K start value> <K end value><K50 discretizations> <K50 start value> <K50 end value> 
+    <Experimentation Name>"
     echo "If any discretizations number == 1, only the starting value is used in the range."
     echo "If K is equal to 1, this is type 2 function."
     echo "If K is >= 1, this is a type 3 function."
@@ -148,6 +149,7 @@ K_END="${11}"
 K50_DISC="${12}"
 K50_START="${13}"
 K50_END="${14}"
+EXP_NAME="${15}"
 
 
 ###############################################################################
@@ -342,10 +344,10 @@ for i in $(seq 1 $FMORT_DISC); do
                 # & SYBMOL AT THE END MEANS IT WILL NOT WAIT FOR THE PROGRAM TO FINISH BEFORE 
                 # CONTINUING THROUGH THIS LOOP
                 if [ $LOCATION_NAME == "TEST" ]; then
-                    echo "TEST -- Running./run_multiyear.sh ${LOCATION_NAME} ${NUM_YEARS} ${CPU_CORE} ${NONFMORT_VAL} ${ENCOUNTER_VAL} ${K_VAL} ${K50_VAL}"
+                    echo "TEST -- Running./run_multiyear.sh ${LOCATION_NAME} ${NUM_YEARS} ${CPU_CORE} ${NONFMORT_VAL} ${ENCOUNTER_VAL} ${K_VAL} ${K50_VAL} ${EXP_NAME}" 
             	echo ""
                 else
-                    ./run_multiyear.sh "${LOCATION_NAME}" "${NUM_YEARS}" "${CPU_CORE}" "${NONFMORT_VAL}"  "${ENCOUNTER_VAL}" "${K_VAL}" "${K50_VAL}"&
+                    ./run_multiyear.sh "${LOCATION_NAME}" "${NUM_YEARS}" "${CPU_CORE}" "${NONFMORT_VAL}"  "${ENCOUNTER_VAL}" "${K_VAL}" "${K50_VAL}" "${EXP_NAME}"&
                 fi
                 # Store PID for the cleanup trap function
                 pids+=($!)
