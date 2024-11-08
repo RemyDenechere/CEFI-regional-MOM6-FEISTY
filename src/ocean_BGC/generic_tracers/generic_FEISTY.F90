@@ -1679,7 +1679,7 @@ end subroutine generic_FEISTY_tracer_get_pointer
 ! 
 ! </DESCRIPTION>
 subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
-                                                  hp_ingest_vec, i, j, k, nk, NUM_PREY, dt, tau)
+                                                  hp_ingest_vec, i, j, k, nk, NUM_PREY, dt, tau, zt)
 
     type(g_tracer_type),               pointer :: tracer_list
     real,                           intent(in) :: Temp
@@ -1687,8 +1687,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     real, dimension(1:NUM_PREY),    intent(in) :: prey_vec
     real, dimension(1:NUM_PREY), intent(inout) :: hp_ingest_vec 
     integer,                        intent(in) :: i, j, k, nk, tau
-                  
-    real,                           intent(in) :: dt         
+    real,                           intent(in) :: dt
+    real, dimension(nk), intent(in)            :: zt ! layer thikness
    
     ! Internal variables : ---------------------------------------------------
     real :: T_e, T_met          ! Storing variables for the effect of temperature on physiological effect 
@@ -1699,7 +1699,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     integer :: stdoutunit, stdlogunit, outunit
     integer :: init = 1
     real ::  m2_to_m3 = 100.00
-    real :: Ld_Repro_end
+    real :: Ld_Repro_zi
     real, dimension(11) :: Resource ! total prey than a predator can encounter (used in type III functional response calculation)
     real :: k50 = 1.00
 
@@ -1716,8 +1716,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     fish(LD)%B = FEISTY%Ld_B(i,j,k)
     FEISTY%BE  = FEISTY%BE_B(i,j,k)
 
-    ! Non prognostic tracers: 
-    Ld_Repro_end = FEISTY%Ld_Repro(i,j,nk)
+    ! Non prognostic tracers: Reproduction from Ld to layer zi: (divided by the number of layer and the thikness of the layer to have the input in m-3)
+    Ld_Repro_zi = FEISTY%Ld_Repro(i, j, nk) / (nk * zt(k))
     
     ! Detritus to zero
     FEISTY%det = FEISTY%zero
@@ -1788,10 +1788,12 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
         FEISTY%Resource_mat = spread(Resource, 1, 8)
         ! Calculate the matrix of prefered resource: 
         FEISTY%Resource_Pref = FEISTY%Resource_mat * FEISTY%Pref_mat
+
+        ! Large demersals and 
         
         ! New Calculation of the feeding level ftot
         do m = 1, FEISTY%nFishGroup
-            
+
             fish(m)%f_tot(i,j,k) = ((fish(m)%V * SUM(FEISTY%Resource_Pref(m, :)))**FEISTY%k_fct_tp)/ & 
                                    ((fish(m)%V * SUM(FEISTY%Resource_Pref(m, :)))**FEISTY%k_fct_tp + (k50 * fish(m)%cmax)**FEISTY%k_fct_tp)
             
@@ -1982,6 +1984,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
         fish(LD)%cons_tot(i,j,k) = fish(LD)%f_tot(i,j,k)* fish(LP)%cmax
 
     end if  
+
     ! Fraction of zooplankton biomass consumed:----------------------------------------
     ! Calcul total consumption for each Zooplankton group:
     hp_ingest_vec(idx_Mz) = (fish(SF)%cons_Mz(i,j,k) * fish(SF)%B + fish(SP)%cons_Mz(i,j,k) * fish(SP)%B + & 
@@ -2034,7 +2037,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     ! alpha        : Assimilation efficiency                           []
     !:======================================================================
     do m = 1, FEISTY%nFishGroup
-        fish(m)%yield(i,j,k) = fish(m)%mu_f * fish(m)%B                                      ! Fishing Yield 
+        fish(m)%yield(i,j,k) = fish(m)%mu_f * fish(m)%B                                      ! Fishing Yield [g ww m-2 d-1]
         fish(m)%mu = fish(m)%mu_p(i,j,k) + fish(m)%mu_a + fish(m)%mu_f                       ! Total mortality 
         fish(m)%E_A(i,j,k) = FEISTY%alpha * fish(m)%cons_tot(i,j,k) - fish(m)%met(i,j,k)     ! Calculation of available energy
         fish(m)%prod(i,j,k) = max(fish(m)%E_A(i,j,k) * fish(m)%B, FEISTY%zero)               ! Productivity (E_a * Biomass) if E_a < 0 prod = 0 
@@ -2094,13 +2097,13 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     ! Small size (no loss from reproduction)
     fish(SF)%dBdt_fish(i,j,k) = FEISTY%eps_R * fish(MF)%rho(i,j,k) * fish(MF)%B + (fish(SF)%E_A(i,j,k) - fish(SF)%Fout(i,j,k) - fish(SF)%mu) * fish(SF)%B
     fish(SP)%dBdt_fish(i,j,k) = FEISTY%eps_R * fish(LP)%rho(i,j,k) * fish(LP)%B + (fish(SP)%E_A(i,j,k) - fish(SP)%Fout(i,j,k) - fish(SP)%mu) * fish(SP)%B
-    fish(SD)%dBdt_fish(i,j,k) = FEISTY%eps_R * (Ld_Repro_end/nk)   * fish(LD)%B + (fish(SD)%E_A(i,j,k) - fish(SD)%Fout(i,j,k) - fish(SD)%mu) * fish(SD)%B  
+    fish(SD)%dBdt_fish(i,j,k) = FEISTY%eps_R * Ld_Repro_zi  * fish(LD)%B + (fish(SD)%E_A(i,j,k) - fish(SD)%Fout(i,j,k) - fish(SD)%mu) * fish(SD)%B  
     
     ! Medium size (reproduction loss for Mf)
     fish(MF)%dBdt_fish(i,j,k) = fish(SF)%Fout(i,j,k) * fish(SF)%B + (fish(MF)%E_A(i,j,k) - fish(MF)%rho(i,j,k) - fish(MF)%mu) * fish(MF)%B 
     fish(MP)%dBdt_fish(i,j,k) = fish(SP)%Fout(i,j,k) * fish(SP)%B + (fish(MP)%E_A(i,j,k) - fish(MP)%Fout(i,j,k)  - fish(MP)%mu) * fish(MP)%B 
     if (k .eq. nk) then ! If at bottom layer then take the integrated Fout from 
-        fish(MD)%dBdt_fish(i,j,k) = sum(fish(SD)%Fout(i,j,1:nk) * FEISTY%Sd_B(i,j,1:nk)) + (fish(MD)%E_A(i,j,k) - fish(MD)%Fout(i,j,k)  - fish(MD)%mu) * fish(MD)%B 
+        fish(MD)%dBdt_fish(i,j,k) = sum(fish(SD)%Fout(i,j,1:nk) * FEISTY%Sd_B(i,j,1:nk) * zt(1:nk)) + (fish(MD)%E_A(i,j,k) - fish(MD)%Fout(i,j,k)  - fish(MD)%mu) * fish(MD)%B 
     else ! SD from all layers migrates at the bottom layers!
         fish(MD)%dBdt_fish(i,j,k) = -0.5
     end if 
