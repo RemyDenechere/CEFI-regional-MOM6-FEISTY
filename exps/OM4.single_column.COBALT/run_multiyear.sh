@@ -28,7 +28,29 @@
 # ENCOUNTER_DEFAULT=70
 # K_EXP_DEFAULT=1
 # K50_EXP_DEFAULT=1
+
+
+#FUNCTION TO KILL ALL SPAWNED PROCESSES
+cleanup() {
+  echo "Terminating all spawned processes..."
+  echo "Check the SCRATCH directory for any stray files."
+  echo "Killing processes DOES NOT clean up the file system."
+  for pid in "${pids[@]}"; do
+    kill "$pid" 2>/dev/null
+  done
+  exit 0
+}
+
+# EMPTY ARRAY 
+pids=()
+
+# Trap Ctrl-C (SIGINT) and call cleanup function
+trap cleanup SIGINT
+
+
 DEFAULT_VALUES=false
+
+
 
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
 if [ "$#" -eq 2 ]; then
@@ -127,6 +149,7 @@ fi
 
 ###############################################################################
 # COPY EVERYTHING TO THE SCRATCH DIRECTORY
+echo "Copying EVERYTHING! to the WORK_DIR"
 cp -rf * "${WORK_DIR}"
 
 # MOVE TO WROKING DIRECTORY
@@ -168,9 +191,13 @@ cd ..
 ####################################################
 #  RUN THE MODEL 
 ####################################################
+echo "Copying executable from ${CEFI_EXECUTABLE_LOC} to here"
 cp "${CEFI_EXECUTABLE_LOC}" . 
 
-mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
+mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+pids+=($1)
+wait
+
 #mpirun -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
 
 ####################################################
@@ -199,6 +226,7 @@ else
     mkdir "$YEAR_FOLDER_PATH"
 fi
 
+echo "Saving feisty files to specific YEAR_FOLDER_PATH"
 yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
 
 ###############################################################################
@@ -218,10 +246,16 @@ do
     fi
 
     # Run the model and save the outputs in $folder_save_exp
-    mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env
+    mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+    # 
+    pids+=($!)
+    wait
+
+    echo "Copying feisty files to YEAR_FOLDER_PATH"
     yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
 
     # get restart files: 
+    echo "Copying RESTART files back to INPUT, there is some clobbering!"
     yes | cp -i RESTART/*.nc INPUT/
 done
 
@@ -232,6 +266,8 @@ FOLDER_SAVE_RESTART="${LONG_NAME}_yr_${NUM_YEARS}_RESTART"
 
 mkdir "$FOLDER_SAVE_RESTART"
 
+echo
+echo "Saving RESTART files into FOLDER_SAVE_RESTART"
 yes | cp -i RESTART/*.nc "$FOLDER_SAVE_RESTART"/
 
 ## set up back to the original configuration
@@ -241,8 +277,10 @@ sed -i "s/input_filename = 'r'/input_filename = 'n'/g" input.nml
 ############################################
 # SAVE EVERYTHING IN THE SAVE DIRECTORY
 ############################################
-cp -r RUNS/* "$SAVE_DIR"
-cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${LOC_NAME}"
+echo "Copying RUNS folder to SAVE_DIR"
+yes | cp -r RUNS/* "$SAVE_DIR"
+echo "Copying RESTART to SAVE_DIR"
+yes | cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${LOC_NAME}"
 
 cd "$HOME_DIR"
 # REMOVE WORKING DIRECTORY AND FOLDERS, ETC...
