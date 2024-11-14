@@ -1985,6 +1985,52 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
 
     end if  
 
+
+    !:======================================================================
+    ! Calculate fish available anergy (E_a),
+    ! IF assimilated biomass lower than metabolic cost (i.e. E_a lt 0.0) 
+    ! THEN consumption for each prey = 0.0  
+    !:======================================================================
+    do m = 1, FEISTY%nFishGroup
+        fish(m)%E_A(i,j,k) = FEISTY%alpha * fish(m)%cons_tot(i,j,k) - fish(m)%met(i,j,k)     ! Calculation of available energy
+
+        if (fish(m)%E_A(i,j,k) .le. FEISTY%zero) then 
+            ! Calculate consumption: 
+            fish(m)%cons_Mz(i,j,k) = FEISTY%zero
+            fish(m)%cons_Lz(i,j,k) = FEISTY%zero
+            fish(m)%cons_BE(i,j,k) = FEISTY%zero
+            fish(m)%cons_Sf = FEISTY%zero
+            fish(m)%cons_Sp = FEISTY%zero
+            fish(m)%cons_Sd = FEISTY%zero
+            fish(m)%cons_Mf = FEISTY%zero
+            fish(m)%cons_Mp = FEISTY%zero
+            fish(m)%cons_Md = FEISTY%zero
+            fish(m)%cons_f(i,j,k) = FEISTY%zero
+            fish(m)%cons_p(i,j,k) = FEISTY%zero
+            fish(m)%cons_d(i,j,k) = FEISTY%zero
+
+            ! Calculate encounter rate:  enc_i = V * B * pref  = f_i*cmax / (1-f_tot) 
+            fish(m)%enc_Mz(i,j,k) = FEISTY%zero
+            fish(m)%enc_Lz(i,j,k) = FEISTY%zero
+            fish(m)%enc_BE(i,j,k) = FEISTY%zero
+            fish(m)%enc_f(i,j,k)  = FEISTY%zero
+            fish(m)%enc_p(i,j,k)  = FEISTY%zero
+            fish(m)%enc_d(i,j,k)  = FEISTY%zero
+
+            ! Calculate total consumption: 
+            fish(m)%cons_tot(i,j,k) = FEISTY%zero
+        end if
+
+    end do 
+    
+    !:======================================================================
+    ! Calculate the mortality for fish functional group 
+    ! Fishing mortality is assumed constant and nul
+    ! mu_p : Predation from fish      [d-1]
+    ! mu_f : Fishing mortality ( = 0) [d-1]
+    ! mu_a : Natural mortality        [d-1]
+    !:======================================================================
+
     ! Fraction of zooplankton biomass consumed:----------------------------------------
     ! Calcul total consumption for each Zooplankton group:
     hp_ingest_vec(idx_Mz) = (fish(SF)%cons_Mz(i,j,k) * fish(SF)%B + fish(SP)%cons_Mz(i,j,k) * fish(SP)%B + & 
@@ -1995,17 +2041,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
 	! Converting zooplankton back to [mol N m-3] and back to hp_ingest_vec time unit [s ??]
 	hp_ingest_vec(idx_Mz) = hp_ingest_vec(idx_Mz) * (1.0/FEISTY%convers_Mz) * (1.0/FEISTY%d2s)
 	hp_ingest_vec(idx_Lz) = hp_ingest_vec(idx_Lz) * (1.0/FEISTY%convers_Mz) * (1.0/FEISTY%d2s)
-    
 
-
-    !:======================================================================
-    ! Calculate the mortality for fish functional group 
-    ! Fishing mortality is assumed constant and nul
-    ! mu_p : Predation from fish      [d-1]
-    ! mu_f : Fishing mortality ( = 0) [d-1]
-    ! mu_a : Natural mortality        [d-1]
-    !:======================================================================
-    ! Calcul Predation mortality: -----------------------------------------------
+    ! Calcul Predation mortality fish : -----------------------------------------------
     ! mu_p [m-3 d-1]
     fish(SF)%mu_p(i,j,k) = (fish(MP)%cons_Sf * fish(MP)%B + fish(MF)%cons_Sf * fish(MF)%B) / fish(SF)%B
     fish(SP)%mu_p(i,j,k) = (fish(MP)%cons_Sp * fish(MP)%B + fish(MF)%cons_Sp * fish(MF)%B) / fish(SP)%B
@@ -2039,7 +2076,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     do m = 1, FEISTY%nFishGroup
         fish(m)%yield(i,j,k) = fish(m)%mu_f * fish(m)%B                                      ! Fishing Yield [g ww m-2 d-1]
         fish(m)%mu = fish(m)%mu_p(i,j,k) + fish(m)%mu_a + fish(m)%mu_f                       ! Total mortality 
-        fish(m)%E_A(i,j,k) = FEISTY%alpha * fish(m)%cons_tot(i,j,k) - fish(m)%met(i,j,k)     ! Calculation of available energy
         fish(m)%prod(i,j,k) = max(fish(m)%E_A(i,j,k) * fish(m)%B, FEISTY%zero)               ! Productivity (E_a * Biomass) if E_a < 0 prod = 0 
     end do
 
@@ -2047,7 +2083,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     !:======================================================================
     ! calcul the flux of biomass out of a size class for each fish group  
     !:======================================================================
- 
     fish(SF)%Fout(i,j,k) = ((FEISTY%kappa_l * fish(SF)%E_A(i,j,k)) - fish(SF)%mu ) /&
         (1 - (FEISTY%Z_s ** (1 - (fish(SF)%mu / (FEISTY%kappa_l * fish(SF)%E_A(i,j,k)+ FEISTY%eps)))) + FEISTY%eps)
     fish(SP)%Fout(i,j,k) = ((FEISTY%kappa_l * fish(SP)%E_A(i,j,k)) - fish(SP)%mu ) /&

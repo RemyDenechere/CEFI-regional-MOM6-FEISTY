@@ -130,12 +130,20 @@ else
     UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_k50_${K50_EXP}"
 fi
 
-WORK_DIR="${SCRATCH_DIR}/${LONG_NAME}"
+WORK_DIR="${SCRATCH_DIR}/${EXP_NAME}/${LONG_NAME}"
 if [ -d "$WORK_DIR" ]; then
     echo "$WORK_DIR" exists 
 else 
     cd "${SCRATCH_DIR}"
-    mkdir "${LONG_NAME}"
+    if [ -d "$EXP_NAME" ]; then
+        echo "$EXP_NAME" exists create "$LONG_NAME"
+        mkdir "${LONG_NAME}"
+    else
+        echo create "$EXP_NAME" and "$LONG_NAME"
+        mkdir "${EXP_NAME}"
+        cd    "${EXP_NAME}"
+        mkdir "${LONG_NAME}"
+    fi 
     cd "${HOME_DIR}"
 fi
 
@@ -194,7 +202,7 @@ cd ..
 echo "Copying executable from ${CEFI_EXECUTABLE_LOC} to here"
 cp "${CEFI_EXECUTABLE_LOC}" . 
 
-mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+# mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
 pids+=($1)
 wait
 
@@ -251,7 +259,7 @@ do
     fi
 
     # Run the model and save the outputs in $folder_save_exp
-    mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+    # mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1  ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
     # 
     pids+=($!)
     wait
