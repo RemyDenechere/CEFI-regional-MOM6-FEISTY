@@ -203,20 +203,25 @@ wait
 ####################################################
 # MOVE THE DATA TO A NEW FOLDER: 
 ####################################################
-FOLDER_SAVE_LOC="RUNS/${EXP_NAME}/${LOC_NAME}"
+FOLDER_SAVE_LOC="RUNS/${LOC_NAME}/${EXP_NAME}"
 
 if [ -d "$FOLDER_SAVE_LOC" ]; then
     echo "$FOLDER_SAVE_LOC" exist 
 else 
-    if [ -d "$EXP_NAME" ]; then # test subfolder EXP_NAME
-        cd "${EXP_NAME}"     
-        mkdir "${LOC_NAME}"
-    else 
+    echo "$FOLDER_SAVE_LOC" does not exist
+    cd RUNS 
+    if [ -d "$LOC_NAME" ]; then # test subfolder EXP_NAME
+        echo  create "$EXP_NAME"
+        cd "${LOC_NAME}"     
         mkdir "${EXP_NAME}"
-        cd "${EXP_NAME}"
+    else 
+        echo  create  "$LOC_NAME" and "$EXP_NAME"
         mkdir "${LOC_NAME}"
+        cd "${LOC_NAME}"
+        mkdir "${EXP_NAME}"
     fi 
 fi
+cd "${WORK_DIR}"
 
 # SAVE YEAR 1!!
 YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LONG_NAME}_yr_1"
@@ -284,6 +289,6 @@ yes | cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${LOC_NAME}"
 
 cd "$HOME_DIR"
 # REMOVE WORKING DIRECTORY AND FOLDERS, ETC...
-rm -r "$WORK_DIR"
+# rm -r "$WORK_DIR"
 
 echo "Simulation done!"
