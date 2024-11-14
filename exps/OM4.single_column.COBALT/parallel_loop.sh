@@ -15,7 +15,7 @@
 # This is a parallel driver for run_multiyear.sh, which can be run independant of this script.
 # 
 #
-# usage: ./parallel_loop <LocationName> <number of years> <number of discretizations> <nonFmort Starting Value> <nonFmort Ending Value>  <experimentation name>
+# usage: ./parallel_loop <LocationName> <number of years> <number of discretizations> <nonFmort Starting Value> <nonFmort Ending Value> <experimentation name>
 # 
 # INPUTS:
 #       LocationName: Location of simulation, should match environmental variable for sanity.
@@ -150,7 +150,6 @@ K50_DISC="${12}"
 K50_START="${13}"
 K50_END="${14}"
 EXP_NAME="${15}"
-
 
 ###############################################################################
 # CHECK TO MAKE SURE FMORT_DISC, THE NUMBER OF PARALLEL LOOPS TO
