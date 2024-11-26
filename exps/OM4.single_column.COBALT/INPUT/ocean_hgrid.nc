@@ -1,1 +1,1 @@
-../BATS/ocean_hgrid.nc
+../GOF/ocean_hgrid.nc
