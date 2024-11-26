@@ -1678,15 +1678,16 @@ end subroutine generic_FEISTY_tracer_get_pointer
 ! Converting input prey_vec units 
 ! 
 ! </DESCRIPTION>
-subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
-                                                  hp_ingest_vec, i, j, k, nk, NUM_PREY, dt, tau, zt)
+subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PREY, &
+                                                  Temp, prey_vec, hp_ingest_vec, det, &
+                                                  dt, zt)
 
     type(g_tracer_type),               pointer :: tracer_list
-    real,                           intent(in) :: Temp
-    integer,                        intent(in) :: NUM_PREY
+    integer,                        intent(in) :: i, j, nk, NUM_PREY
+    real, dimension(1:nk)           intent(in) :: Temp
     real, dimension(1:NUM_PREY),    intent(in) :: prey_vec
     real, dimension(1:NUM_PREY), intent(inout) :: hp_ingest_vec 
-    integer,                        intent(in) :: i, j, k, nk, tau
+    real,                        intent(inout) :: det  ! Flux detritus at the bottom layer (fn_residual_btm in COBALT)
     real,                           intent(in) :: dt
     real, dimension(nk), intent(in)            :: zt ! layer thikness
    
@@ -2372,7 +2373,6 @@ end subroutine generic_FEISTY_fish_update_from_source
 subroutine generic_FEISTY_benthic_update_from_source(det, i, j, nk, dt)
     ! Internal variables 
     integer, intent(in) :: i, j, nk
-    real, intent(inout) :: det                  ! Flux detritus at the bottom layer (fn_residual_btm in COBALT)
     real,    intent(in) :: dt                   ! COBALT time step (sec). 
     real                :: r_BE                 ! benthic growth rate ((g/m2/d) / (g/m2))
     real                :: pred_BE              ! predation from demersals (g/m2/d)
