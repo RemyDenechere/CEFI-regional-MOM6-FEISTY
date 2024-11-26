@@ -1,1 +1,1 @@
-../BATS/grid_spec.nc
+../GOF/grid_spec.nc

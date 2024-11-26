@@ -497,7 +497,10 @@ namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange
           jprod_n,          & ! zooplankton production
           o2lim,            & ! oxygen limitation of zooplankton activity
           temp_lim,         & ! Temperature limitation
-          vmove               ! Vertical movement
+          vmove,            & ! Vertical movement
+     ! FEISTY diags: 
+          hp_ingest_nmdz,   & ! High trophic level ingestion of medium zooplankton
+          hp_ingest_nlgz      ! High trophic level ingestion of medium zooplankton
     integer ::		    &
           id_jzloss_n       = -1, &
           id_jzloss_p       = -1, &
@@ -533,7 +536,10 @@ namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange
           id_jprod_don_100  = -1, &
           id_jremin_n_100   = -1, &
           id_f_n_100        = -1, &
-          id_f_n
+          id_f_n,                 &
+          ! FEISTY diags: 
+          id_hp_ingest_nmdz = -1, &
+          id_hp_ingest_nlgz = -1
   end type zooplankton
 
   type bacteria
@@ -967,9 +973,7 @@ namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange
           remoc, &
           tot_layer_int_doc,&
           tot_layer_int_poc,&
-          tot_layer_int_dic,&
-          ! FEISTY variables 
-          Pop_btm                  ! Detritus flux to bottom used by Benthic communitites in FEISTY
+          tot_layer_int_dic
 
 !==============================================================================================================
 
@@ -1102,7 +1106,9 @@ namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange
           wc_vert_int_jprod_n2amx,&
           wc_vert_int_jfe_iceberg,&
           wc_vert_int_jno3_iceberg,&
-          wc_vert_int_jpo4_iceberg
+          wc_vert_int_jpo4_iceberg,&
+          ! FEISTY variables 
+          Pop_btm                  ! Detritus flux to bottom used by Benthic communitites in FEISTY
 !==============================================================================================================
 
      real, dimension(:,:,:,:), pointer :: &
@@ -6120,10 +6126,18 @@ contains
 
 !==============================================================================================================
 !  09/05/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run
-     vardesc_temp = vardesc("Pop_btm", "Detritus flux to sea floor",'h','L','s','g WW m-3 d-1','f')
-     cobalt%id_Pop_btm = register_diag_field(package_name, vardesc_temp%name, axes(1:3), &
+     vardesc_temp = vardesc("Pop_btm", "Detritus flux to sea floor",'h','1','s','g WW m-3 d-1','f')
+     cobalt%id_Pop_btm = register_diag_field(package_name, vardesc_temp%name, axes(1:2), &
         init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
+     vardesc_temp = vardesc("hp_ingest_nmdz", "High trophic level ingestion of medium zooplankton",'h','L','s','mol N m-3 s-1','f')
+     cobalt%id_hp_ingest_nmdz = register_diag_field(package_name, vardesc_temp%name, axes(1:3), &
+          init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
+
+     vardesc_temp = vardesc("hp_ingest_nlgz", "High trophic level ingestion of large zooplankton",'h','L','s','mol N m-3 s-1','f')
+     cobalt%id_hp_ingest_nlgz = register_diag_field(package_name, vardesc_temp%name, axes(1:3), &
+          init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
+ 
 
 !------------------------------------------------------------------------------------------------------------------
 ! 2-D fields (from Oday)
@@ -8999,7 +9013,7 @@ contains
        prey_vec(4) = max(phyto(SMALL)%f_n(i,j,k) - cobalt%refuge_conc,0.0)
        prey_vec(5) = max(bact(1)%f_n(i,j,k) - cobalt%refuge_conc,0.0)
        prey_vec(6) = max(zoo(1)%f_n(i,j,k) - cobalt%refuge_conc,0.0)
-       prey_vec(7) = max(zoo(2)%f_n(i,j,k) - cobalt%refuge_conc,0.0)
+       prey_vec(7) = max(zoo(2)%f_n(i,j,k) - cobalt%refuge_conc, 0.0)
        prey_vec(8) = max(zoo(3)%f_n(i,j,k) - cobalt%refuge_conc,0.0)*cobalt%dp_fac(i,j)
        prey_vec(9) = max(cobalt%f_ndet(i,j,k) - cobalt%refuge_conc,0.0)
        !
@@ -9273,12 +9287,14 @@ contains
        !                 (sw_fac_denom+epsln) )**(1.0/cobalt%mswitch_hp)
 
        ! Define params: imax_hp, ki_hp, coef_hp, nswitch_hp, mswitch_hp,   ktemp_hp, k_o2, o2_min, hp_ipa_vec
-       if ( do_FEISTY ) then
+       if (do_FEISTY) then
           ! FEISTY calculation: 
-          call generic_FEISTY_fish_update_from_source(tracer_list, Temp(i,j,k), prey_vec, hp_ingest_vec, &
-                                                      i, j, k, nk, NUM_PREY, dt, tau, cobalt%zt(i, j, 1:nk))
-               ! prey_vec remain unchanged from FEISTY 
-               ! hp_ipa_vec(7:8) is calculated from FEISTY 
+          
+          ! prey_vec remain unchanged from FEISTY 
+          ! hp_ingest_vec(7:8) is calculated from FEISTY 
+          ! hp_ipa_vec is the preference (not used inside FEISTY)
+          hp_ingest_vec(7) = hp_ingest_nmdz(i,j,k)
+          hp_ingest_vec(8) = hp_ingest_nlgz(i,j,k)
           
           ! Add non fish mortality on zooplankton :0.1 imax_hp? 
           food1 = hp_ipa_vec(7)*prey_vec(7)
@@ -9291,10 +9307,10 @@ contains
           hp_pa_vec(8) = hp_ipa_vec(8)*(food2**cobalt%nswitch_hp / &
                     (sw_fac_denom+epsln) )**(1.0/cobalt%mswitch_hp)
           tot_prey_hp = hp_pa_vec(7)*prey_vec(7) + hp_pa_vec(8)*prey_vec(8)
-          hp_ingest_vec(7) = hp_ingest_vec(7) + cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)* nonFmort *cobalt%imax_hp* &
+          hp_ingest_vec(7) = hp_ingest_vec(7) + nonFmort * cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)*gicobalt%imax_hp* &
                               hp_pa_vec(7)*prey_vec(7)*tot_prey_hp**(cobalt%coef_hp-1.0)/ &
                               (cobalt%ki_hp+tot_prey_hp)
-          hp_ingest_vec(8) = hp_ingest_vec(8) + cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)* nonFmort *cobalt%imax_hp* &
+          hp_ingest_vec(8) = hp_ingest_vec(8) + nonFmort * cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)*cobalt%imax_hp* &
                               hp_pa_vec(8)*prey_vec(8)*tot_prey_hp**(cobalt%coef_hp-1.0)/ &
                               (cobalt%ki_hp+tot_prey_hp)
 
@@ -9314,7 +9330,6 @@ contains
                               hp_pa_vec(8)*prey_vec(8)*tot_prey_hp**(cobalt%coef_hp-1.0)/ &
                               (cobalt%ki_hp+tot_prey_hp)
        end if
-
 
        ! Hight trophic level ingestion: 
        cobalt%hp_jingest_n(i,j,k) = hp_ingest_vec(7) + hp_ingest_vec(8)
@@ -9873,7 +9888,7 @@ contains
 
     allocate(rho_dzt_bot(isc:iec,jsc:jec))
     allocate(k_bot(isc:iec,jsc:jec))
-    ! added for FEISTY calculation at the bottom:
+    !---------------- Remy Denechere: added for FEISTY calculation at the bottom:
     allocate(fn_residual_btm(isc:iec,jsc:jec))
 
     do j = jsc, jec; do i = isc, iec  !{
@@ -9971,21 +9986,22 @@ contains
              ! via aerobic processes (fnoxic_sed)
              !
 
-               ! FEISTY-bottom: --------------------------------------------------------------------------------
-               !    input : fn_residual_btm, cobalt%btm_temp (old? )
-               !    output : fn_residual_btm 
+               ! FEISTY--no-vertical: -------------------------------------------------------------------------
+               ! Rémy Denéchère 
                ! -----------------------------------------------------------------------------------------------
                ! fn_residual_btm: detritus usable for benthic comunities: 
                fn_residual_btm(i, j) = cobalt%fntot_btm(i,j) - cobalt%fn_burial(i,j) - &
                                          cobalt%fno3denit_sed(i,j)/cobalt%n_2_n_denit
 
                if (do_FEISTY) then 
-                  call generic_FEISTY_benthic_update_from_source(fn_residual_btm(i, j), i, j, nk, dt)
+                    call generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PREY, &
+                                                                Temp(i,j,1:nk), prey_vec, hp_ingest_vec, fn_residual_btm(i, j)&
+                                                                dt, cobalt%zt(i, j, 1:nk))
                end if
-              
+               
 
                ! Save flux of detritus to sea bed 
-               cobalt%Pop_btm(i,j,nk) = fn_residual_btm(i, j)
+               cobalt%Pop_btm(i,j) = fn_residual_btm(i, j)
 
 
              if (cobalt%btm_o2(i,j) .gt. cobalt%o2_min) then  !{

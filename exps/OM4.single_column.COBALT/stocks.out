@@ -1,0 +1,61 @@
+ ================Stocks Report Guide=====================================
+  
+ S(t) = Total amount     of a tracer in the component model at time t.
+        Calculated via the component model itself.
+  
+ F(t) = Cumulative input of a tracer to the component model at time t.
+        Calculated via interchange of fluxes with other component models.
+  
+ S(t) - S(0) = Cumulative increase of the component stocks at time t
+               Calculated by the component itself.
+  
+ In a conserving component F(t)=S(t)-S(0) to within numerical accuracy.
+  
+ Component Model refers to one of OCN, ATM, LND or ICE
+ 
+ NOTE: When use_lag_fluxes=.true. is used in coupler, the ocean stocks 
+       calculations are in error by an order which scales as the inverse
+       of the number of time steps.
+  
+ =======================================================================
+ ======================Initial Stock S(0)===============================
+     water[Kg]                heat[Joules]             salt[Kg]
+ATM  0.000000000000000E+00    0.000000000000000E+00    0.000000000000000E+00
+LND  0.000000000000000E+00    0.000000000000000E+00    0.000000000000000E+00
+ICE  0.000000000000000E+00    0.000000000000000E+00    0.000000000000000E+00
+OCN  1.117831734696772E+14    0.000000000000000E+00    0.000000000000000E+00
+ ========================================================================
+ 
+ ===============================================
+t = TimeSinceStart[days]=      366.000
+ ===============================================
+Stocks of water                                        ATM                    LND                    ICE                    OCN
+Total =S(t)               [Kg]           0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00   1.117744461686407E+14
+Change=S(t)-S(0)          [Kg]           0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00  -8.727301036468750E+09
+Input =F(t)               [Kg]          -1.292616649125163E+12   0.000000000000000E+00  -3.051757812500000E-02   1.292616649125206E+12
+Diff  =F(t) - (S(t)-S(0)) [Kg]          -1.292616649125163E+12   0.000000000000000E+00  -3.051757812500000E-02   1.301343950161675E+12
+Error =Diff/S(0)          [NonDim]      -1.292616649125163E+12   0.000000000000000E+00  -3.051757812500000E-02   1.164168013636392E-02
+ 
+Lost Stocks in the exchange between Ice and Ocean water[Kg]       0.000000000000000E+00
+ 
+ 
+Stocks of heat                                        ATM                    LND                    ICE                    OCN
+Total =S(t)               [Joules]       0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00   3.177197452448009E+18
+Change=S(t)-S(0)          [Joules]       0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00   3.177197452448009E+18
+Input =F(t)               [Joules]      -3.164444457840653E+18   0.000000000000000E+00  -3.014635876904499E+16   3.194610082916110E+18
+Diff  =F(t) - (S(t)-S(0)) [Joules]      -3.164444457840653E+18   0.000000000000000E+00  -3.014635876904499E+16   1.741263046810112E+16
+Error =Diff/S(0)          [NonDim]      -3.164444457840653E+18   0.000000000000000E+00  -3.014635876904499E+16   1.741263046810112E+16
+ 
+Lost Stocks in the exchange between Ice and Ocean heat[Joules]      -1.926630640025600E+13
+ 
+ 
+Stocks of salt                                        ATM                    LND                    ICE                    OCN
+Total =S(t)               [Kg]           0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00
+Change=S(t)-S(0)          [Kg]           0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00
+Input =F(t)               [Kg]           0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00
+Diff  =F(t) - (S(t)-S(0)) [Kg]           0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00
+Error =Diff/S(0)          [NonDim]       0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00   0.000000000000000E+00
+ 
+Lost Stocks in the exchange between Ice and Ocean salt[Kg]       0.000000000000000E+00
+ 
+ 

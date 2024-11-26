@@ -19,9 +19,14 @@
 ./BuildExchangeGrid.sh CCE_loc10  31.9889637 -117.5351529 65
 ./BuildExchangeGrid.sh CCE_loc11 32.9161201 -120.2922059 49
 
-# Copy FEISTY input files in locs:
+# Copy FEISTY CCE input files in locs:
 for ((i=1; i<=11; i++))
 do
 	cp CCE/FEISTY_2023_10_spinup_subset.nc CCE_loc${i}
 	echo " Copy FEISTY input file in CCE_loc${i}"
 done
+
+# Other location to test:
+./BuildExchangeGrid.sh GOF 43.2874 -70.5328 75	# Gold Of Main 
+./BuildExchangeGrid.sh NS  53.7217 3.2790   50  # Noth Sea
+

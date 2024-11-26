@@ -40,7 +40,7 @@ export PATH=$PATH:/usr/local/src/ncview-2.1.7/
 
 # ---------------------------------------------------------------------------------------
 ## Turn off FEISTY: 
-# sed -i "s/do_FEISTY                  = .true./do_FEISTY                  = .false./g" input.nml
+sed -i "s/do_FEISTY                  = .true./do_FEISTY                  = .false./g" input.nml
 
 # ---------------------------------------------------------------------------------------
 ## set up the input file for the experiment: (make this with symbolic links)
@@ -58,6 +58,6 @@ source ../../builds/redhat580/linux-gnu.env
 yes | cp -i *feisty*.nc "$folder_save"
 
 ## set up back to the original configuration
-#sed -i "s/do_FEISTY                  = .false./do_FEISTY                  = .true./g" input.nml
+sed -i "s/do_FEISTY                  = .false./do_FEISTY                  = .true./g" input.nml
 
 echo "Simulation done!"
