@@ -7636,7 +7636,7 @@ contains
     ! water column as a bottom flux (btf) where they impact the alkalinity and DIC
     !
     call g_tracer_get_values(tracer_list,'cadet_arag','btm_reservoir', cobalt%fcadet_arag_btm,isd,jsd)
-    cobalt%fcadet_arag_btm = cobalt%fcadet_arag_btm/dt
+     cobalt%fcadet_arag_btm = cobalt%fcadet_arag_btm/dt
     call g_tracer_get_pointer(tracer_list,'cadet_arag_btf','field',temp_field)
     temp_field(:,:,1) = cobalt%fcadet_arag_btm(:,:)
     call g_tracer_set_values(tracer_list,'cadet_arag','btm_reservoir',0.0)
@@ -9996,7 +9996,8 @@ contains
                if (do_FEISTY) then 
                     call generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PREY, &
                                                                 Temp(i,j,1:nk), prey_vec, hp_ingest_vec, fn_residual_btm(i, j)&
-                                                                dt, cobalt%zt(i, j, 1:nk))
+                                                                dt, cobalt%zt(i, j, 1:nk), &
+                                                                hp_ingest_nmdz(i,j,1:nk), hp_ingest_nlgz(i,j,1:nk))
                end if
                
 
@@ -15484,7 +15485,7 @@ contains
     allocate(cobalt%wc_vert_int_jpo4_iceberg(isd:ied, jsd:jed))  ; cobalt%wc_vert_int_jpo4_iceberg=0.0
 !==============================================================================================================
 !  09/05/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run
-    allocate(cobalt%Pop_btm(isd:ied,jsd:jed,1:nk));  cobalt%Pop_btm  = 0.0 ! 
+    allocate(cobalt%Pop_btm(isd:ied,jsd:jed));  cobalt%Pop_btm  = 0.0 ! 
     
 !==============================================================================================================
     !
