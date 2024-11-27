@@ -1648,7 +1648,6 @@ subroutine generic_FEISTY_tracer_get_pointer(tracer_list)
 end subroutine generic_FEISTY_tracer_get_pointer
 
 
-
 !#######################################################################
 ! <SUBROUTINE NAME="FEISTY_fish_derivative">
 !   <OVERVIEW>
@@ -1679,7 +1678,7 @@ end subroutine generic_FEISTY_tracer_get_pointer
 ! 
 ! </DESCRIPTION>
 subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
-                                                  hp_ingest_vec, i, j, k, nk, NUM_PREY, dt, tau, zt)
+                                                  hp_ingest_vec, i, j, k, nk, NUM_PREY, dt, tau, zt, dzt)
 
     type(g_tracer_type),               pointer :: tracer_list
     real,                           intent(in) :: Temp
@@ -1688,7 +1687,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     real, dimension(1:NUM_PREY), intent(inout) :: hp_ingest_vec 
     integer,                        intent(in) :: i, j, k, nk, tau
     real,                           intent(in) :: dt
-    real, dimension(nk), intent(in)            :: zt ! layer thikness
+    real, dimension(nk), intent(in)            :: zt, dzt ! layer depth and thickness
    
     ! Internal variables : ---------------------------------------------------
     real :: T_e, T_met          ! Storing variables for the effect of temperature on physiological effect 
@@ -1717,7 +1716,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     FEISTY%BE  = FEISTY%BE_B(i,j,k)
 
     ! Non prognostic tracers: Reproduction from Ld to layer zi: (divided by the number of layer and the thikness of the layer to have the input in m-3)
-    Ld_Repro_zi = FEISTY%Ld_Repro(i, j, nk) / (nk * zt(k))
+    Ld_Repro_zi = FEISTY%Ld_Repro(i, j, nk) / (nk * dzt(k))
     
     ! Detritus to zero
     FEISTY%det = FEISTY%zero
@@ -2138,7 +2137,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     fish(MF)%dBdt_fish(i,j,k) = fish(SF)%Fout(i,j,k) * fish(SF)%B + (fish(MF)%E_A(i,j,k) - fish(MF)%rho(i,j,k) - fish(MF)%mu) * fish(MF)%B 
     fish(MP)%dBdt_fish(i,j,k) = fish(SP)%Fout(i,j,k) * fish(SP)%B + (fish(MP)%E_A(i,j,k) - fish(MP)%Fout(i,j,k)  - fish(MP)%mu) * fish(MP)%B 
     if (k .eq. nk) then ! If at bottom layer then take the integrated Fout from 
-        fish(MD)%dBdt_fish(i,j,k) = sum(fish(SD)%Fout(i,j,1:nk) * FEISTY%Sd_B(i,j,1:nk) * zt(1:nk)) + (fish(MD)%E_A(i,j,k) - fish(MD)%Fout(i,j,k)  - fish(MD)%mu) * fish(MD)%B 
+        fish(MD)%dBdt_fish(i,j,k) = sum(fish(SD)%Fout(i,j,1:nk) * FEISTY%Sd_B(i,j,1:nk) * dzt(1:nk)) + (fish(MD)%E_A(i,j,k) - fish(MD)%Fout(i,j,k)  - fish(MD)%mu) * fish(MD)%B 
     else ! SD from all layers migrates at the bottom layers!
         fish(MD)%dBdt_fish(i,j,k) = -0.5
     end if 
@@ -2179,6 +2178,10 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
         write (outunit,*)  'small zooplankton biomass ', prey_vec(idx_Mz) * FEISTY%convers_Mz
         write (outunit,*)  'large zooplankton biomass ', prey_vec(idx_Lz) * FEISTY%convers_Mz
         write (outunit,*)  '-------------- FEISTY output --------------'
+
+        write (outunit,*)  '------------ Layer  ------------'
+        write (outunit,*)  'depths (m) =                   ', zt
+        write (outunit,*)  'thickness  =                   ', dzt
 
         write (outunit,*)  '-------------- FEISTY Biomass --------------'
         do m = 1, FEISTY%nFishGroup
