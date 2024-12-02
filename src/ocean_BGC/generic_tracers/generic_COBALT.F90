@@ -8034,6 +8034,9 @@ contains
        zbot(i,j,k) = ztop(i,j,k) + dzt(i,j,k)
     enddo; enddo ; enddo !} i,j,k
 
+    write (outunit,*)  'layer depth  =                   ', cobalt%zt(i,j,1:nk)
+    write (outunit,*)  'thickness  =                     ', dzt(i,j,1:nk)
+
     !---------------------------------------------------------------------
     !Calculate co3_ion
     !Also calculate co2 fluxes csurf and alpha for the next round of exchange
@@ -9271,12 +9274,14 @@ contains
        !hp_pa_vec(8) = hp_ipa_vec(8)* &
        !               ( (hp_ipa_vec(8)*prey_vec(8))**cobalt%nswitch_hp / &
        !                 (sw_fac_denom+epsln) )**(1.0/cobalt%mswitch_hp)
+       write (outunit,*)  'layer depth  =                   ', cobalt%zt(i,j,1:nk)
+       write (outunit,*)  'thickness  =                     ', dzt(i,j,1:nk)
 
        ! Define params: imax_hp, ki_hp, coef_hp, nswitch_hp, mswitch_hp,   ktemp_hp, k_o2, o2_min, hp_ipa_vec
        if ( do_FEISTY ) then
           ! FEISTY calculation: 
           call generic_FEISTY_fish_update_from_source(tracer_list, Temp(i,j,k), prey_vec, hp_ingest_vec, &
-                                                      i, j, k, nk, NUM_PREY, dt, tau, cobalt%zt(i, j, 1:nk), cobalt%zt(i, j, 1:nk))
+                                                      i, j, k, nk, NUM_PREY, dt, tau, cobalt%zt(i, j, 1:nk), dzt(i, j, 1:nk))
                ! prey_vec remain unchanged from FEISTY 
                ! hp_ipa_vec(7:8) is calculated from FEISTY 
           

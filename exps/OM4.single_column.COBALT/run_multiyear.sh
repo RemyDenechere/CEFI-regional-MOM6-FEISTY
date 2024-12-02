@@ -131,9 +131,11 @@ else
 fi
 
 WORK_DIR="${SCRATCH_DIR}/${EXP_NAME}/${LONG_NAME}"
+EXP_DIR="${SCRATCH_DIR}/${EXP_NAME}/"
 if [ -d "$WORK_DIR" ]; then
     echo "$WORK_DIR" exists 
 else 
+    echo "$WORK_DIR" does not exist
     cd "${SCRATCH_DIR}"
     if [ -d "$EXP_NAME" ]; then
         echo "$EXP_NAME" exists create "$LONG_NAME"
@@ -297,6 +299,6 @@ yes | cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${LOC_NAME}"
 
 cd "$HOME_DIR"
 # REMOVE WORKING DIRECTORY AND FOLDERS, ETC...
-# rm -r "$WORK_DIR"
+rm -fr "$EXP_DIR"/
 
 echo "Simulation done!"
