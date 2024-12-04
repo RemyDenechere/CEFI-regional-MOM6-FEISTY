@@ -139,6 +139,7 @@ else
     cd "${SCRATCH_DIR}"
     if [ -d "$EXP_NAME" ]; then
         echo "$EXP_NAME" exists create "$LONG_NAME"
+        cd    "${EXP_NAME}"
         mkdir "${LONG_NAME}"
     else
         echo create "$EXP_NAME" and "$LONG_NAME"
