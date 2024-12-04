@@ -153,7 +153,7 @@ fi
 if [ -d "$WORK_DIR" ]; then
 	echo "${WORK_DIR} exists, continuing..."
 else
-	echo "${WORKDIR} does not exist, exiting..."
+	echo "${WORK_DIR} does not exist, exiting..."
 	exit 1
 fi
 
@@ -299,6 +299,6 @@ yes | cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${LOC_NAME}"
 
 cd "$HOME_DIR"
 # REMOVE WORKING DIRECTORY AND FOLDERS, ETC...
-rm -fr "$EXP_DIR"/
+# rm -fr "$EXP_DIR"/
 
 echo "Simulation done!"
