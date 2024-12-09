@@ -59,10 +59,11 @@ public generic_FEISTY_send_diagnostic_data
 logical :: FunctRspons_typeIII = .false.
 logical :: do_print_FEISTY_diagnostic = .false.
 real    :: a_enc = 70.0
+real    :: dp_int = 100.0
 real    :: k_fct_tp = 1.0
 real    :: k50 = 1.0
 
-namelist /generic_FEISTY_nml/ do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, k_fct_tp, k50
+namelist /generic_FEISTY_nml/ do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, k_fct_tp, k50
 
 
 !#########################################################################################!  
@@ -1692,7 +1693,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real, dimension(nFishGroup) :: tpel = (/1,1,1,1,1,0,1,0/)
     real :: biop, biob
     real :: Tp, Tb, 
-    integer :: layer_id_100 = 0
+    integer :: layer_id_dpint = 0
 
     stdoutunit=stdout(); stdlogunit=stdlog()
     
@@ -1709,16 +1710,16 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     
     ! get id of 100 m depth where 
     Do m = 1, nk
-        if (zt(m) .le. 100.0) then 
-            layer_id_100 = layer_id_100 + int(1)
+        if (zt(m) .le. dp_int) then 
+            layer_id_dpint = layer_id_dpint + int(1)
         end if 
     endDo
     
     !======================================================================!
     !                   Convertion from COBALT to FEISTY
     ! Converting zooplankton unit from [mol N m-2] to [gww m-2]
-    FEISTY%Mz = SUM(med_zoo_N(1:layer_id_100)) * FEISTY%convers_Mz
-    FEISTY%Lz = SUM(Lrg_zoo_N(1:layer_id_100)) * FEISTY%convers_Mz
+    FEISTY%Mz = SUM(med_zoo_N(1:layer_id_dpint)) * FEISTY%convers_Mz
+    FEISTY%Lz = SUM(Lrg_zoo_N(1:layer_id_dpint)) * FEISTY%convers_Mz
     ! Detritus convertion 
     FEISTY%det = det * FEISTY%convers_det   ! Convert in g ww m-2 d-1)
     
@@ -1750,7 +1751,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     !:====================================================================== 
     
     ! Calcul temperature surface and bottom
-    Tp = SUM(Temp(1:layer_id_100)) / real(layer_id_100)
+    Tp = SUM(Temp(1:layer_id_dpint)) / real(layer_id_dpint)
     Tb = Temp(nk)
 
     ! Calcul of time in pelagic for demersals
