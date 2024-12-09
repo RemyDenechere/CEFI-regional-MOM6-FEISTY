@@ -58,11 +58,13 @@ public generic_FEISTY_send_diagnostic_data
 !                                       FEISTY namelist 
 logical :: FunctRspons_typeIII = .false.
 logical :: do_print_FEISTY_diagnostic = .false.
+logical :: cutoff = .false.
 real    :: a_enc = 70.0
 real    :: k_fct_tp = 1.0
 real    :: k50 = 1.0
 
-namelist /generic_FEISTY_nml/ do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, k_fct_tp, k50
+namelist /generic_FEISTY_nml/ do_print_FEISTY_diagnostic, FunctRspons_typeIII, cutoff, & 
+                              a_enc, k_fct_tp, k50
 
 
 !#########################################################################################!  
@@ -1993,7 +1995,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, Temp, prey_vec, &
     do m = 1, FEISTY%nFishGroup
         fish(m)%E_A(i,j,k) = FEISTY%alpha * fish(m)%cons_tot(i,j,k) - fish(m)%met(i,j,k)     ! Calculation of available energy
 
-        if (fish(m)%E_A(i,j,k) .le. FEISTY%zero) then 
+        if (fish(m)%E_A(i,j,k) .le. FEISTY%zero .and. cutoff) then 
             ! Calculate consumption: 
             fish(m)%cons_Mz(i,j,k) = FEISTY%zero
             fish(m)%cons_Lz(i,j,k) = FEISTY%zero

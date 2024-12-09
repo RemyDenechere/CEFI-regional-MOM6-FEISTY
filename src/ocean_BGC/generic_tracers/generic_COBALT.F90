@@ -8034,8 +8034,8 @@ contains
        zbot(i,j,k) = ztop(i,j,k) + dzt(i,j,k)
     enddo; enddo ; enddo !} i,j,k
 
-    write (outunit,*)  'layer depth  =                   ', cobalt%zt(i,j,1:nk)
-    write (outunit,*)  'thickness  =                     ', dzt(i,j,1:nk)
+!     write (outunit,*)  'layer depth  =                   ', cobalt%zt(i,j,1:nk)
+!     write (outunit,*)  'thickness  =                     ', dzt(i,j,1:nk)
 
     !---------------------------------------------------------------------
     !Calculate co3_ion
@@ -9274,8 +9274,8 @@ contains
        !hp_pa_vec(8) = hp_ipa_vec(8)* &
        !               ( (hp_ipa_vec(8)*prey_vec(8))**cobalt%nswitch_hp / &
        !                 (sw_fac_denom+epsln) )**(1.0/cobalt%mswitch_hp)
-       write (outunit,*)  'layer depth  =                   ', cobalt%zt(i,j,1:nk)
-       write (outunit,*)  'thickness  =                     ', dzt(i,j,1:nk)
+     !   write (outunit,*)  'layer depth  =                   ', cobalt%zt(i,j,1:nk)
+     !   write (outunit,*)  'thickness  =                     ', dzt(i,j,1:nk)
 
        ! Define params: imax_hp, ki_hp, coef_hp, nswitch_hp, mswitch_hp,   ktemp_hp, k_o2, o2_min, hp_ipa_vec
        if ( do_FEISTY ) then
