@@ -9995,8 +9995,9 @@ contains
 
                if (do_FEISTY) then 
                     call generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PREY, &
-                                                                Temp(i,j,1:nk), prey_vec, hp_ingest_vec, fn_residual_btm(i, j)&
-                                                                dt, cobalt%zt(i, j, 1:nk), &
+                                                                Temp(i,j,1:nk), fn_residual_btm(i, j),&
+                                                                dt, cobalt%zt(i, j, 1:nk), dzt(i,j, 1:nk),&
+                                                                zoo(2)%f_n(i,j,1:nk), zoo(3)%f_n(i,j,1:nk),&
                                                                 hp_ingest_nmdz(i,j,1:nk), hp_ingest_nlgz(i,j,1:nk))
                end if
                
