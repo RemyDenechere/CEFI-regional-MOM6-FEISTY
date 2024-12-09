@@ -1340,6 +1340,9 @@ subroutine user_add_params_FEISTY
     ! Conversion from cobalt zooplankton and detritus to FEISTY  
     call g_tracer_add_param('convers_Mz', FEISTY%convers_Mz, 6.625*12.01*9.0 * 1000.0)       ! zooplankton biomass unit conversion conversion 
     call g_tracer_add_param('convers_det', FEISTY%convers_det, 6.625*12.01*9.0*FEISTY%d2s)   ! detritus unit conversion
+
+    call g_tracer_add_param('PI_be_cutoff', FEISTY%PI_be_cutoff, 200.0)   ! demersal time in pel cutoff
+    
    
 	! Stop param list:    
     call g_tracer_end_param_list(package_name)
@@ -1660,8 +1663,8 @@ end subroutine generic_FEISTY_tracer_get_pointer
 ! 
 ! </DESCRIPTION>
 subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PREY, &
-                                                  Temp, prey_vec, hp_ingest_vec, det, &
-                                                  dt, zt, hp_ingest_nmdz, hp_ingest_nlgz)
+                                                  Temp, det, med_zoo_N, Lrg_zoo_N,&
+                                                  dt, zt, dzt, hp_ingest_nmdz, hp_ingest_nlgz) ! dzt(i,j,1)
 
     type(g_tracer_type),               pointer :: tracer_list
     integer,                        intent(in) :: i, j, nk, NUM_PREY
@@ -1669,8 +1672,9 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real, dimension(1:NUM_PREY),    intent(in) :: prey_vec
     real, dimension(1:NUM_PREY), intent(inout) :: hp_ingest_vec 
     real,                        intent(inout) :: det  ! Flux detritus at the bottom layer (fn_residual_btm in COBALT)
+    real, dimension(nk),            intent(in) :: med_zoo_N, Lrg_zoo_N
     real,                           intent(in) :: dt
-    real, dimension(nk), intent(in)            :: zt ! layer thikness
+    real, dimension(nk), intent(in)            :: zt, dzt ! layer depth and thikness
     real, dimension(nk), intent(inout)         :: hp_ingest_nmdz, hp_ingest_nlgz
    
     ! Internal variables : ---------------------------------------------------
@@ -1684,7 +1688,11 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real ::  m2_to_m3 = 100.00
     real :: Ld_Repro_zi
     real, dimension(11) :: Resource ! total prey than a predator can encounter (used in type III functional response calculation)
-    real :: k50 = 1.00
+    real, dimension(nFishGroup) :: Texp ! Temperature experienced, and time in pelagic zone
+    real, dimension(nFishGroup) :: tpel = (/1,1,1,1,1,0,1,0/)
+    real :: biop, biob
+    real :: Tp, Tb, 
+    integer :: layer_id_100 = 0
 
     stdoutunit=stdout(); stdlogunit=stdlog()
     
@@ -1699,13 +1707,18 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     fish(LD)%B = FEISTY%Ld_B(i,j)
     FEISTY%BE  = FEISTY%BE_B(i,j)
     
+    ! get id of 100 m depth where 
+    Do m = 1, nk
+        if (zt(m) .le. 100.0) then 
+            layer_id_100 = layer_id_100 + int(1)
+        end if 
+    endDo
+    
     !======================================================================!
     !                   Convertion from COBALT to FEISTY
-
     ! Converting zooplankton unit from [mol N m-2] to [gww m-2]
-    FEISTY%Mz = prey_vec(idx_Mz) * FEISTY%convers_Mz
-    FEISTY%Lz = prey_vec(idx_Lz) * FEISTY%convers_Mz  
-    
+    FEISTY%Mz = SUM(med_zoo_N(1:layer_id_100)) * FEISTY%convers_Mz
+    FEISTY%Lz = SUM(Lrg_zoo_N(1:layer_id_100)) * FEISTY%convers_Mz
     ! Detritus convertion 
     FEISTY%det = det * FEISTY%convers_det   ! Convert in g ww m-2 d-1)
     
@@ -1735,12 +1748,26 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! cmax      : mass-specific maximum consumption          [d-1]
     ! V         : mass-specific Encounter rate               [m3 g−1 d−1]
     !:====================================================================== 
+    
+    ! Calcul temperature surface and bottom
+    Tp = SUM(Temp(1:layer_id_100)) / real(layer_id_100)
+    Tb = Temp(nk)
 
-    T_e = exp(FEISTY%ke * (Temp-10.0))      ! for encounter rate and Cmax
-    T_met = exp(FEISTY%kmet * (Temp-10.0))  ! for metabolism
+    ! Calcul of time in pelagic for demersals
+    biop = FEISTY%pref_Ld_Mf * fish(MF)%B + FEISTY%pref_Ld_Mp * fish(MD)%B
+    biob = FEISTY%pref_Ld_Md * fish(MD)%B  + FEISTY%pref_Ld_BE * FEISTY%BE_B(i,j)
+
+    if (zt(i,j,nk) < FEISTY%PI_be_cutoff) then 
+        tpel(nFishGroup) = biop / (biop + biob)
+    else 
+        tpel(nFishGroup) = 0.0
+    end if 
 
     ! Temperature calculation for each fish: 
     do m = 1, FEISTY%nFishGroup
+        Texp(m) = (Tp * tpel(m)) + (Tb*(1.0-tpel(m)))
+        T_e(m) = exp(FEISTY%ke * (Texp(m)-10.0))      ! for encounter rate and Cmax
+        T_met(m) = exp(FEISTY%kmet * (Texp(m)-10.0))  ! for metabolism
         fish(m)%Tcorr_e = T_e                                       ! save Temp effect on encounter rate and Cmax
         fish(m)%Tcorr_met = T_met                                   ! save Temp effect on met
         fish(m)%V = fish(m)%Tcorr_e * fish(m)%V_w * m2_to_m3        ! update clearance rate with temp effect
@@ -1759,7 +1786,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! cons     : total consumption                          [d-1]
     !:======================================================================
 
-    if (FunctRspons_typeIII) then 
     ! If we use a functional type III response then we have to calculate the total resource encountered 
     ! dimensions: (8, 11)
         Resource(1) = FEISTY%Mz
@@ -1817,158 +1843,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
 
             ! Calculate total consumption: 
             fish(m)%cons_tot(i,j,k) = fish(m)%f_tot(i,j,k) * fish(m)%cmax
-        end do
-    else ! Former calculation of the feeding level with a type II functional response 
-        
-        ! Calcul feeding level of MesoZoo prey: -------------------------------------------------
-        ! Small fish only consume Medium zooplankton: (pref_Mz = 0.9 for 4P2Z and 1 for 4P4Z models)
-        ! Small fish don't feed on Large zooplankton
-        fish(SF)%f_Mz = fish(SF)%V * FEISTY%pref_Mz * FEISTY%Mz/((fish(SF)%V* FEISTY%pref_Mz * FEISTY%Mz) + fish(SF)%cmax)
-        fish(SP)%f_Mz = fish(SP)%V * FEISTY%pref_Mz * FEISTY%Mz/((fish(SP)%V* FEISTY%pref_Mz * FEISTY%Mz) + fish(SP)%cmax)
-        fish(SD)%f_Mz = fish(SD)%V * FEISTY%pref_Mz * FEISTY%Mz/((fish(SD)%V* FEISTY%pref_Mz * FEISTY%Mz) + fish(SD)%cmax)
-
-        fish(SF)%f_tot(i,j,k) = fish(SF)%f_Mz
-        fish(SP)%f_tot(i,j,k) = fish(SP)%f_Mz
-        fish(SD)%f_tot(i,j,k) = fish(SD)%f_Mz
-        
-        ! Medium forage:
-        fish(MF)%f_Mz = fish(MF)%V * FEISTY%pref_Mf_Mz * FEISTY%Mz/((fish(MF)%V* & 
-            (FEISTY%pref_Mf_Mz * FEISTY%Mz + FEISTY%pref_Mf_Lz * FEISTY%Lz + & 
-            FEISTY%pref_Mf_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MF)%cmax)
-
-        fish(MF)%f_Lz = fish(MF)%V * FEISTY%pref_Mf_Lz * FEISTY%Lz/((fish(MF)%V* & 
-            (FEISTY%pref_Mf_Mz * FEISTY%Mz + FEISTY%pref_Mf_Lz * FEISTY%Lz + &
-            FEISTY%pref_Mf_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MF)%cmax)
-            
-        fish(MF)%f_Sf = fish(MF)%V *FEISTY%pref_Mf_S* fish(SF)%B/((fish(MF)%V* &
-            (FEISTY%pref_Mf_Mz * FEISTY%Mz + FEISTY%pref_Mf_Lz * FEISTY%Lz + & 
-            FEISTY%pref_Mf_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MF)%cmax)
-
-        fish(MF)%f_Sp = fish(MF)%V * FEISTY%pref_Mf_S* fish(SP)%B/((fish(MF)%V* &
-            (FEISTY%pref_Mf_Mz * FEISTY%Mz + FEISTY%pref_Mf_Lz * FEISTY%Lz + & 
-            FEISTY%pref_Mf_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MF)%cmax)
-
-        fish(MF)%f_Sd = fish(MF)%V * FEISTY%pref_Mf_S* fish(SD)%B/((fish(MF)%V* &
-            (FEISTY%pref_Mf_Mz * FEISTY%Mz + FEISTY%pref_Mf_Lz * FEISTY%Lz + & 
-            FEISTY%pref_Mf_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MF)%cmax) 
-                    
-        fish(MF)%f_tot(i,j,k) = fish(MF)%f_Mz + fish(MF)%f_Lz + fish(MF)%f_Sf + fish(MF)%f_Sp + fish(MF)%f_Sd
-        
-        ! Medium pelagic:
-        fish(MP)%f_Mz = fish(MP)%V * FEISTY%pref_Mp_Mz * FEISTY%Mz/((fish(MP)%V* (FEISTY%pref_Mp_Mz * FEISTY%Mz &
-            + FEISTY%pref_Mp_Lz * FEISTY%Lz + FEISTY%pref_Mp_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MP)%cmax)
-
-        fish(MP)%f_Lz = fish(MP)%V * FEISTY%pref_Mp_Lz * FEISTY%Lz/((fish(MP)%V* (FEISTY%pref_Mp_Mz * FEISTY%Mz &
-            + FEISTY%pref_Mp_Lz * FEISTY%Lz + FEISTY%pref_Mp_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MP)%cmax)
-
-        fish(MP)%f_Sf = fish(MP)%V *FEISTY%pref_Mp_S* fish(SF)%B/((fish(MP)%V* (FEISTY%pref_Mp_Mz * FEISTY%Mz &
-            + FEISTY%pref_Mp_Lz * FEISTY%Lz + FEISTY%pref_Mp_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MP)%cmax)
-
-        fish(MP)%f_Sp = fish(MP)%V *FEISTY%pref_Mp_S* fish(SP)%B/((fish(MP)%V* (FEISTY%pref_Mp_Mz * FEISTY%Mz &
-            + FEISTY%pref_Mp_Lz * FEISTY%Lz + FEISTY%pref_Mp_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MP)%cmax)
-
-        fish(MP)%f_Sd = fish(MP)%V *FEISTY%pref_Mp_S* fish(SD)%B/((fish(MP)%V* (FEISTY%pref_Mp_Mz * FEISTY%Mz &
-            + FEISTY%pref_Mp_Lz * FEISTY%Lz + FEISTY%pref_Mp_S*(fish(SF)%B + fish(SP)%B + fish(SD)%B))) + fish(MP)%cmax)
-        
-        fish(MP)%f_tot(i,j,k)= fish(MP)%f_Mz + fish(MP)%f_Lz + fish(MP)%f_Sf + fish(MP)%f_Sp + fish(MP)%f_Sd
-
-        ! Medium Demersals only eat benthos resource: 
-        fish(MD)%f_BE = fish(MD)%V * FEISTY%pref_Md_BE * FEISTY%BE/((fish(MD)%V * FEISTY%pref_Md_BE * FEISTY%BE) + fish(MD)%cmax)
-        fish(MD)%f_tot(i,j,k)= fish(MD)%f_BE
-
-        ! Large Demersal: 
-        fish(LD)%f_Mf = fish(LD)%V * FEISTY%pref_Ld_Mf * fish(MF)%B /(fish(LD)%V * &
-            (FEISTY%pref_Ld_Mf * fish(MF)%B + FEISTY%pref_Ld_Mp * fish(MP)%B + FEISTY%pref_Ld_Md * fish(MD)%B + FEISTY%pref_Ld_BE * FEISTY%BE) + fish(LD)%cmax)
-
-        fish(LD)%f_Mp = fish(LD)%V * FEISTY%pref_Ld_Mp * fish(MP)%B /(fish(LD)%V* &
-            (FEISTY%pref_Ld_Mf * fish(MF)%B + FEISTY%pref_Ld_Mp * fish(MP)%B + FEISTY%pref_Ld_Md * fish(MD)%B + FEISTY%pref_Ld_BE * FEISTY%BE) + fish(LD)%cmax)
-
-        fish(LD)%f_Md = fish(LD)%V * FEISTY%pref_Ld_Md * fish(MD)%B /(fish(LD)%V* &
-            (FEISTY%pref_Ld_Mf * fish(MF)%B + FEISTY%pref_Ld_Mp * fish(MP)%B + FEISTY%pref_Ld_Md * fish(MD)%B + FEISTY%pref_Ld_BE * FEISTY%BE) + fish(LD)%cmax)
-
-        fish(LD)%f_BE = fish(LD)%V * FEISTY%pref_Ld_BE * FEISTY%BE /(fish(LD)%V* &
-            (FEISTY%pref_Ld_Mf * fish(MF)%B + FEISTY%pref_Ld_Mp * fish(MP)%B + FEISTY%pref_Ld_Md * fish(MD)%B + FEISTY%pref_Ld_BE * FEISTY%BE) + fish(LD)%cmax)
-
-        fish(LD)%f_tot(i,j,k)= fish(LD)%f_Mf + fish(LD)%f_Mp + fish(LD)%f_Md + fish(LD)%f_BE
-
-        ! Large pelagics: 
-        fish(LP)%f_Mf = fish(LP)%V * FEISTY%pref_Lp_Mf * fish(MF)%B / &
-            (fish(LP)%V* (FEISTY%pref_Lp_Mf * fish(MF)%B + FEISTY%pref_Lp_Mp * fish(MP)%B) + fish(LP)%cmax)
-
-        fish(LP)%f_Mp = fish(LP)%V * FEISTY%pref_Lp_Mp * fish(MP)%B / &
-            (fish(LP)%V* (FEISTY%pref_Lp_Mf * fish(MF)%B + FEISTY%pref_Lp_Mp * fish(MP)%B) + fish(LP)%cmax)
-
-        fish(LP)%f_tot(i,j,k) = fish(LP)%f_Mf + fish(LP)%f_Mp
-        
-        !:====================================================================================:!
-        !                             Encounter rate with each group                           !
-        !   enc_i = V * B * pref  = f_i*cmax / (1-f_tot) 
-        !:====================================================================================:!
-        do m = 1, FEISTY%nFishGroup
-            fish(m)%enc_Mz(i,j,k) = fish(m)%f_Mz * fish(m)%cmax / (1 - fish(m)%f_tot(i,j,k))	                                 !    Encounter rate of medium zooplankton
-            fish(m)%enc_Lz(i,j,k) = fish(m)%f_Lz * fish(m)%cmax / (1 - fish(m)%f_tot(i,j,k))		                             !    Encounter rate of large zooplankton
-            fish(m)%enc_f(i,j,k)  = (fish(m)%f_Sf + fish(m)%f_Mf) * fish(m)%cmax / (1 - fish(m)%f_tot(i,j,k))		             !    Encounter rate of forage fish
-            fish(m)%enc_p(i,j,k)  = (fish(m)%f_Sp + fish(m)%f_Mp + fish(m)%f_Lp) * fish(m)%cmax / (1 - fish(m)%f_tot(i,j,k))	 !    Encounter rate of pelagic fish
-            fish(m)%enc_d(i,j,k)  = (fish(m)%f_Sd + fish(m)%f_Md + fish(m)%f_Ld) * fish(m)%cmax / (1 - fish(m)%f_tot(i,j,k))	 !    Encounter rate of demersal fish
-            fish(m)%enc_BE(i,j,k)  = fish(m)%f_BE * fish(m)%cmax / (1 - fish(m)%f_tot(i,j,k))		                             !    Encounter rate of benthos
-        end do 
-
-        !:====================================================================================:!
-        !                                Consumption per group                                 !
-        !:====================================================================================:!
-        ! Calcul consumption rate of MesoZoo: -------------------------------------------------
-        ! Used for estimation of the fraction of zooplankton biomass consumed: (m-2 d-1)
-        fish(SF)%cons_Mz(i,j,k) = fish(SF)%f_Mz * fish(SF)%cmax 
-        fish(SP)%cons_Mz(i,j,k) = fish(SP)%f_Mz * fish(SP)%cmax
-        fish(SD)%cons_Mz(i,j,k) = fish(SD)%f_Mz * fish(SD)%cmax
-        ! Medium on Mz
-        fish(MF)%cons_Mz(i,j,k) = fish(MF)%f_Mz * fish(MF)%cmax
-        fish(MP)%cons_Mz(i,j,k) = fish(MP)%f_Mz * fish(MP)%cmax
-        ! Medium on Lz
-        fish(MF)%cons_Lz(i,j,k) = fish(MF)%f_Lz * fish(MF)%cmax
-        fish(MP)%cons_Lz(i,j,k) = fish(MP)%f_Lz * fish(MP)%cmax
-
-        ! Calcul consumption for each fish group: ----------------------------------------------
-        ! Used to calculate the predation mortality on each group: 
-        ! Medium forage consumption on fish
-        fish(MF)%cons_Sf = fish(MF)%f_Sf * fish(MF)%cmax
-        fish(MF)%cons_Sp = fish(MF)%f_Sp * fish(MF)%cmax 
-        fish(MF)%cons_Sd = fish(MF)%f_Sd * fish(MF)%cmax
-        ! Medium Pelagic consumption on fish
-        fish(MP)%cons_Sf = fish(MP)%f_Sf * fish(MP)%cmax
-        fish(MP)%cons_Sp = fish(MP)%f_Sp * fish(MP)%cmax 
-        fish(MP)%cons_Sd = fish(MP)%f_Sd * fish(MP)%cmax
-
-        ! Medium Demersal consumption on fish
-        fish(MD)%cons_BE(i,j,k) = fish(MD)%f_BE * fish(MD)%cmax
-        ! Large Pelagic:
-        fish(LP)%cons_Mf = fish(LP)%f_Mf * fish(LP)%cmax
-        fish(LP)%cons_Mp = fish(LP)%f_Mp * fish(LP)%cmax
-        ! Large Demersal: 
-        fish(LD)%cons_Mf = fish(LD)%f_Mf * fish(LD)%cmax
-        fish(LD)%cons_Mp = fish(LD)%f_Mp * fish(LD)%cmax
-        fish(LD)%cons_Md = fish(LD)%f_Md * fish(LD)%cmax
-        fish(LD)%cons_BE(i,j,k) = fish(LD)%f_BE * fish(LD)%cmax
-
-        ! Calculate diagnostic: consumption of forage, large pelagics and Demersals: 
-        do m = 1, FEISTY%nFishGroup
-            fish(m)%cons_f(i,j,k) = fish(m)%cons_Sf + fish(m)%cons_Mf 
-            fish(m)%cons_p(i,j,k) = fish(m)%cons_Sp + fish(m)%cons_Mp + fish(m)%cons_Lp 
-            fish(m)%cons_d(i,j,k) = fish(m)%cons_Sd + fish(m)%cons_Md + fish(m)%cons_Ld
-        end do 
-
-        ! The folowing groups don't feed on zooplankton: ------------------------------------
-        ! Calculate diagnostic total consumption
-        fish(SF)%cons_tot(i,j,k) = fish(SF)%cons_Mz(i,j,k)
-        fish(SP)%cons_tot(i,j,k) = fish(SP)%cons_Mz(i,j,k)
-        fish(SD)%cons_tot(i,j,k) = fish(SD)%cons_Mz(i,j,k)
-        fish(MF)%cons_tot(i,j,k) = fish(MF)%f_tot(i,j,k) * fish(MF)%cmax
-        fish(MP)%cons_tot(i,j,k) = fish(MP)%f_tot(i,j,k) * fish(MP)%cmax
-        fish(MD)%cons_tot(i,j,k) = fish(MD)%cons_BE(i,j,k)
-        fish(LP)%cons_tot(i,j,k) = fish(LP)%f_tot(i,j,k)* fish(LP)%cmax
-        fish(LD)%cons_tot(i,j,k) = fish(LD)%f_tot(i,j,k)* fish(LP)%cmax
-
-    end if  
+        end do  
 
 
     !:======================================================================
