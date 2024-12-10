@@ -1655,13 +1655,11 @@ end subroutine generic_FEISTY_tracer_get_pointer
 ! </DESCRIPTION>
 subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PREY, &
                                                   Temp, det, med_zoo_N, Lrg_zoo_N,&
-                                                  dt, zt, dzt, hp_ingest_nmdz_dpint, hp_ingest_nlgz_dpint) ! dzt(i,j,1)
+                                                  dt, zt, dzt, hp_ingest_nmdz, hp_ingest_nlgz) ! dzt(i,j,1)
 
     type(g_tracer_type),               pointer :: tracer_list
     integer,                        intent(in) :: i, j, nk, NUM_PREY
     real, dimension(1:nk)           intent(in) :: Temp
-    real, dimension(1:NUM_PREY),    intent(in) :: prey_vec
-    real, dimension(1:NUM_PREY), intent(inout) :: hp_ingest_vec 
     real,                        intent(inout) :: det  ! Flux detritus at the bottom layer (fn_residual_btm in COBALT)
     real, dimension(nk),            intent(in) :: med_zoo_N, Lrg_zoo_N
     real,                           intent(in) :: dt
@@ -1669,20 +1667,22 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real, dimension(nk), intent(inout)         :: hp_ingest_nmdz, hp_ingest_nlgz
    
     ! Internal variables : ---------------------------------------------------
-    real :: T_e, T_met          ! Storing variables for the effect of temperature on physiological effect 
+    real :: T_e, T_met          ! Storing variables for the effect of temperature on physiological effect
+    real :: biop, biob
+    real :: Tp, Tb
     real :: Delta_t             ! conversion from COBALT to FEISTY time step 
     real :: pred_BE             ! predation on benthic resource 
     real :: r_BE                ! Benthic growth rate
-    integer :: m                ! index loop fish
-    integer :: k                ! index loop depth
-    integer :: stdoutunit, stdlogunit, outunit
-    integer :: init = 1
     real ::  m2_to_m3 = 100.00
     real, dimension(11) :: Resource ! total prey than a predator can encounter (used in type III functional response calculation)
     real, dimension(nFishGroup) :: Texp ! Temperature experienced, and time in pelagic zone
     real, dimension(nFishGroup) :: tpel = (/1,1,1,1,1,0,1,0/)
-    real :: biop, biob
-    real :: Tp, Tb, 
+
+    integer :: m                ! index loop fish
+    integer :: k                ! index loop depth
+    integer :: stdoutunit, stdlogunit, outunit
+    integer :: init = 1
+  
     integer :: layer_id_dpint = 0
     real :: hp_ingest_nmdz_dpint, hp_ingest_nlgz_dpint ! Depth integrated zooplankton ingestion from fish predation
 
