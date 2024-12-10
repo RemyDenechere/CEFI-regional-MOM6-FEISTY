@@ -49,7 +49,6 @@ public generic_FEISTY_tracer_get_values
 public generic_FEISTY_tracer_get_pointer
 public generic_FEISTY_update_from_coupler
 public generic_FEISTY_fish_update_from_source
-public generic_FEISTY_benthic_update_from_source
 public generic_FEISTY_end
 public generic_FEISTY_update_pointer
 public generic_FEISTY_send_diagnostic_data
@@ -1654,29 +1653,31 @@ end subroutine generic_FEISTY_tracer_get_pointer
 ! 
 ! </DESCRIPTION>
 subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PREY, &
-                                                  Temp, det, med_zoo_N, Lrg_zoo_N,&
-                                                  dt, zt, dzt, hp_ingest_nmdz, hp_ingest_nlgz) ! dzt(i,j,1)
+                                                  Temp, det, dt, zt, dzt, &
+                                                  med_zoo_N, Lrg_zoo_N, &
+                                                  hp_ingest_nmdz, hp_ingest_nlgz) ! dzt(i,j,1)
 
     type(g_tracer_type),               pointer :: tracer_list
     integer,                        intent(in) :: i, j, nk, NUM_PREY
-    real, dimension(1:nk)           intent(in) :: Temp
+    real, dimension(nk),            intent(in) :: Temp
     real,                        intent(inout) :: det  ! Flux detritus at the bottom layer (fn_residual_btm in COBALT)
-    real, dimension(nk),            intent(in) :: med_zoo_N, Lrg_zoo_N
     real,                           intent(in) :: dt
-    real, dimension(nk), intent(in)            :: zt, dzt ! layer depth and thikness
-    real, dimension(nk), intent(inout)         :: hp_ingest_nmdz, hp_ingest_nlgz
+    real, dimension(nk),            intent(in) :: zt, dzt ! layer depth and thikness
+    real, dimension(nk),            intent(in) :: med_zoo_N, Lrg_zoo_N
+    real, dimension(nk),         intent(inout) :: hp_ingest_nmdz, hp_ingest_nlgz
    
     ! Internal variables : ---------------------------------------------------
-    real :: T_e, T_met          ! Storing variables for the effect of temperature on physiological effect
-    real :: biop, biob
     real :: Tp, Tb
+    real :: biop, biob
+    real, dimension(FEISTY%nFishGroup) :: T_e, T_met          ! Storing variables for the effect of temperature on physiological effect
+    real, dimension(FEISTY%nFishGroup) :: Texp ! Temperature experienced, and time in pelagic zone
+    real, dimension(FEISTY%nFishGroup) :: tpel
+
     real :: Delta_t             ! conversion from COBALT to FEISTY time step 
     real :: pred_BE             ! predation on benthic resource 
     real :: r_BE                ! Benthic growth rate
     real ::  m2_to_m3 = 100.00
     real, dimension(11) :: Resource ! total prey than a predator can encounter (used in type III functional response calculation)
-    real, dimension(nFishGroup) :: Texp ! Temperature experienced, and time in pelagic zone
-    real, dimension(nFishGroup) :: tpel = (/1,1,1,1,1,0,1,0/)
 
     integer :: m                ! index loop fish
     integer :: k                ! index loop depth
@@ -1744,15 +1745,17 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! Calcul average temperature in surface and take bottom temp
     Tp = SUM(Temp(1:layer_id_dpint)) / real(layer_id_dpint)
     Tb = Temp(nk)
+    ! initialisation tpel: 
+    tpel = (/1,1,1,1,1,0,1,0/)
 
     ! Calcul of time in pelagic for demersals
     biop = FEISTY%pref_Ld_Mf * fish(MF)%B + FEISTY%pref_Ld_Mp * fish(MD)%B
     biob = FEISTY%pref_Ld_Md * fish(MD)%B  + FEISTY%pref_Ld_BE * FEISTY%BE_B(i,j)
 
     if (zt(nk) < FEISTY%PI_be_cutoff) then  ! zt(nk) is the sea floor depth 
-        tpel(nFishGroup) = biop / (biop + biob)
+        tpel(FEISTY%nFishGroup) = biop / (biop + biob)
     else 
-        tpel(nFishGroup) = 0.0
+        tpel(FEISTY%nFishGroup) = 0.0
     end if 
 
     ! Temperature calculation for each fish: 
@@ -2212,54 +2215,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
 end subroutine generic_FEISTY_fish_update_from_source
 
 
-
-!#######################################################################
-! <SUBROUTINE NAME="generic_FEISTY_benthic_update_from_source">
-!
-! <DESCRIPTION>
-!   Calcul the new Benthic biomass at the bottom layer. Processes at the 
-!   bottom layer in COBALT are calculated outside of the main loop. For 
-!   the fish to use the benthic biomass at the bottom layer we updated 
-!   nk layer of benthic biomass. 
-!   Benthic resource could also be considered as a non vertical tracers 
-!   
-!   INPUT: fn_residual_btm = det        ! Flux detritus at the bottom layer
-!
-!   OUTPUT: fn_residual_btm
-! 
-! </DESCRIPTION>
-subroutine generic_FEISTY_benthic_update_from_source(det, i, j, nk, dt)
-    ! Internal variables 
-    integer, intent(in) :: i, j, nk
-    real,    intent(in) :: dt                   ! COBALT time step (sec). 
-    real                :: r_BE                 ! benthic growth rate ((g/m2/d) / (g/m2))
-    real                :: pred_BE              ! predation from demersals (g/m2/d)
-    integer :: stdoutunit, stdlogunit, outunit
-
-    stdoutunit=stdout(); stdlogunit=stdlog()
-    ! Set up values
-    FEISTY%det = det * FEISTY%convers_det       ! Convert in the right unit (g ww m-2 d-1)
-    ! FEISTY%Pop_btm(i,j,nk) = FEISTY%det       ! Save detritus to sea floor!
-    FEISTY%BE = FEISTY%BE_B(i, j, nk)           ! Using biomass at bottom depth
-     
-    ! Check for negative value! 
-    if (FEISTY%BE  .le. FEISTY%zero) then
-        FEISTY%BE = FEISTY%IC
-    end if
-
-    ! Benthic at the last bottom layer (nk?)
-    pred_BE = fish(MD)%cons_BE(i,j,nk) * FEISTY%Md_B(i,j,nk) + fish(LD)%cons_BE(i,j,nk) * FEISTY%Ld_B(i,j,nk)
-    r_BE = FEISTY%Bent_eff * FEISTY%det / (FEISTY%BE + FEISTY%eps)
-    FEISTY%dBdt_BE(i,j,nk) = (r_BE * FEISTY%BE * (1 - FEISTY%BE/FEISTY%CC) - pred_BE)
-   
-    ! Calcul of the detritus after consumption from benthic organism - off 
-    if (do_Benthic_pred_detritus) then 
-        det = (FEISTY%det - pred_BE * FEISTY%BE) / FEISTY%convers_det
-    end if
-
-end subroutine generic_FEISTY_benthic_update_from_source
-
-
 !#######################################################################
 ! <SUBROUTINE NAME="generic_FEISTY_update_pointer">
 !
@@ -2289,9 +2244,6 @@ subroutine generic_FEISTY_update_pointer(i, j, k, tau, dt)
     FEISTY%p_Ld_B(i,j,tau) = FEISTY%p_Ld_B(i,j,tau) +  fish(LD)%dBdt_fish(i,j) * Delta_t 
     FEISTY%p_BE_B(i,j,tau) = FEISTY%p_BE_B(i,j,tau) +  FEISTY%dBdt_BE(i,j)     * Delta_t 
 
-    ! Update non-prognostic tracers:
-    FEISTY%p_Ld_Repro(i,j,tau) = fish(LD)%rho(i,j)
-
 end subroutine generic_FEISTY_update_pointer
 
 
@@ -2304,11 +2256,11 @@ end subroutine generic_FEISTY_update_pointer
 ! </DESCRIPTION>
 subroutine generic_FEISTY_send_diagnostic_data(model_time)
     type(time_type),     intent(in) :: model_time
-    real, dimension(:,:,:), pointer :: grid_tmask(:,:,1)
+    real, dimension(:,:,:), pointer :: grid_tmask
     integer :: isc,iec,jsc,jec,isd,ied,jsd,jed,nk,ntau, m
     logical :: used
 
-    call g_tracer_get_common(isc,iec,jsc,jec,isd,ied,jsd,jed,nk,ntau,grid_tmask(:,:,1)=grid_tmask(:,:,1)) 
+    call g_tracer_get_common(isc,iec,jsc,jec,isd,ied,jsd,jed,nk,ntau,grid_tmask=grid_tmask) 
 
     do m = 1, FEISTY%nFishGroup
         if (fish(m)%id_met .gt. 0)             &
