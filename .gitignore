@@ -22,3 +22,4 @@ exps/OM4.single_column.COBALT/CCE_restart/
 /builds/build/
 
 # Other files to ignore 
+exps/OM4.single_column.COBALT/output.cobalt
