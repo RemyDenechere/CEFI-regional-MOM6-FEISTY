@@ -272,6 +272,7 @@ type, public :: FEISTY_type
     ! Conversion from cobalt zooplankton and detritus to FEISTY  
     real :: convers_Mz              ! zooplankton biomass 
     real :: convers_det             ! detritus 
+    real :: PI_be_cutoff            ! seafloor depth value for demersal time in pelagic cutoff
 
 	
     ! Tracers: variables that need to be passed from on time step to the next: 
@@ -1374,9 +1375,6 @@ subroutine user_allocate_arrays_FEISTY
     allocate(FEISTY%BE_B(isd:ied,jsd:jed));     
     allocate(FEISTY%dBdt_BE(isd:ied,jsd:jed));  FEISTY%dBdt_BE  = 0.0 ! Derivative for Benthic resource
 
-    ! Non-prognostic tracers: 
-    allocate(FEISTY%Ld_Repro(isd:ied,jsd:jed)); FEISTY%Ld_Repro = 0.0 
-
     ! Diagnostic variables: 
     do m = 1, FEISTY%nFishGroup
         allocate(fish(m)%met(isd:ied,jsd:jed));        fish(m)%met = 0.0   		    !    Metabolic rate
@@ -1581,13 +1579,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         prog       = .false.) ! , &
   !      init_value = FEISTY%IC)
 
-    ! Diagnostic tracers:----------------------------
-    call g_tracer_add(tracer_list,package_name, &
-        name       = 'Ld_Repro',         &
-        longname   = 'Reproduction of Large Demersal at bottom layer',  &
-        units      = 'g m-2 d-1',      &
-        prog       = .false.)
-
 end subroutine user_add_tracers_FEISTY
 
 
@@ -1687,7 +1678,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     integer :: stdoutunit, stdlogunit, outunit
     integer :: init = 1
     real ::  m2_to_m3 = 100.00
-    real :: Ld_Repro_zi
     real, dimension(11) :: Resource ! total prey than a predator can encounter (used in type III functional response calculation)
     real, dimension(nFishGroup) :: Texp ! Temperature experienced, and time in pelagic zone
     real, dimension(nFishGroup) :: tpel = (/1,1,1,1,1,0,1,0/)
@@ -1785,8 +1775,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         write(outunit,*) "T_e : ", T_e
         write(outunit,*) "T_met : ", T_met
     endif 
-
-
 
     !:======================================================================
     ! Calculate the consumption for each group on zooplankton and fish 
@@ -2015,24 +2003,16 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! Small size (no loss from reproduction)
     fish(SF)%dBdt_fish(i,j) = FEISTY%eps_R * fish(MF)%rho(i,j) * fish(MF)%B + (fish(SF)%E_A(i,j) - fish(SF)%Fout(i,j) - fish(SF)%mu) * fish(SF)%B
     fish(SP)%dBdt_fish(i,j) = FEISTY%eps_R * fish(LP)%rho(i,j) * fish(LP)%B + (fish(SP)%E_A(i,j) - fish(SP)%Fout(i,j) - fish(SP)%mu) * fish(SP)%B
-    fish(SD)%dBdt_fish(i,j) = FEISTY%eps_R * Ld_Repro_zi  * fish(LD)%B + (fish(SD)%E_A(i,j) - fish(SD)%Fout(i,j) - fish(SD)%mu) * fish(SD)%B  
+    fish(SD)%dBdt_fish(i,j) = FEISTY%eps_R * fish(LD)%rho(i,j) * fish(LD)%B + (fish(SD)%E_A(i,j) - fish(SD)%Fout(i,j) - fish(SD)%mu) * fish(SD)%B  
     
     ! Medium size (reproduction loss for Mf)
     fish(MF)%dBdt_fish(i,j) = fish(SF)%Fout(i,j) * fish(SF)%B + (fish(MF)%E_A(i,j) - fish(MF)%rho(i,j) - fish(MF)%mu) * fish(MF)%B 
     fish(MP)%dBdt_fish(i,j) = fish(SP)%Fout(i,j) * fish(SP)%B + (fish(MP)%E_A(i,j) - fish(MP)%Fout(i,j)  - fish(MP)%mu) * fish(MP)%B 
-    if (k .eq. nk) then ! If at bottom layer then take the integrated Fout from 
-        fish(MD)%dBdt_fish(i,j) = sum(fish(SD)%Fout(i,j,1:nk) * FEISTY%Sd_B(i,j,1:nk) * zt(1:nk)) + (fish(MD)%E_A(i,j) - fish(MD)%Fout(i,j)  - fish(MD)%mu) * fish(MD)%B 
-    else ! SD from all layers migrates at the bottom layers!
-        fish(MD)%dBdt_fish(i,j) = -0.5
-    end if 
+    fish(MD)%dBdt_fish(i,j) = fish(SD)%Fout(i,j) * fish(SD)%B + (fish(MD)%E_A(i,j) - fish(MD)%Fout(i,j)  - fish(MD)%mu) * fish(MD)%B 
 
     ! Large fish (reproduction Fout = 0) 
     fish(LP)%dBdt_fish(i,j) = fish(MP)%Fout(i,j) * fish(MP)%B + (fish(LP)%E_A(i,j) - fish(LP)%rho(i,j) - fish(LP)%mu) * fish(LP)%B
-    if (k .eq. nk) then
-        fish(LD)%dBdt_fish(i,j) = fish(MD)%Fout(i,j) * fish(MD)%B + (fish(LD)%E_A(i,j) - fish(LD)%rho(i,j) - fish(LD)%mu) * fish(LD)%B 
-    else ! LD from all layers migrates at the bottom layers!
-        fish(LD)%dBdt_fish(i,j) =  -0.5
-    end if 
+    fish(LD)%dBdt_fish(i,j) = fish(MD)%Fout(i,j) * fish(MD)%B + (fish(LD)%E_A(i,j) - fish(LD)%rho(i,j) - fish(LD)%mu) * fish(LD)%B 
 
     !:======================================================================
     ! Calcul the Benthic biomass from detritus flux to benthic 

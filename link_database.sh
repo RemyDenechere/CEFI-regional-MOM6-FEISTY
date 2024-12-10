@@ -58,7 +58,7 @@ else
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/woa13_decav_ptemp_monthly_fulldepth_01.nc ./woa13_decav_ptemp_monthly_fulldepth_01.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/woa13_decav_s_monthly_fulldepth_01.nc ./woa13_decav_s_monthly_fulldepth_01.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/woa13_decav_s_monthly_fulldepth_01.nc ./woa13_decav_s_monthly_fulldepth_01.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/mosaic.nc ./mosaic.nc
+	#ln -fs ${CEFI_DATASET_GLOBAL}/mosaic.nc ./mosaic.nc
 fi
 
 if [ -z "${CEFI_DATASET_LOC}" ]; then
