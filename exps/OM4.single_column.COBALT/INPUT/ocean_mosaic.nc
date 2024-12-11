@@ -1,1 +1,1 @@
-../GOF/ocean_mosaic.nc
+../BATS/ocean_mosaic.nc

@@ -117,7 +117,7 @@ type, public :: fish_type
     ! These diagnostic variables are not tracers, i.e., they 
     ! do not need to be passed from a time step to the next one
 	! -----------------------------------
-	real, allocatable, dimension(:,:,:) :: &
+	real, allocatable, dimension(:,:) :: &
     	met, & 		    !    Metabolic rate
     	
         enc_Mz, & 	    !    Encounter rate of medium zooplankton
@@ -210,7 +210,7 @@ type, public :: FEISTY_type
     real :: d2s                 ! conversion second to day
     real :: y2d                 ! conversion day to year 
     real :: IC                  ! Initial Conditions 
-    real :: conv_m2_to_m3       ! conversion from m2 to m2 searching rates! 
+    real :: conv_m2_to_m2       ! conversion from m2 to m2 searching rates! 
 
 
     ! Parameters physiology: ------------------------------------------
@@ -417,7 +417,7 @@ subroutine generic_FEISTY_init(tracer_list)
     ! generic_FEISTY_update_from_source 
     ! parameters used : 
     ! w        : wet weight                                 [g]
-    ! a_enc    : coefficient for Encounter rate             [m3 g^(b_enc−1) d−1]
+    ! a_enc    : coefficient for Encounter rate             [m2 g^(b_enc−1) d−1]
     ! b_enc    : exponent for clearance rate                [Ø]
     ! a_cmax   : coefficient for maximum consumption        [d-1 g^(b_cmax)]
     ! b_cmax   : exponent for maximum consumption           [Ø]
@@ -527,206 +527,206 @@ subroutine generic_FEISTY_register_diag(diag_list)
 
     ! Register Encounter rate of medium zooplankton (enc_Mz):
         ! SF:
-        vardesc_temp = vardesc("SF_enc_Mz","Encounter rate of medium zooplankton for Small Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SF_enc_Mz","Encounter rate of medium zooplankton for Small Forage",'h','1','s','m2 g-1 d-1','f')
         fish(SF)%id_enc_Mz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SP:
-        vardesc_temp = vardesc("SP_enc_Mz","Encounter rate of medium zooplankton for Small Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SP_enc_Mz","Encounter rate of medium zooplankton for Small Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(SP)%id_enc_Mz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SD:
-        vardesc_temp = vardesc("SD_enc_Mz","Encounter rate of medium zooplankton for Small Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SD_enc_Mz","Encounter rate of medium zooplankton for Small Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(SD)%id_enc_Mz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MF:
-        vardesc_temp = vardesc("MF_enc_Mz","Encounter rate of medium zooplankton for Medium Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MF_enc_Mz","Encounter rate of medium zooplankton for Medium Forage",'h','1','s','m2 g-1 d-1','f')
         fish(MF)%id_enc_Mz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MP:
-        vardesc_temp = vardesc("MP_enc_Mz","Encounter rate of medium zooplankton for Medium Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MP_enc_Mz","Encounter rate of medium zooplankton for Medium Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(MP)%id_enc_Mz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MD:
-        vardesc_temp = vardesc("MD_enc_Mz","Encounter rate of medium zooplankton for Medium Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MD_enc_Mz","Encounter rate of medium zooplankton for Medium Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(MD)%id_enc_Mz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LP:
-        vardesc_temp = vardesc("LP_enc_Mz","Encounter rate of medium zooplankton for Large Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LP_enc_Mz","Encounter rate of medium zooplankton for Large Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(LP)%id_enc_Mz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LD:
-        vardesc_temp = vardesc("LD_enc_Mz","Encounter rate of medium zooplankton for Large Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LD_enc_Mz","Encounter rate of medium zooplankton for Large Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(LD)%id_enc_Mz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
     ! Register Encounter rate of large zooplankton (enc_Lz):
         ! SF:
-        vardesc_temp = vardesc("SF_enc_Lz","Encounter rate of large zooplankton for Small Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SF_enc_Lz","Encounter rate of large zooplankton for Small Forage",'h','1','s','m2 g-1 d-1','f')
         fish(SF)%id_enc_Lz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SP:
-        vardesc_temp = vardesc("SP_enc_Lz","Encounter rate of large zooplankton for Small Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SP_enc_Lz","Encounter rate of large zooplankton for Small Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(SP)%id_enc_Lz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SD:
-        vardesc_temp = vardesc("SD_enc_Lz","Encounter rate of large zooplankton for Small Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SD_enc_Lz","Encounter rate of large zooplankton for Small Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(SD)%id_enc_Lz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MF:
-        vardesc_temp = vardesc("MF_enc_Lz","Encounter rate of large zooplankton for Medium Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MF_enc_Lz","Encounter rate of large zooplankton for Medium Forage",'h','1','s','m2 g-1 d-1','f')
         fish(MF)%id_enc_Lz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MP:
-        vardesc_temp = vardesc("MP_enc_Lz","Encounter rate of large zooplankton for Medium Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MP_enc_Lz","Encounter rate of large zooplankton for Medium Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(MP)%id_enc_Lz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MD:
-        vardesc_temp = vardesc("MD_enc_Lz","Encounter rate of large zooplankton for Medium Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MD_enc_Lz","Encounter rate of large zooplankton for Medium Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(MD)%id_enc_Lz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LP:
-        vardesc_temp = vardesc("LP_enc_Lz","Encounter rate of large zooplankton for Large Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LP_enc_Lz","Encounter rate of large zooplankton for Large Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(LP)%id_enc_Lz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LD:
-        vardesc_temp = vardesc("LD_enc_Lz","Encounter rate of large zooplankton for Large Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LD_enc_Lz","Encounter rate of large zooplankton for Large Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(LD)%id_enc_Lz = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
 
     ! Register Encounter rate of forage fish (enc_f):
         ! SF:
-        vardesc_temp = vardesc("SF_enc_f","Encounter rate of forage fish for Small Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SF_enc_f","Encounter rate of forage fish for Small Forage",'h','1','s','m2 g-1 d-1','f')
         fish(SF)%id_enc_f = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SP:
-        vardesc_temp = vardesc("SP_enc_f","Encounter rate of forage fish for Small Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SP_enc_f","Encounter rate of forage fish for Small Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(SP)%id_enc_f = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SD:
-        vardesc_temp = vardesc("SD_enc_f","Encounter rate of forage fish for Small Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SD_enc_f","Encounter rate of forage fish for Small Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(SD)%id_enc_f = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MF:
-        vardesc_temp = vardesc("MF_enc_f","Encounter rate of forage fish for Medium Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MF_enc_f","Encounter rate of forage fish for Medium Forage",'h','1','s','m2 g-1 d-1','f')
         fish(MF)%id_enc_f = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MP:
-        vardesc_temp = vardesc("MP_enc_f","Encounter rate of forage fish for Medium Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MP_enc_f","Encounter rate of forage fish for Medium Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(MP)%id_enc_f = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MD:
-        vardesc_temp = vardesc("MD_enc_f","Encounter rate of forage fish for Medium Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MD_enc_f","Encounter rate of forage fish for Medium Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(MD)%id_enc_f = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LP:
-        vardesc_temp = vardesc("LP_enc_f","Encounter rate of forage fish for Large Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LP_enc_f","Encounter rate of forage fish for Large Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(LP)%id_enc_f = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LD:
-        vardesc_temp = vardesc("LD_enc_f","Encounter rate of forage fish for Large Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LD_enc_f","Encounter rate of forage fish for Large Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(LD)%id_enc_f = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
     ! Register Encounter rate of pelagic fish (enc_p):
         ! SF:
-        vardesc_temp = vardesc("SF_enc_p","Encounter rate of pelagic fish for Small Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SF_enc_p","Encounter rate of pelagic fish for Small Forage",'h','1','s','m2 g-1 d-1','f')
         fish(SF)%id_enc_p = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SP:
-        vardesc_temp = vardesc("SP_enc_p","Encounter rate of pelagic fish for Small Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SP_enc_p","Encounter rate of pelagic fish for Small Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(SP)%id_enc_p = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SD:
-        vardesc_temp = vardesc("SD_enc_p","Encounter rate of pelagic fish for Small Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SD_enc_p","Encounter rate of pelagic fish for Small Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(SD)%id_enc_p = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MF:
-        vardesc_temp = vardesc("MF_enc_p","Encounter rate of pelagic fish for Medium Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MF_enc_p","Encounter rate of pelagic fish for Medium Forage",'h','1','s','m2 g-1 d-1','f')
         fish(MF)%id_enc_p = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MP:
-        vardesc_temp = vardesc("MP_enc_p","Encounter rate of pelagic fish for Medium Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MP_enc_p","Encounter rate of pelagic fish for Medium Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(MP)%id_enc_p = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MD:
-        vardesc_temp = vardesc("MD_enc_p","Encounter rate of pelagic fish for Medium Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MD_enc_p","Encounter rate of pelagic fish for Medium Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(MD)%id_enc_p = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LP:
-        vardesc_temp = vardesc("LP_enc_p","Encounter rate of pelagic fish for Large Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LP_enc_p","Encounter rate of pelagic fish for Large Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(LP)%id_enc_p = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LD:
-        vardesc_temp = vardesc("LD_enc_p","Encounter rate of pelagic fish for Large Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LD_enc_p","Encounter rate of pelagic fish for Large Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(LD)%id_enc_p = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
     ! Register Encounter rate of demersal fish (enc_d):
         ! SF:
-        vardesc_temp = vardesc("SF_enc_d","Encounter rate of demersal fish for Small Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SF_enc_d","Encounter rate of demersal fish for Small Forage",'h','1','s','m2 g-1 d-1','f')
         fish(SF)%id_enc_d = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SP:
-        vardesc_temp = vardesc("SP_enc_d","Encounter rate of demersal fish for Small Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SP_enc_d","Encounter rate of demersal fish for Small Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(SP)%id_enc_d = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SD:
-        vardesc_temp = vardesc("SD_enc_d","Encounter rate of demersal fish for Small Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SD_enc_d","Encounter rate of demersal fish for Small Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(SD)%id_enc_d = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MF:
-        vardesc_temp = vardesc("MF_enc_d","Encounter rate of demersal fish for Medium Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MF_enc_d","Encounter rate of demersal fish for Medium Forage",'h','1','s','m2 g-1 d-1','f')
         fish(MF)%id_enc_d = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MP:
-        vardesc_temp = vardesc("MP_enc_d","Encounter rate of demersal fish for Medium Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MP_enc_d","Encounter rate of demersal fish for Medium Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(MP)%id_enc_d = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MD:
-        vardesc_temp = vardesc("MD_enc_d","Encounter rate of demersal fish for Medium Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MD_enc_d","Encounter rate of demersal fish for Medium Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(MD)%id_enc_d = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LP:
-        vardesc_temp = vardesc("LP_enc_d","Encounter rate of demersal fish for Large Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LP_enc_d","Encounter rate of demersal fish for Large Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(LP)%id_enc_d = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LD:
-        vardesc_temp = vardesc("LD_enc_d","Encounter rate of demersal fish for Large Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LD_enc_d","Encounter rate of demersal fish for Large Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(LD)%id_enc_d = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
     ! Register Encounter rate of benthos (enc_BE):
         ! SF:
-        vardesc_temp = vardesc("SF_enc_BE","Encounter rate of benthos for Small Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SF_enc_BE","Encounter rate of benthos for Small Forage",'h','1','s','m2 g-1 d-1','f')
         fish(SF)%id_enc_BE = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SP:
-        vardesc_temp = vardesc("SP_enc_BE","Encounter rate of benthos for Small Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SP_enc_BE","Encounter rate of benthos for Small Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(SP)%id_enc_BE = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! SD:
-        vardesc_temp = vardesc("SD_enc_BE","Encounter rate of benthos for Small Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("SD_enc_BE","Encounter rate of benthos for Small Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(SD)%id_enc_BE = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MF:
-        vardesc_temp = vardesc("MF_enc_BE","Encounter rate of benthos for Medium Forage",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MF_enc_BE","Encounter rate of benthos for Medium Forage",'h','1','s','m2 g-1 d-1','f')
         fish(MF)%id_enc_BE = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MP:
-        vardesc_temp = vardesc("MP_enc_BE","Encounter rate of benthos for Medium Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MP_enc_BE","Encounter rate of benthos for Medium Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(MP)%id_enc_BE = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! MD:
-        vardesc_temp = vardesc("MD_enc_BE","Encounter rate of benthos for Medium Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("MD_enc_BE","Encounter rate of benthos for Medium Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(MD)%id_enc_BE = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LP:
-        vardesc_temp = vardesc("LP_enc_BE","Encounter rate of benthos for Large Pelagic",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LP_enc_BE","Encounter rate of benthos for Large Pelagic",'h','1','s','m2 g-1 d-1','f')
         fish(LP)%id_enc_BE = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
         ! LD:
-        vardesc_temp = vardesc("LD_enc_BE","Encounter rate of benthos for Large Demersal",'h','1','s','m3 g-1 d-1','f')
+        vardesc_temp = vardesc("LD_enc_BE","Encounter rate of benthos for Large Demersal",'h','1','s','m2 g-1 d-1','f')
         fish(LD)%id_enc_BE = register_diag_field(package_name, vardesc_temp%name, axes(1:2),&
             init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
@@ -1280,7 +1280,7 @@ subroutine user_add_params_FEISTY
     call g_tracer_add_param('d2s', FEISTY%d2s, 24.0*60.0*60.0)      ! conversion second to day
     call g_tracer_add_param('y2d', FEISTY%y2d, 365.0)               ! conversion day to year 
     call g_tracer_add_param('IC', FEISTY%IC,  10.0**(-5))            ! value for initial condition    
-    call g_tracer_add_param('conv_m2_to_m3', FEISTY%conv_m2_to_m3, 100.0)
+    call g_tracer_add_param('conv_m2_to_m2', FEISTY%conv_m2_to_m2, 100.0)
 
     ! Parameters physiology: ------------------------------------------
     call g_tracer_add_param('ke', FEISTY%ke, 0.0630)                ! [°c-1]                Temperature correction for cmax and encounter
@@ -1372,7 +1372,7 @@ subroutine user_allocate_arrays_FEISTY
     allocate(FEISTY%Lp_B(isd:ied,jsd:jed));     
     allocate(FEISTY%Ld_B(isd:ied,jsd:jed));     
     allocate(FEISTY%BE_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%dBdt_BE(isd:ied,jsd:jed));  FEISTY%dBdt_BE  = 0.0 ! Derivative for Benthic resource
+    allocate(FEISTY%dBdt_BE(isd:ied,jsd:jed));         FEISTY%dBdt_BE  = 0.0 ! Derivative for Benthic resource
 
     ! Diagnostic variables: 
     do m = 1, FEISTY%nFishGroup
@@ -1393,15 +1393,15 @@ subroutine user_allocate_arrays_FEISTY
         allocate(fish(m)%cons_BE(isd:ied,jsd:jed));    fish(m)%cons_BE = 0.0	            !    Consumption rate of benthos
         allocate(fish(m)%cons_tot(isd:ied,jsd:jed));   fish(m)%cons_tot = 0.0 	            !    Total Consumption rate 
 
-        allocate(fish(m)%f_tot(isd:ied,jsd:jed));      fish(m)%f_tot = 0.0 	            !    Feeding level = Tot_con / Cmax
+        allocate(fish(m)%f_tot(isd:ied,jsd:jed));      fish(m)%f_tot = 0.0 	                !    Feeding level = Tot_con / Cmax
         allocate(fish(m)%mu_p(isd:ied,jsd:jed));       fish(m)%mu_p = 0.0 	                !    Predation mortality rate
         allocate(fish(m)%E_A(isd:ied,jsd:jed));        fish(m)%E_A = 0.0 		            !    Rate of biomass accumulation/ Available energy
         allocate(fish(m)%prod(isd:ied,jsd:jed));       fish(m)%prod = 0.0 	                !    Productivity = E_A* Biomass
         allocate(fish(m)%Fout(isd:ied,jsd:jed));       fish(m)%Fout = 0.0 	                !    flux of biomass to next size class
         allocate(fish(m)%rho(isd:ied,jsd:jed));        fish(m)%rho = 0.0 		            !    rho
-        allocate(fish(m)%yield(isd:ied,jsd:jed));      fish(m)%yield = 0.0                 !    Yield = nu_F * Biomass 
+        allocate(fish(m)%yield(isd:ied,jsd:jed));      fish(m)%yield = 0.0                  !    Yield = nu_F * Biomass 
 
-        allocate(fish(m)%dBdt_fish(isd:ied,jsd:jed));  fish(m)%dBdt_fish = 0.0             ! Derivative for fish in m-2 d-1
+        allocate(fish(m)%dBdt_fish(isd:ied,jsd:jed));  fish(m)%dBdt_fish = 0.0              ! Derivative for fish in m-2 d-1
     end do 
 end subroutine user_allocate_arrays_FEISTY
 
@@ -1484,7 +1484,7 @@ end subroutine user_deallocate_arrays_FEISTY
 !       call g_tracer_add(tracer_list,package_name,&
 !            name       = 'SFfish',         &
 !            longname   = 'small forage fish biomass',  &
-!            units      = 'g/m3',      &
+!            units      = 'g/m2',      &
 !            prog       = .true.,
 !            init_value     = 0.001      )   
 !        
@@ -1590,15 +1590,15 @@ subroutine generic_FEISTY_tracer_get_values(tracer_list, isd, jsd, tau)
     integer, intent(in) :: isd, jsd, tau 
 
     ! Get values of the prognostic variable : ----------------------------------------------
-    call g_tracer_get_values(tracer_list, 'Sf_B' ,'field', FEISTY%Sf_B(:,:), isd, jsd, ntau=tau, positive = .true.)
-    call g_tracer_get_values(tracer_list, 'Sp_B' ,'field', FEISTY%Sp_B(:,:), isd, jsd, ntau=tau, positive = .true.)
-    call g_tracer_get_values(tracer_list, 'Sd_B' ,'field', FEISTY%Sd_B(:,:), isd, jsd, ntau=tau, positive = .true.)
-    call g_tracer_get_values(tracer_list, 'Mf_B' ,'field', FEISTY%Mf_B(:,:), isd, jsd, ntau=tau, positive = .true.)
-    call g_tracer_get_values(tracer_list, 'Mp_B' ,'field', FEISTY%Mp_B(:,:), isd, jsd, ntau=tau, positive = .true.)
-    call g_tracer_get_values(tracer_list, 'Md_B' ,'field', FEISTY%Md_B(:,:), isd, jsd, ntau=tau, positive = .true.)
-    call g_tracer_get_values(tracer_list, 'Lp_B' ,'field', FEISTY%Lp_B(:,:), isd, jsd, ntau=tau, positive = .true.)
-    call g_tracer_get_values(tracer_list, 'Ld_B' ,'field', FEISTY%Ld_B(:,:), isd, jsd, ntau=tau, positive = .true.)
-    call g_tracer_get_values(tracer_list, 'BE_B' ,'field', FEISTY%BE_B(:,:), isd, jsd, ntau=tau)
+    call g_tracer_get_values(tracer_list, 'Sf_B' ,'alpha', FEISTY%Sf_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sp_B' ,'alpha', FEISTY%Sp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sd_B' ,'alpha', FEISTY%Sd_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Mf_B' ,'alpha', FEISTY%Mf_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Mp_B' ,'alpha', FEISTY%Mp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Md_B' ,'alpha', FEISTY%Md_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Lp_B' ,'alpha', FEISTY%Lp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Ld_B' ,'alpha', FEISTY%Ld_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'BE_B' ,'alpha', FEISTY%BE_B(:,:), isd, jsd)
 
 end subroutine generic_FEISTY_tracer_get_values
 
@@ -1609,15 +1609,15 @@ end subroutine generic_FEISTY_tracer_get_values
 subroutine generic_FEISTY_tracer_get_pointer(tracer_list)
     type(g_tracer_type), pointer :: tracer_list
 
-    call g_tracer_get_pointer(tracer_list,'Sf_B','field', FEISTY%p_Sf_B)
-    call g_tracer_get_pointer(tracer_list,'Sp_B','field', FEISTY%p_Sp_B)
-    call g_tracer_get_pointer(tracer_list,'Sd_B','field', FEISTY%p_Sd_B)
-    call g_tracer_get_pointer(tracer_list,'Mf_B','field', FEISTY%p_Mf_B)
-    call g_tracer_get_pointer(tracer_list,'Mp_B','field', FEISTY%p_Mp_B)
-    call g_tracer_get_pointer(tracer_list,'Md_B','field', FEISTY%p_Md_B)
-    call g_tracer_get_pointer(tracer_list,'Lp_B','field', FEISTY%p_Lp_B)
-    call g_tracer_get_pointer(tracer_list,'Ld_B','field', FEISTY%p_Ld_B)
-    call g_tracer_get_pointer(tracer_list,'BE_B','field', FEISTY%p_BE_B)
+    call g_tracer_get_pointer(tracer_list,'Sf_B','alpha', FEISTY%p_Sf_B)
+    call g_tracer_get_pointer(tracer_list,'Sp_B','alpha', FEISTY%p_Sp_B)
+    call g_tracer_get_pointer(tracer_list,'Sd_B','alpha', FEISTY%p_Sd_B)
+    call g_tracer_get_pointer(tracer_list,'Mf_B','alpha', FEISTY%p_Mf_B)
+    call g_tracer_get_pointer(tracer_list,'Mp_B','alpha', FEISTY%p_Mp_B)
+    call g_tracer_get_pointer(tracer_list,'Md_B','alpha', FEISTY%p_Md_B)
+    call g_tracer_get_pointer(tracer_list,'Lp_B','alpha', FEISTY%p_Lp_B)
+    call g_tracer_get_pointer(tracer_list,'Ld_B','alpha', FEISTY%p_Ld_B)
+    call g_tracer_get_pointer(tracer_list,'BE_B','alpha', FEISTY%p_BE_B)
 
 end subroutine generic_FEISTY_tracer_get_pointer
 
@@ -1676,7 +1676,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real :: Delta_t             ! conversion from COBALT to FEISTY time step 
     real :: pred_BE             ! predation on benthic resource 
     real :: r_BE                ! Benthic growth rate
-    real ::  m2_to_m3 = 100.00
+    real ::  m2_to_m2 = 100.00
     real, dimension(11) :: Resource ! total prey than a predator can encounter (used in type III functional response calculation)
 
     integer :: m                ! index loop fish
@@ -1739,7 +1739,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! Tcorr_e   : temperature correction for Encounter and Cmax
     ! Tcorr_met : temperature correction for metabolism
     ! cmax      : mass-specific maximum consumption          [d-1]
-    ! V         : mass-specific Encounter rate               [m3 g−1 d−1]
+    ! V         : mass-specific Encounter rate               [m2 g−1 d−1]
     !:====================================================================== 
     
     ! Calcul average temperature in surface and take bottom temp
@@ -1763,9 +1763,9 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         Texp(m) = (Tp * tpel(m)) + (Tb*(1.0-tpel(m)))
         T_e(m) = exp(FEISTY%ke * (Texp(m)-10.0))      ! for encounter rate and Cmax
         T_met(m) = exp(FEISTY%kmet * (Texp(m)-10.0))  ! for metabolism
-        fish(m)%Tcorr_e = T_e                                       ! save Temp effect on encounter rate and Cmax
-        fish(m)%Tcorr_met = T_met                                   ! save Temp effect on met
-        fish(m)%V = fish(m)%Tcorr_e * fish(m)%V_w * m2_to_m3        ! update clearance rate with temp effect
+        fish(m)%Tcorr_e = T_e(m)                                       ! save Temp effect on encounter rate and Cmax
+        fish(m)%Tcorr_met = T_met(m)                                   ! save Temp effect on met
+        fish(m)%V = fish(m)%Tcorr_e * fish(m)%V_w * m2_to_m2        ! update clearance rate with temp effect
         fish(m)%cmax = fish(m)%cmax_w * fish(m)%Tcorr_e             ! update cmax with temp effect
         fish(m)%met(i,j) = fish(m)%met_w * fish(m)%Tcorr_met      ! Temperature corrected metabolism
     end do 
@@ -2038,8 +2038,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         write (outunit,*)  '------------ input for FEISTY ------------'
         write (outunit,*)  'depth =                   ', k
         write (outunit,*)  'Temperature               ', Temp
-        write (outunit,*)  'small zooplankton biomass ', prey_vec(idx_Mz) * FEISTY%convers_Mz
-        write (outunit,*)  'large zooplankton biomass ', prey_vec(idx_Lz) * FEISTY%convers_Mz
+        write (outunit,*)  'small zooplankton biomass ', med_zoo_N * FEISTY%convers_Mz
+        write (outunit,*)  'large zooplankton biomass ', Lrg_zoo_N * FEISTY%convers_Mz
         write (outunit,*)  '-------------- FEISTY output --------------'
 
         write (outunit,*)  '-------------- FEISTY Biomass --------------'
@@ -2223,11 +2223,10 @@ end subroutine generic_FEISTY_fish_update_from_source
 !   The grid_tmask(:,:,1)(i,j) might be unecessary for fish.
 ! 
 ! </DESCRIPTION>
-subroutine generic_FEISTY_update_pointer(i, j, k, tau, dt)
-    integer, intent(in) :: i, j, k, tau
+subroutine generic_FEISTY_update_pointer(i, j, tau, dt)
+    integer, intent(in) :: i, j, tau
     real,    intent(in) :: dt
     real                :: Delta_t
-
     ! FEISTY%d2s: Conversion from Day to second
     ! FEISTY dBdt, variation of fish per time, has a dt in day. However, COBALT runs un unit of second (dt)
     ! Therefore we need to convert FEISTY derivativve from d to second, i.e., 

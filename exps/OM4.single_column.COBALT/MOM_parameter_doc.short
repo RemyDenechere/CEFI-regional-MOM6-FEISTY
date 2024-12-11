@@ -124,7 +124,7 @@ DTFREEZE_DP = -7.75E-08         !   [degC Pa-1] default = 0.0
                                 ! temperature with pressure.
 
 ! === module MOM_restart ===
-MAX_FIELDS = 104                ! default = 100
+MAX_FIELDS = 105                ! default = 100
                                 ! The maximum number of restart fields that can be used.
 
 ! === module MOM_tracer_flow_control ===
@@ -453,61 +453,3 @@ EXP_OPACITY_SCHEME = "DOUBLE_EXP" ! default = "SINGLE_EXP"
                                 !        DOUBLE_EXP - Double Exponent decay.
 PEN_SW_SCALE = 0.35             !   [m] default = 0.0
                                 ! The vertical absorption e-folding depth of the penetrating shortwave
-                                ! radiation.
-PEN_SW_SCALE_2ND = 23.0         !   [m] default = 0.0
-                                ! The (2nd) vertical absorption e-folding depth of the penetrating shortwave
-                                ! radiation (use if SW_EXP_MODE==double.)
-SW_1ST_EXP_RATIO = 0.58         !   [nondim] default = 0.0
-                                ! The fraction of 1st vertical absorption e-folding depth penetrating shortwave
-                                ! radiation if SW_EXP_MODE==double.
-PEN_SW_FRAC = 1.0               !   [nondim] default = 0.0
-                                ! The fraction of the shortwave radiation that penetrates below the surface.
-PEN_SW_NBANDS = 2               ! default = 1
-                                ! The number of bands of penetrating shortwave radiation.
-
-! === module MOM_tracer_advect ===
-TRACER_ADVECTION_SCHEME = "PPM:H3" ! default = "PLM"
-                                ! The horizontal transport scheme for tracers:
-                                !   PLM    - Piecewise Linear Method
-                                !   PPM:H3 - Piecewise Parabolic Method (Huyhn 3rd order)
-                                !   PPM    - Piecewise Parabolic Method (Colella-Woodward)
-
-! === module MOM_tracer_hor_diff ===
-CHECK_DIFFUSIVE_CFL = True      !   [Boolean] default = False
-                                ! If true, use enough iterations the diffusion to ensure that the diffusive
-                                ! equivalent of the CFL limit is not violated.  If false, always use the greater
-                                ! of 1 or MAX_TR_DIFFUSION_CFL iteration.
-
-! === module MOM_sum_output ===
-MAXTRUNC = 100000               !   [truncations save_interval-1] default = 0
-                                ! The run will be stopped, and the day set to a very large value if the velocity
-                                ! is truncated more than MAXTRUNC times between energy saves.  Set MAXTRUNC to 0
-                                ! to stop if there is any truncation of velocities.
-ENERGYSAVEDAYS = 0.25           !   [days] default = 1.0
-                                ! The interval in units of TIMEUNIT between saves of the energies of the run and
-                                ! other globally summed diagnostics.
-
-! === module ocean_stochastics_init ===
-
-! === module ocean_model_init ===
-
-! === module MOM_surface_forcing ===
-MAX_P_SURF = 0.0                !   [Pa] default = -1.0
-                                ! The maximum surface pressure that can be exerted by the atmosphere and
-                                ! floating sea-ice or ice shelves. This is needed because the FMS coupling
-                                ! structure does not limit the water that can be frozen out of the ocean and the
-                                ! ice-ocean heat fluxes are treated explicitly.  No limit is applied if a
-                                ! negative value is used.
-ADJUST_NET_FRESH_WATER_TO_ZERO = True !   [Boolean] default = False
-                                ! If true, adjusts the net fresh-water forcing seen by the ocean (including
-                                ! restoring) to zero.
-CD_TIDES = 0.0018               !   [nondim] default = 1.0E-04
-                                ! The drag coefficient that applies to the tides.
-USE_RIGID_SEA_ICE = True        !   [Boolean] default = False
-                                ! If true, sea-ice is rigid enough to exert a nonhydrostatic pressure that
-                                ! resist vertical motion.
-SEA_ICE_RIGID_MASS = 100.0      !   [kg m-2] default = 1000.0
-                                ! The mass of sea-ice per unit area at which the sea-ice starts to exhibit
-                                ! rigidity
-
-! === module MOM_restart ===
