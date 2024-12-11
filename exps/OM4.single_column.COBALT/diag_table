@@ -721,6 +721,8 @@ OM4_single_column
  "generic_cobalt_z","fediss",       "fediss",                 "ocean_cobalt_omip_rates_year_z","all","mean","none",2
  "generic_cobalt_z","graz",         "graz",                   "ocean_cobalt_omip_rates_year_z","all","mean","none",2
 #
+#==============================================================================================================
+#  12/102024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run
 # FEISTY tracers output
 "ocean_model", "volcello",     "volcello",         "ocean_feisty_tracers",      "all", "mean", "none",2 # Cell measure for 3d data
 "generic_feisty", "Sf_B",  "Sf_B",     "ocean_feisty_tracers","all","mean","none",2
