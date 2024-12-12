@@ -1519,63 +1519,81 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         name       = 'Sf_B',         &
         longname   = 'Small forage fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .false.) ! , &
+        prog       = .true.,            &
+        move_vertical = .true.,         &
+        btm_reservoir = .true.          ) ! , &
   !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list, package_name,&
         name       = 'Mf_B',         &
         longname   = 'Medium forage fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .false.) ! , &
+        prog       = .true.,            &
+        move_vertical = .true.,         &
+        btm_reservoir = .true.          ) ! , &
   !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sp_B',         &
         longname   = 'Small large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .false.) ! , &
+        prog       = .true.,            &
+        move_vertical = .true.,         &
+        btm_reservoir = .true.          ) ! , &
         !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Mp_B',         &
         longname   = 'Medium large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .false.) ! , &
+        prog       = .true.,            &
+        move_vertical = .true.,         &
+        btm_reservoir = .true.          ) ! , &
         !      init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Lp_B',         &
         longname   = 'Large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .false.) ! , &
+        prog       = .true.,            &
+        move_vertical = .true.,         &
+        btm_reservoir = .true.          ) ! , &
         !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sd_B',         &
         longname   = 'Small demersal fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .false.) ! , &
+        prog       = .true.,            &
+        move_vertical = .true.,         &
+        btm_reservoir = .true.          ) ! , &
   !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Md_B',         &
         longname   = 'Medium demersal fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .false.) ! , &
+        prog       = .true.,            &
+        move_vertical = .true.,         &
+        btm_reservoir = .true.          ) ! , &
   !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Ld_B',         &
         longname   = 'Large demersal fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .false.) ! , &
+        prog       = .true.,            &
+        move_vertical = .true.,         &
+        btm_reservoir = .true.          ) ! , &
   !      init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'BE_B',         &
         longname   = 'Benthic invertebrate biomass',  &
         units      = 'g m-2',      &
-        prog       = .false.) ! , &
+        prog       = .true.,            &
+        move_vertical = .true.,         &
+        btm_reservoir = .true.          ) ! , &
   !      init_value = FEISTY%IC)
 
 end subroutine user_add_tracers_FEISTY
@@ -1590,15 +1608,15 @@ subroutine generic_FEISTY_tracer_get_values(tracer_list, isd, jsd, tau)
     integer, intent(in) :: isd, jsd, tau 
 
     ! Get values of the prognostic variable : ----------------------------------------------
-    call g_tracer_get_values(tracer_list, 'Sf_B' ,'alpha', FEISTY%Sf_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Sp_B' ,'alpha', FEISTY%Sp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Sd_B' ,'alpha', FEISTY%Sd_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Mf_B' ,'alpha', FEISTY%Mf_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Mp_B' ,'alpha', FEISTY%Mp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Md_B' ,'alpha', FEISTY%Md_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Lp_B' ,'alpha', FEISTY%Lp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Ld_B' ,'alpha', FEISTY%Ld_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'BE_B' ,'alpha', FEISTY%BE_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sf_B' ,'btm_reservoir', FEISTY%Sf_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sp_B' ,'btm_reservoir', FEISTY%Sp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sd_B' ,'btm_reservoir', FEISTY%Sd_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Mf_B' ,'btm_reservoir', FEISTY%Mf_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Mp_B' ,'btm_reservoir', FEISTY%Mp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Md_B' ,'btm_reservoir', FEISTY%Md_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Lp_B' ,'btm_reservoir', FEISTY%Lp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Ld_B' ,'btm_reservoir', FEISTY%Ld_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'BE_B' ,'btm_reservoir', FEISTY%BE_B(:,:), isd, jsd)
 
 end subroutine generic_FEISTY_tracer_get_values
 
@@ -1609,15 +1627,15 @@ end subroutine generic_FEISTY_tracer_get_values
 subroutine generic_FEISTY_tracer_get_pointer(tracer_list)
     type(g_tracer_type), pointer :: tracer_list
 
-    call g_tracer_get_pointer(tracer_list,'Sf_B','alpha', FEISTY%p_Sf_B)
-    call g_tracer_get_pointer(tracer_list,'Sp_B','alpha', FEISTY%p_Sp_B)
-    call g_tracer_get_pointer(tracer_list,'Sd_B','alpha', FEISTY%p_Sd_B)
-    call g_tracer_get_pointer(tracer_list,'Mf_B','alpha', FEISTY%p_Mf_B)
-    call g_tracer_get_pointer(tracer_list,'Mp_B','alpha', FEISTY%p_Mp_B)
-    call g_tracer_get_pointer(tracer_list,'Md_B','alpha', FEISTY%p_Md_B)
-    call g_tracer_get_pointer(tracer_list,'Lp_B','alpha', FEISTY%p_Lp_B)
-    call g_tracer_get_pointer(tracer_list,'Ld_B','alpha', FEISTY%p_Ld_B)
-    call g_tracer_get_pointer(tracer_list,'BE_B','alpha', FEISTY%p_BE_B)
+    call g_tracer_get_pointer(tracer_list,'Sf_B','btm_reservoir', FEISTY%p_Sf_B)
+    call g_tracer_get_pointer(tracer_list,'Sp_B','btm_reservoir', FEISTY%p_Sp_B)
+    call g_tracer_get_pointer(tracer_list,'Sd_B','btm_reservoir', FEISTY%p_Sd_B)
+    call g_tracer_get_pointer(tracer_list,'Mf_B','btm_reservoir', FEISTY%p_Mf_B)
+    call g_tracer_get_pointer(tracer_list,'Mp_B','btm_reservoir', FEISTY%p_Mp_B)
+    call g_tracer_get_pointer(tracer_list,'Md_B','btm_reservoir', FEISTY%p_Md_B)
+    call g_tracer_get_pointer(tracer_list,'Lp_B','btm_reservoir', FEISTY%p_Lp_B)
+    call g_tracer_get_pointer(tracer_list,'Ld_B','btm_reservoir', FEISTY%p_Ld_B)
+    call g_tracer_get_pointer(tracer_list,'BE_B','btm_reservoir', FEISTY%p_BE_B)
 
 end subroutine generic_FEISTY_tracer_get_pointer
 

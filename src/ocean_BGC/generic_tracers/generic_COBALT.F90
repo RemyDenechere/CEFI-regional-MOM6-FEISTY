@@ -1,4 +1,3 @@
-
 ! <CONTACT EMAIL="Charles.Stock@noaa.gov"> Charles Stock
 ! </CONTACT>
 !
@@ -6127,7 +6126,7 @@ contains
 
 !==============================================================================================================
 !  09/05/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run
-     vardesc_temp = vardesc("Pop_btm", "Detritus flux to sea floor",'h','1','s','g WW m-3 d-1','f')
+     vardesc_temp = vardesc("Pop_btm", "Detritus flux to sea floor",'h','1','s','g WW m-2 d-1','f')
      cobalt%id_Pop_btm = register_diag_field(package_name, vardesc_temp%name, axes(1:2), &
         init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
@@ -7552,17 +7551,16 @@ contains
           name       = 'hp_ingest_nmdz',         &
           longname   = 'High trophic level ingestion of medium zooplankton',  &
           units      = 'mol N m-3 s-1',      &
-          prog       = .false.,       &
-          init_value = 1.e-10           )
-          print*, "got here !!!!!!!!!!! line 7556 oui "
+          prog       = .true.) !,       &
+          ! init_value = 1.e-10           )
 
           call g_tracer_add(tracer_list, package_name,&
           name       = 'hp_ingest_nlgz',         &
           longname   = 'High trophic level ingestion of large zooplankton',  &
           units      = 'mol N m-3 s-1',      &
-          prog       = .false.,       &
-          init_value = 1.e-10           )
-          end if
+          prog       = .true.) !,       &
+          ! init_value = 1.e-10           
+     end if
 
   end subroutine user_add_tracers
 
@@ -7866,13 +7864,6 @@ contains
          used = g_send_data(phyto(MEDIUM)%id_fsi_btm,phyto(MEDIUM)%fsi_btm, &
          model_time, rmask = grid_tmask(:,:,1),&
          is_in=isc, js_in=jsc,ie_in=iec, je_in=jec)
-
-! =======================================================================================
-!  12/10/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run       
-     if (do_FEISTY) then 
-          call g_tracer_get_values(tracer_list, 'hp_ingest_nmdz' ,'field', cobalt%hp_ingest_nmdz(:,:,:), isd, jsd, ntau=tau, positive = .true.)
-          call g_tracer_get_values(tracer_list, 'hp_ingest_nlgz' ,'field', cobalt%hp_ingest_nlgz(:,:,:), isd, jsd, ntau=tau, positive = .true.)
-     endif 
  
 
   end subroutine generic_COBALT_update_from_bottom
@@ -8229,14 +8220,17 @@ contains
     call g_tracer_get_values(tracer_list,'nmdz' ,'field',zoo(2)%f_n(:,:,:) ,isd,jsd,ntau=tau,positive=.true.)
     call g_tracer_get_values(tracer_list,'nlgz' ,'field',zoo(3)%f_n(:,:,:) ,isd,jsd,ntau=tau,positive=.true.)
     !==============================================================================================================
-    !  09/05/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run       
+    !  12/10/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run       
     ! 
     ! fish from FEISTY  
     ! 
     if (do_FEISTY) then 
           call generic_FEISTY_tracer_get_values(tracer_list, isd, jsd, tau)
-    end if 
+          call g_tracer_get_values(tracer_list, 'hp_ingest_nmdz' ,'field', cobalt%hp_ingest_nmdz(:,:,:), isd, jsd, ntau=tau, positive = .true.)
+          call g_tracer_get_values(tracer_list, 'hp_ingest_nlgz' ,'field', cobalt%hp_ingest_nlgz(:,:,:), isd, jsd, ntau=tau, positive = .true.)
 
+    end if 
+    ! =======================================================================================
     !
     ! bacteria
     !
@@ -10206,7 +10200,8 @@ contains
 
     if (do_FEISTY) then 
           call generic_FEISTY_tracer_get_pointer(tracer_list)
-          call g_tracer_get_pointer(tracer_list,'hp_ingest_nlgz','field', cobalt%p_hp_ingest_nmdz)
+          call g_tracer_get_pointer(tracer_list,'hp_ingest_nlgz','field', cobalt%p_hp_ingest_nlgz)
+          call g_tracer_get_pointer(tracer_list,'hp_ingest_nmdz','field', cobalt%p_hp_ingest_nmdz)
     end if 
 
     ! CAS calculate total N and P before source/sink
@@ -15224,7 +15219,6 @@ contains
        allocate(zoo(n)%temp_lim(isd:ied,jsd:jed,nk))     ; zoo(n)%temp_lim        = 0.0
        allocate(zoo(n)%vmove(isd:ied,jsd:jed,nk))        ; zoo(n)%vmove           = 0.0
     enddo
-    ! FEISTY: 
 
     ! higher predator ingestion
     allocate(cobalt%hp_jingest_n(isd:ied,jsd:jed,nk))     ; cobalt%hp_jingest_n      = 0.0
