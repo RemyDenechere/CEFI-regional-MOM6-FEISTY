@@ -5,6 +5,8 @@
 REPO="CEFI-regional-MOM6-FEISTY"
 USER_NAME="RemyDenechere"
 GITHUB_TOKEN=$(cat ~/token)
+WORKING_DIR=$(pwd)
+HOME_DIR="/project/rdenechere/$REPO"
 # 
 if [ "$#" -eq 0 ]; then
     COMMIT_MESSAGE="Commit on $(date '+%Y-%m-%d %H:%M:%S')"
@@ -17,11 +19,16 @@ else
     exit 1
 fi
 
-git add .
-git add /project/rdenechere/CEFI-regional-MOM6-FEISTY/src/ocean_BGC/generic_tracers/generic_COBALT.F90
-git add /project/rdenechere/CEFI-regional-MOM6-FEISTY/src/ocean_BGC/generic_tracers/generic_FEISTY.F90
+echo "going to home "$HOME_DIR" to stage changes" 
+cd $HOME_DIR
+
+git add *
+git add .gitignore
 
 git commit -m "$COMMIT_MESSAGE"
 
 # push last commits: 
-git push https://$GITHUB_TOKEN@github.com/$USER_NAME/$REPO.git
+git push https://$GITHUB_TOKEN@github.com/$USER_NAME/$REPO
+
+echo "going back to working directory"
+cd $WORKING_DIR

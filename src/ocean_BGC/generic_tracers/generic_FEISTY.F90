@@ -88,7 +88,7 @@ type, public :: fish_type
     real :: mu_f = 0            ! Fishing mortality 
     real :: mu_a = 0            ! natural mortality
     real :: mu 
-
+ 
     ! consumption for each prey : --------------
     real :: cons_Sf = 0            ! --
     real :: cons_Sp = 0            ! --
