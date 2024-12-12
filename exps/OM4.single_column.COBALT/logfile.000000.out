@@ -160,7 +160,7 @@ READ_INPUT_NML: input.nml
         a_enc                      = 70.0
         dp_int                     = 100.0
         k_fct_tp                   = 1.0
-        k50 			      = 1.0
+        k50 			  = 1.0
  /
  
  
