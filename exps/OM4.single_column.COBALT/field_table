@@ -742,23 +742,23 @@ irr_aclm_sfc_valid_min = 0.0
 #
 # Give nlgz value to hp_ingest as a first test. 
 #
-hp_ingest_nlgz_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
-hp_ingest_nlgz_src_var_name = Sf_B
-hp_ingest_nlgz_src_var_unit = none
-hp_ingest_nlgz_dest_var_name = hp_ingest_nlgz
-hp_ingest_nlgz_dest_var_unit = mol kg-1 s-1
-hp_ingest_nlgz_src_var_record = 1
-hp_ingest_nlgz_src_var_gridspec = NONE
-hp_ingest_nlgz_valid_min = 0.0
-#
-hp_ingest_nmdz_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
-hp_ingest_nmdz_src_var_name = Sf_B
-hp_ingest_nmdz_src_var_unit = none
-hp_ingest_nmdz_dest_var_name = hp_ingest_nmdz
-hp_ingest_nmdz_dest_var_unit = mol kg-1 s-1
-hp_ingest_nmdz_src_var_record = 1
-hp_ingest_nmdz_src_var_gridspec = NONE
-hp_ingest_nmdz_valid_min = 0.0
+# hp_ingest_nlgz_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
+# hp_ingest_nlgz_src_var_name = Sf_B
+# hp_ingest_nlgz_src_var_unit = none
+# hp_ingest_nlgz_dest_var_name = hp_ingest_nlgz
+# hp_ingest_nlgz_dest_var_unit = mol kg-1 s-1
+# hp_ingest_nlgz_src_var_record = 1
+# hp_ingest_nlgz_src_var_gridspec = NONE
+# hp_ingest_nlgz_valid_min = 0.0
+# #
+# hp_ingest_nmdz_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
+# hp_ingest_nmdz_src_var_name = Sf_B
+# hp_ingest_nmdz_src_var_unit = none
+# hp_ingest_nmdz_dest_var_name = hp_ingest_nmdz
+# hp_ingest_nmdz_dest_var_unit = mol kg-1 s-1
+# hp_ingest_nmdz_src_var_record = 1
+# hp_ingest_nmdz_src_var_gridspec = NONE
+# hp_ingest_nmdz_valid_min = 0.0
 # hp_ingest_nmdz_src_file = INPUT/FEISTY_2023_10_spinup_subset.nc
 # hp_ingest_nmdz_src_var_name = Sf_B
 # hp_ingest_nmdz_src_var_unit = none
