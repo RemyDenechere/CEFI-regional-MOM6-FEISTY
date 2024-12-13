@@ -58,3 +58,36 @@ U_TRUNC_FILE = "U_velocity_truncations" ! default = ""
 V_TRUNC_FILE = "V_velocity_truncations" ! default = ""
                                 ! The absolute path to a file into which the accelerations leading to meridional
                                 ! velocity truncations are written. Undefine this for efficiency if this
+                                ! diagnostic is not needed.
+
+! === module MOM_PointAccel ===
+MAX_TRUNC_FILE_SIZE_PER_PE = 50 ! default = 50
+                                ! The maximum number of columns of truncations that any PE will write out during
+                                ! a run.
+DEBUG_FULL_COLUMN = False       !   [Boolean] default = False
+                                ! If true, write out the accelerations in all massive layers; otherwise just
+                                ! document the ones with large velocities.
+
+! === module MOM_barotropic ===
+DEBUG_BT = False                !   [Boolean] default = False
+                                ! If true, write out verbose debugging data within the barotropic time-stepping
+                                ! loop. The data volume can be quite large if this is true.
+
+! === module MOM_diabatic_driver ===
+! The following parameters are used for diabatic processes.
+DEBUG_CONSERVATION = False      !   [Boolean] default = False
+                                ! If true, monitor conservation and extrema.
+
+! === module MOM_kappa_shear ===
+! Parameterization of shear-driven turbulence following Jackson, Hallberg and Legg, JPO 2008
+
+! === module MOM_surface_forcing ===
+CHECK_NO_LAND_FLUXES = False    !   [Boolean] default = False
+                                ! If true, checks that values from IOB fluxes are zero above land points (i.e.
+                                ! G%mask2dT = 0).
+
+! === module MOM_file_parser ===
+REPORT_UNUSED_PARAMS = True     !   [Boolean] default = True
+                                ! If true, report any parameter lines that are not used in the run.
+FATAL_UNUSED_PARAMS = False     !   [Boolean] default = False
+                                ! If true, kill the run if there are any unused parameters.
