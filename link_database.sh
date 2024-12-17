@@ -74,8 +74,8 @@ else
 	ln -fs ${CEFI_DATASET_LOC}/land_mask.nc ./land_mask.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_hgrid.nc ./ocean_hgrid.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_topog.nc ./ocean_topog.nc
-	ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc ./FEISTY_2023_10_spinup_subset.nc
-	ln -fs ${CEFI_DATASET_LOC}/FEISTY_2D_2023_10_spinup_subset.nc ./FEISTY_2D_2023_10_spinup_subset.nc
+	ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc 		./FEISTY_2023_10_spinup_subset.nc
+	ln -fs ${CEFI_DATASET_LOC}/FEISTY_2D_2023_10_spinup_subset.nc 	./FEISTY_2D_2023_10_spinup_subset.nc
 	ln -fs ${CEFI_DATASET_LOC}/land_mosaic.nc ./land_mosaic.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_mask.nc ./ocean_mask.nc
 
