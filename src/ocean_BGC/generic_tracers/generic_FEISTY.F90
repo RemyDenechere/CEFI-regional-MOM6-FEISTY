@@ -1292,7 +1292,7 @@ subroutine user_add_params_FEISTY
     call g_tracer_add_param('b_cmax', FEISTY%b_cmax, 0.250)         ! []                    Exponent for Cmax 
     call g_tracer_add_param('a_met', FEISTY%a_met, 0.2*FEISTY%a_cmax)! [d-1 g^(b_met)]       Coeff for Metabolic loss 
     call g_tracer_add_param('b_met', FEISTY%b_met, 0.1750)          ! []                    Exponent for Metabolic cost 
-    call g_tracer_add_param('alpha', FEISTY%alpha, 0.70)            ! []                    Assimilation efficiency 
+    call g_tracer_add_param('btm_reservoir', FEISTY%alpha, 0.70)            ! []                    Assimilation efficiency 
     call g_tracer_add_param('Nat_mrt', FEISTY%Nat_mrt, 0.10/365.0)  ! [m-2 d-1]             Natural mortality coeffient 
     ! Fishing : ---------------------------------------------------------
     call g_tracer_add_param('Frate', FEISTY%Frate, 0.30/FEISTY%y2d) ! [d-1]                 Fishing intensity 
@@ -1519,82 +1519,82 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         name       = 'Sf_B',         &
         longname   = 'Small forage fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,            &
-        move_vertical = .true.,         &
-        btm_reservoir = .true.          ) ! , &
-  !      init_value = FEISTY%IC)
+        prog       = .true.,           &
+        sink_rate  = FEISTY%zero,     &
+        btm_reservoir = .true.         , &
+        init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list, package_name,&
         name       = 'Mf_B',         &
         longname   = 'Medium forage fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,            &
-        move_vertical = .true.,         &
-        btm_reservoir = .true.          ) ! , &
-  !      init_value = FEISTY%IC)
+        prog       = .true.,           &
+        sink_rate  = FEISTY%zero,     &
+        btm_reservoir = .true.        , &
+        init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sp_B',         &
         longname   = 'Small large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,            &
-        move_vertical = .true.,         &
-        btm_reservoir = .true.          ) ! , &
-        !      init_value = FEISTY%IC)
+        prog       = .true.,           &
+        sink_rate  = FEISTY%zero,     &
+        btm_reservoir = .true.         , &
+        init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Mp_B',         &
         longname   = 'Medium large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,            &
-        move_vertical = .true.,         &
-        btm_reservoir = .true.          ) ! , &
-        !      init_value = FEISTY%IC)			
+        prog       = .true.,           &
+        sink_rate  = FEISTY%zero,     &
+        btm_reservoir = .true.         , &
+        init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Lp_B',         &
         longname   = 'Large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,            &
-        move_vertical = .true.,         &
-        btm_reservoir = .true.          ) ! , &
-        !      init_value = FEISTY%IC)
+        prog       = .true.,           &
+        sink_rate  = FEISTY%zero,     &
+        btm_reservoir = .true.         , &
+        init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sd_B',         &
         longname   = 'Small demersal fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,            &
-        move_vertical = .true.,         &
-        btm_reservoir = .true.          ) ! , &
-  !      init_value = FEISTY%IC)
+        prog       = .true.,           &
+        sink_rate  = FEISTY%zero,     &
+        btm_reservoir = .true.        , &
+        init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Md_B',         &
         longname   = 'Medium demersal fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,            &
-        move_vertical = .true.,         &
-        btm_reservoir = .true.          ) ! , &
-  !      init_value = FEISTY%IC)
+        prog       = .true.,           &
+        sink_rate  = FEISTY%zero,     &
+        btm_reservoir = .true.        , &
+        init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Ld_B',         &
         longname   = 'Large demersal fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,            &
-        move_vertical = .true.,         &
-        btm_reservoir = .true.          ) ! , &
-  !      init_value = FEISTY%IC)			
+        prog       = .true.,           &
+        sink_rate  = FEISTY%zero,     &
+        btm_reservoir = .true.        , &
+        init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'BE_B',         &
         longname   = 'Benthic invertebrate biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,            &
-        move_vertical = .true.,         &
-        btm_reservoir = .true.          ) ! , &
-  !      init_value = FEISTY%IC)
+        prog       = .true.,           &
+        sink_rate  = FEISTY%zero,     &
+        btm_reservoir = .true.        , &
+        init_value = FEISTY%IC)
 
 end subroutine user_add_tracers_FEISTY
 
@@ -1627,15 +1627,15 @@ end subroutine generic_FEISTY_tracer_get_values
 subroutine generic_FEISTY_tracer_get_pointer(tracer_list)
     type(g_tracer_type), pointer :: tracer_list
 
-    call g_tracer_get_pointer(tracer_list,'Sf_B','btm_reservoir', FEISTY%p_Sf_B)
-    call g_tracer_get_pointer(tracer_list,'Sp_B','btm_reservoir', FEISTY%p_Sp_B)
-    call g_tracer_get_pointer(tracer_list,'Sd_B','btm_reservoir', FEISTY%p_Sd_B)
-    call g_tracer_get_pointer(tracer_list,'Mf_B','btm_reservoir', FEISTY%p_Mf_B)
-    call g_tracer_get_pointer(tracer_list,'Mp_B','btm_reservoir', FEISTY%p_Mp_B)
-    call g_tracer_get_pointer(tracer_list,'Md_B','btm_reservoir', FEISTY%p_Md_B)
-    call g_tracer_get_pointer(tracer_list,'Lp_B','btm_reservoir', FEISTY%p_Lp_B)
-    call g_tracer_get_pointer(tracer_list,'Ld_B','btm_reservoir', FEISTY%p_Ld_B)
-    call g_tracer_get_pointer(tracer_list,'BE_B','btm_reservoir', FEISTY%p_BE_B)
+    call g_tracer_get_pointer(tracer_list,'Sf_B','field', FEISTY%p_Sf_B)
+    call g_tracer_get_pointer(tracer_list,'Sp_B','field', FEISTY%p_Sp_B)
+    call g_tracer_get_pointer(tracer_list,'Sd_B','field', FEISTY%p_Sd_B)
+    call g_tracer_get_pointer(tracer_list,'Mf_B','field', FEISTY%p_Mf_B)
+    call g_tracer_get_pointer(tracer_list,'Mp_B','field', FEISTY%p_Mp_B)
+    call g_tracer_get_pointer(tracer_list,'Md_B','field', FEISTY%p_Md_B)
+    call g_tracer_get_pointer(tracer_list,'Lp_B','field', FEISTY%p_Lp_B)
+    call g_tracer_get_pointer(tracer_list,'Ld_B','field', FEISTY%p_Ld_B)
+    call g_tracer_get_pointer(tracer_list,'BE_B','field', FEISTY%p_BE_B)
 
 end subroutine generic_FEISTY_tracer_get_pointer
 
@@ -1718,18 +1718,28 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     fish(LD)%B = FEISTY%Ld_B(i,j)
     FEISTY%BE  = FEISTY%BE_B(i,j)
     
-    ! get id of 100 m depth where 
+    ! get id of 100 m depth 
+    layer_id_dpint = 0 ! BRZENKSI, force it to be zero
     Do k = 1, nk
-        if (zt(m) .le. dp_int) then 
+        if (zt(k) .le. dp_int) then ! BRZENSKI k used to be 'm'
             layer_id_dpint = layer_id_dpint + int(1)
-        end if 
+        end if
     endDo
     
     !======================================================================!
     !                   Convertion from COBALT to FEISTY
     ! Converting zooplankton unit from [mol N m-2] to [gww m-2]
     FEISTY%Mz = SUM(med_zoo_N(1:layer_id_dpint)) * FEISTY%convers_Mz
+    ! Check for Negative or nul values for zooplankton  
+    if ( FEISTY%Mz .le. 0.0 ) then
+        ! print *, 'FEISTY Medium Zooplankton <= 0 !!!'
+    end if
     FEISTY%Lz = SUM(Lrg_zoo_N(1:layer_id_dpint)) * FEISTY%convers_Mz
+    ! Check for Negative or nul values for zooplankton  
+    if ( FEISTY%Lz .le. 0.0 ) then
+        ! print *, 'FEISTY Large Zooplankton <= 0 !!!'
+    end if
+
     ! Detritus convertion 
     FEISTY%det = det * FEISTY%convers_det   ! Convert in g ww m-2 d-1)
     
@@ -1925,14 +1935,25 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
 
     ! Calculation of the hight trophic level predation on zooplankton at every depth: 
     ! integrated zooplankton biomass has to be reconverted into mol of nitrogen per kg
-    Do k = 1, layer_id_dpint
-        hp_ingest_nmdz(k) = hp_ingest_nmdz_dpint * med_zoo_N(k)/(FEISTY%Mz/FEISTY%convers_Mz) 
-        hp_ingest_nlgz(k) = hp_ingest_nlgz_dpint * Lrg_zoo_N(k)/(FEISTY%Lz/FEISTY%convers_Mz)
-    endDo
-    Do k = layer_id_dpint, nk
-        hp_ingest_nmdz(k) = FEISTY%Zero
-        hp_ingest_nlgz(k) = FEISTY%Zero
-    endDo
+    
+    if (FEISTY%Mz .le. FEISTY%zero) then 
+        hp_ingest_nmdz(1:layer_id_dpint) = FEISTY%zero
+    else 
+        Do k = 1, layer_id_dpint
+            hp_ingest_nmdz(k) = hp_ingest_nmdz_dpint * med_zoo_N(k)/(FEISTY%Mz/FEISTY%convers_Mz)
+        endDo
+    endif
+    if (FEISTY%Lz .le. FEISTY%zero) then 
+        hp_ingest_nlgz(1:layer_id_dpint) = FEISTY%zero
+    else 
+        Do k = 1, layer_id_dpint
+            hp_ingest_nlgz(k) = hp_ingest_nlgz_dpint * Lrg_zoo_N(k)/(FEISTY%Lz/FEISTY%convers_Mz)
+        endDo
+    endif
+
+    
+    hp_ingest_nmdz((layer_id_dpint + int(1)): nk) = FEISTY%zero
+    hp_ingest_nlgz((layer_id_dpint + int(1)): nk) = FEISTY%zero
 
     ! Calcul Predation mortality fish : -----------------------------------------------
     ! mu_p [m-2 d-1]
