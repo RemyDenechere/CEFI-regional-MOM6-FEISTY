@@ -297,6 +297,6 @@ yes | cp -r "$FOLDER_SAVE_RESTART" "${SAVE_DIR}/${LOC_NAME}"
 
 cd "$HOME_DIR"
 # REMOVE WORKING DIRECTORY AND FOLDERS, ETC...
-# rm -r "$WORK_DIR"
+rm -r "$WORK_DIR"
 
 echo "Simulation done!"
