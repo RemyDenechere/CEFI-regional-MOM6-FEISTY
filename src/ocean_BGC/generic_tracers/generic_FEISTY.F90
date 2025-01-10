@@ -1292,7 +1292,7 @@ subroutine user_add_params_FEISTY
     call g_tracer_add_param('b_cmax', FEISTY%b_cmax, 0.250)         ! []                    Exponent for Cmax 
     call g_tracer_add_param('a_met', FEISTY%a_met, 0.2*FEISTY%a_cmax)! [d-1 g^(b_met)]       Coeff for Metabolic loss 
     call g_tracer_add_param('b_met', FEISTY%b_met, 0.1750)          ! []                    Exponent for Metabolic cost 
-    call g_tracer_add_param('btm_reservoir', FEISTY%alpha, 0.70)            ! []                    Assimilation efficiency 
+    call g_tracer_add_param('alpha', FEISTY%alpha, 0.70)            ! []                    Assimilation efficiency 
     call g_tracer_add_param('Nat_mrt', FEISTY%Nat_mrt, 0.10/365.0)  ! [m-2 d-1]             Natural mortality coeffient 
     ! Fishing : ---------------------------------------------------------
     call g_tracer_add_param('Frate', FEISTY%Frate, 0.30/FEISTY%y2d) ! [d-1]                 Fishing intensity 
@@ -1520,8 +1520,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         longname   = 'Small forage fish biomass',  &
         units      = 'g m-2',      &
         prog       = .true.,           &
-        sink_rate  = FEISTY%zero,     &
-        btm_reservoir = .true.         , &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list, package_name,&
@@ -1529,8 +1527,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         longname   = 'Medium forage fish biomass',  &
         units      = 'g m-2',      &
         prog       = .true.,           &
-        sink_rate  = FEISTY%zero,     &
-        btm_reservoir = .true.        , &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
@@ -1538,8 +1534,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         longname   = 'Small large pelagic fish biomass',  &
         units      = 'g m-2',      &
         prog       = .true.,           &
-        sink_rate  = FEISTY%zero,     &
-        btm_reservoir = .true.         , &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
@@ -1547,8 +1541,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         longname   = 'Medium large pelagic fish biomass',  &
         units      = 'g m-2',      &
         prog       = .true.,           &
-        sink_rate  = FEISTY%zero,     &
-        btm_reservoir = .true.         , &
         init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
@@ -1556,8 +1548,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         longname   = 'Large pelagic fish biomass',  &
         units      = 'g m-2',      &
         prog       = .true.,           &
-        sink_rate  = FEISTY%zero,     &
-        btm_reservoir = .true.         , &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
@@ -1565,8 +1555,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         longname   = 'Small demersal fish biomass',  &
         units      = 'g m-2',      &
         prog       = .true.,           &
-        sink_rate  = FEISTY%zero,     &
-        btm_reservoir = .true.        , &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
@@ -1574,8 +1562,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         longname   = 'Medium demersal fish biomass',  &
         units      = 'g m-2',      &
         prog       = .true.,           &
-        sink_rate  = FEISTY%zero,     &
-        btm_reservoir = .true.        , &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
@@ -1583,8 +1569,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         longname   = 'Large demersal fish biomass',  &
         units      = 'g m-2',      &
         prog       = .true.,           &
-        sink_rate  = FEISTY%zero,     &
-        btm_reservoir = .true.        , &
         init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
@@ -1592,8 +1576,6 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         longname   = 'Benthic invertebrate biomass',  &
         units      = 'g m-2',      &
         prog       = .true.,           &
-        sink_rate  = FEISTY%zero,     &
-        btm_reservoir = .true.        , &
         init_value = FEISTY%IC)
 
 end subroutine user_add_tracers_FEISTY
@@ -1608,15 +1590,15 @@ subroutine generic_FEISTY_tracer_get_values(tracer_list, isd, jsd, tau)
     integer, intent(in) :: isd, jsd, tau 
 
     ! Get values of the prognostic variable : ----------------------------------------------
-    call g_tracer_get_values(tracer_list, 'Sf_B' ,'btm_reservoir', FEISTY%Sf_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Sp_B' ,'btm_reservoir', FEISTY%Sp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Sd_B' ,'btm_reservoir', FEISTY%Sd_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Mf_B' ,'btm_reservoir', FEISTY%Mf_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Mp_B' ,'btm_reservoir', FEISTY%Mp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Md_B' ,'btm_reservoir', FEISTY%Md_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Lp_B' ,'btm_reservoir', FEISTY%Lp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Ld_B' ,'btm_reservoir', FEISTY%Ld_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'BE_B' ,'btm_reservoir', FEISTY%BE_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sf_B' ,'field', FEISTY%Sf_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sp_B' ,'field', FEISTY%Sp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sd_B' ,'field', FEISTY%Sd_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Mf_B' ,'field', FEISTY%Mf_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Mp_B' ,'field', FEISTY%Mp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Md_B' ,'field', FEISTY%Md_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Lp_B' ,'field', FEISTY%Lp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Ld_B' ,'field', FEISTY%Ld_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'BE_B' ,'field', FEISTY%BE_B(:,:), isd, jsd)
 
 end subroutine generic_FEISTY_tracer_get_values
 

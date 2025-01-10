@@ -17,7 +17,7 @@ OM4_single_column
 "ocean_feisty_tracers",         24, "hours",  1, "days", "time",
 "ocean_feisty_fluxes",          24, "hours",  1, "days", "time",
 "ocean_feisty_forcing",         24, "hours",  1, "days", "time", 
-"ocean_feisty_forcing_detritus",24, "hours",  1, "days", "time", 
+"ocean_feisty_forcing_detritus", 24, "hours",  1, "days", "time", 
 #
 #======================
 # GENERIC OCEAN COBALT DIAGNOSTICS
