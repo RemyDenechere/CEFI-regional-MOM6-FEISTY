@@ -1485,7 +1485,7 @@ end subroutine user_deallocate_arrays_FEISTY
 !            name       = 'SFfish',         &
 !            longname   = 'small forage fish biomass',  &
 !            units      = 'g/m2',      &
-!            prog       = .true.,
+!            prog       = .false.,
 !            init_value     = 0.001      )   
 !        
 !       prog = .true. or .false
@@ -1519,63 +1519,72 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         name       = 'Sf_B',         &
         longname   = 'Small forage fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,           &
+        btm_reservoir = .true.,         &
+        prog       = .false.,           &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list, package_name,&
         name       = 'Mf_B',         &
         longname   = 'Medium forage fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,           &
+        btm_reservoir = .true.,         &
+        prog       = .false.,           &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sp_B',         &
         longname   = 'Small large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,           &
+        btm_reservoir = .true.,         &
+        prog       = .false.,           &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Mp_B',         &
         longname   = 'Medium large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,           &
+        btm_reservoir = .true.,         &
+        prog       = .false.,           &
         init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Lp_B',         &
         longname   = 'Large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,           &
+        btm_reservoir = .true.,         &
+        prog       = .false.,           &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sd_B',         &
         longname   = 'Small demersal fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,           &
+        btm_reservoir = .true.,         &
+        prog       = .false.,           &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Md_B',         &
         longname   = 'Medium demersal fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,           &
+        btm_reservoir = .true.,         &
+        prog       = .false.,           &
         init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Ld_B',         &
         longname   = 'Large demersal fish biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,           &
+        btm_reservoir = .true.,         &
+        prog       = .false.,           &
         init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'BE_B',         &
         longname   = 'Benthic invertebrate biomass',  &
         units      = 'g m-2',      &
-        prog       = .true.,           &
+        btm_reservoir = .true.,         &
+        prog       = .false.,           &
         init_value = FEISTY%IC)
 
 end subroutine user_add_tracers_FEISTY
@@ -1590,15 +1599,15 @@ subroutine generic_FEISTY_tracer_get_values(tracer_list, isd, jsd, tau)
     integer, intent(in) :: isd, jsd, tau 
 
     ! Get values of the prognostic variable : ----------------------------------------------
-    call g_tracer_get_values(tracer_list, 'Sf_B' ,'field', FEISTY%Sf_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Sp_B' ,'field', FEISTY%Sp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Sd_B' ,'field', FEISTY%Sd_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Mf_B' ,'field', FEISTY%Mf_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Mp_B' ,'field', FEISTY%Mp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Md_B' ,'field', FEISTY%Md_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Lp_B' ,'field', FEISTY%Lp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Ld_B' ,'field', FEISTY%Ld_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'BE_B' ,'field', FEISTY%BE_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sf_B' ,'btm_reservoir', FEISTY%Sf_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sp_B' ,'btm_reservoir', FEISTY%Sp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sd_B' ,'btm_reservoir', FEISTY%Sd_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Mf_B' ,'btm_reservoir', FEISTY%Mf_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Mp_B' ,'btm_reservoir', FEISTY%Mp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Md_B' ,'btm_reservoir', FEISTY%Md_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Lp_B' ,'btm_reservoir', FEISTY%Lp_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Ld_B' ,'btm_reservoir', FEISTY%Ld_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'BE_B' ,'btm_reservoir', FEISTY%BE_B(:,:), isd, jsd)
 
 end subroutine generic_FEISTY_tracer_get_values
 
@@ -1669,7 +1678,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! Internal variables : ---------------------------------------------------
     real :: Tp, Tb
     real :: biop, biob
-    real, dimension(FEISTY%nFishGroup) :: T_e, T_met          ! Storing variables for the effect of temperature on physiological effect
     real, dimension(FEISTY%nFishGroup) :: Texp ! Temperature experienced, and time in pelagic zone
     real, dimension(FEISTY%nFishGroup) :: tpel
 
@@ -1701,10 +1709,9 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     FEISTY%BE  = FEISTY%BE_B(i,j)
     
     ! get id of 100 m depth 
-    layer_id_dpint = 0 ! BRZENKSI, force it to be zero
     Do k = 1, nk
         if (zt(k) .le. dp_int) then ! BRZENSKI k used to be 'm'
-            layer_id_dpint = layer_id_dpint + int(1)
+            layer_id_dpint = k
         end if
     endDo
     
@@ -1758,7 +1765,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! initialisation tpel: 
     tpel = (/1,1,1,1,1,0,1,0/)
 
-    ! Calcul of time in pelagic for demersals
+    ! Calcul of biomass experience in pelagic for demersals by demersals
     biop = FEISTY%pref_Ld_Mf * fish(MF)%B + FEISTY%pref_Ld_Mp * fish(MD)%B
     biob = FEISTY%pref_Ld_Md * fish(MD)%B  + FEISTY%pref_Ld_BE * FEISTY%BE_B(i,j)
 
@@ -1771,10 +1778,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! Temperature calculation for each fish: 
     do m = 1, FEISTY%nFishGroup
         Texp(m) = (Tp * tpel(m)) + (Tb*(1.0-tpel(m)))
-        T_e(m) = exp(FEISTY%ke * (Texp(m)-10.0))      ! for encounter rate and Cmax
-        T_met(m) = exp(FEISTY%kmet * (Texp(m)-10.0))  ! for metabolism
-        fish(m)%Tcorr_e = T_e(m)                                       ! save Temp effect on encounter rate and Cmax
-        fish(m)%Tcorr_met = T_met(m)                                   ! save Temp effect on met
+        fish(m)%Tcorr_e = exp(FEISTY%ke * (Texp(m)-10.0))                                       ! save Temp effect on encounter rate and Cmax
+        fish(m)%Tcorr_met = exp(FEISTY%kmet * (Texp(m)-10.0))                                   ! save Temp effect on met
         fish(m)%V = fish(m)%Tcorr_e * fish(m)%V_w * m2_to_m2        ! update clearance rate with temp effect
         fish(m)%cmax = fish(m)%cmax_w * fish(m)%Tcorr_e             ! update cmax with temp effect
         fish(m)%met(i,j) = fish(m)%met_w * fish(m)%Tcorr_met      ! Temperature corrected metabolism
@@ -1785,8 +1790,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         write(outunit,*) "Tb : ", Tb
         write(outunit,*) "tpel : ", tpel
         write(outunit,*) "Texp : ", Texp
-        write(outunit,*) "T_e : ", T_e
-        write(outunit,*) "T_met : ", T_met
+        write(outunit,*) "T_e : ", fish(m)%Tcorr_e
+        write(outunit,*) "T_met : ", fish(m)%Tcorr_met
     endif 
 
     !:======================================================================

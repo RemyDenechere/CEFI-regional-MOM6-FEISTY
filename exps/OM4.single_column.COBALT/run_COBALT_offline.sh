@@ -35,8 +35,8 @@ else
 fi
 
 # export path for openmpi and ncview (potentially load module instead)
-export PATH=$PATH:/usr/lib64/openmpi/bin/
-export PATH=$PATH:/usr/local/src/ncview-2.1.7/
+#export PATH=$PATH:/usr/lib64/openmpi/bin/
+#export PATH=$PATH:/usr/local/src/ncview-2.1.7/
 
 # ---------------------------------------------------------------------------------------
 ## Turn off FEISTY: 
