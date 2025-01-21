@@ -6126,7 +6126,7 @@ contains
 
 !==============================================================================================================
 !  09/05/2024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run
-     vardesc_temp = vardesc("Pop_btm", "Detritus flux to sea floor",'h','1','s','g WW m-2 d-1','f')
+     vardesc_temp = vardesc("Pop_btm", "Detritus flux to sea floor",'h','1','s','mol m-2 s-1','f')
      cobalt%id_Pop_btm = register_diag_field(package_name, vardesc_temp%name, axes(1:2), &
         init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)
 
