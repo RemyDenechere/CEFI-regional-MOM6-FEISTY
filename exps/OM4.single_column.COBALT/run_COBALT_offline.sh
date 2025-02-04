@@ -35,8 +35,8 @@ else
 fi
 
 # export path for openmpi and ncview (potentially load module instead)
-#export PATH=$PATH:/usr/lib64/openmpi/bin/
-#export PATH=$PATH:/usr/local/src/ncview-2.1.7/
+# export PATH=$PATH:/usr/lib64/openmpi/bin/
+# export PATH=$PATH:/usr/local/src/ncview-2.1.7/
 
 # ---------------------------------------------------------------------------------------
 ## Turn off FEISTY: 
@@ -48,6 +48,7 @@ dir_run
 rm -rf INPUT/*
 cd INPUT/ && ../../../link_database.sh "$station_name" && cd ..
 # yes | cp -i "$station_name"/* INPUT/
+
 
 # ---------------------------------------------------------------------------------------
 ## Run the model 

@@ -7,8 +7,6 @@
 # CONTACT: REMY DENECHERE <RDENECHERE@UCSD.EDU>
 #        : JARED BRZENSKI <JABRZENSKI@UCSD.EDU>
 #
-# usage: ./run_COBALT_FEISTY_loop.sh BATS 10 test core#
-#        ./run_COBALT_FEISTY_loop.sh CCE 20 baseparam core#
 #
 # RUN THIS SCRIPT FROM THE CEFI/EXPS/OM4 DIRECTORY
 #

@@ -10004,25 +10004,24 @@ contains
 
                if (do_FEISTY) then 
                     call generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PREY, &
-                                                                Temp(i,j,1:nk), cobalt%Pop_btm(i,j),&
-                                                                dt, cobalt%zt(i, j, 1:nk), dzt(i,j, 1:nk),&
-                                                                zoo(2)%f_n(i,j,1:nk), zoo(3)%f_n(i,j,1:nk),&
-                                                                cobalt%hp_ingest_nmdz(i,j,1:nk), cobalt%hp_ingest_nlgz(i,j,1:nk))
-                                                                 
+                                                                 Temp(i,j,1:nk), cobalt%Pop_btm(i,j),&
+                                                                 dt, cobalt%zt(i, j, 1:nk), dzt(i,j, 1:nk),&
+                                                                 zoo(2)%f_n(i,j,1:nk), zoo(3)%f_n(i,j,1:nk),&
+                                                                 cobalt%hp_ingest_nmdz(i,j,1:nk), cobalt%hp_ingest_nlgz(i,j,1:nk))                                             
                end if
 
-             if (cobalt%btm_o2(i,j) .gt. cobalt%o2_min) then  !{
-                cobalt%fnoxic_sed(i,j) = max(0.0, min(cobalt%btm_o2(i,j)*cobalt%bottom_thickness* &
-                                         cobalt%Rho_0*r_dt*(1.0/cobalt%o2_2_nh4), &
-                                         cobalt%Pop_btm(i,j)))
-             else
-                cobalt%fnoxic_sed(i,j) = 0.0
-             endif !}
+               if (cobalt%btm_o2(i,j) .gt. cobalt%o2_min) then  !{
+                    cobalt%fnoxic_sed(i,j) = max(0.0, min(cobalt%btm_o2(i,j)*cobalt%bottom_thickness* &
+                                             cobalt%Rho_0*r_dt*(1.0/cobalt%o2_2_nh4), &
+                                             cobalt%Pop_btm(i,j)))
+               else
+                    cobalt%fnoxic_sed(i,j) = 0.0
+               endif !}
 
-             ! Any remaining organic matter is remineralized via sulfate reduction
-             !
-             cobalt%fnfeso4red_sed(i,j) = max(0.0, cobalt%fntot_btm(i,j)-cobalt%fnoxic_sed(i,j)- &
-                                          cobalt%fn_burial(i,j)-cobalt%fno3denit_sed(i,j)/cobalt%n_2_n_denit)
+               ! Any remaining organic matter is remineralized via sulfate reduction
+               !
+               cobalt%fnfeso4red_sed(i,j) = max(0.0, cobalt%fntot_btm(i,j)-cobalt%fnoxic_sed(i,j)- &
+                                                  cobalt%fn_burial(i,j)-cobalt%fno3denit_sed(i,j)/cobalt%n_2_n_denit)
           else
              cobalt%fnfeso4red_sed(i,j) = 0.0
              cobalt%fno3denit_sed(i,j) = 0.0
@@ -10035,8 +10034,7 @@ contains
           cobalt%ffe_sed(i,j) = cobalt%ffe_sed_max * tanh( (cobalt%fntot_btm(i,j)*cobalt%c_2_n*sperd*1.0e3)/ &
                                 max(cobalt%btm_o2(i,j)*1.0e6,epsln) )
           cobalt%ffe_geotherm(i,j) = cobalt%ffe_geotherm_ratio*internal_heat(i,j)*4184.0/dt
-
-          !
+          
           ! Calcium carbonate flux and burial, based on Dunne et al., 2012
           !
           ! phi_surfresp_cased = 0.14307   ! const for enhanced diss., surf sed respiration (dimensionless)
