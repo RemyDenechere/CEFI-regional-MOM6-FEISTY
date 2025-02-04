@@ -1692,7 +1692,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     integer :: stdoutunit, stdlogunit, outunit
     integer :: init = 1
   
-    integer :: layer_id_dpint = 0
+    integer :: layer_id_dpint   ! layer id at depth dp_int
     real :: hp_ingest_nmdz_dpint, hp_ingest_nlgz_dpint ! Depth integrated zooplankton ingestion from fish predation
 
     stdoutunit=stdout(); stdlogunit=stdlog()
@@ -1708,7 +1708,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     fish(LD)%B = FEISTY%Ld_B(i,j)
     FEISTY%BE  = FEISTY%BE_B(i,j)
     
-    ! get id of 100 m depth 
+    ! get id of 100 m depth
     Do k = 1, nk
         if (zt(k) .le. dp_int) then ! BRZENSKI k used to be 'm'
             layer_id_dpint = k
@@ -1910,35 +1910,35 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     !:======================================================================
 
     ! Depth integrated Fraction of zooplankton biomass consumed :----------------------------------------
-    ! Calcul total consumption for each Zooplankton group:
+    ! Calcul total consumption (integrated) for each Zooplankton group: [g WW m-2 d-1]
     hp_ingest_nmdz_dpint = (fish(SF)%cons_Mz(i,j) * fish(SF)%B + fish(SP)%cons_Mz(i,j) * fish(SP)%B + & 
                 fish(SD)%cons_Mz(i,j) * fish(SD)%B + fish(MF)%cons_Mz(i,j) * fish(MF)%B + &
-                fish(MP)%cons_Mz(i,j) * fish(MP)%B) 
+                fish(MP)%cons_Mz(i,j) * fish(MP)%B)  
     hp_ingest_nlgz_dpint = (fish(MF)%cons_Lz(i,j) * fish(MF)%B + fish(MP)%cons_Lz(i,j) * fish(MP)%B)
 	
-	! Converting zooplankton back to [mol N m-2] and back to hp_ingest_vec time unit [s]
+	! Converting zooplankton consumption back from [g WW m-2 d-1] to [mol N kg s-1] to be unsed in COBALT
 	hp_ingest_nmdz_dpint = hp_ingest_nmdz_dpint * (1.0/FEISTY%convers_Mz) * (1.0/FEISTY%d2s)
 	hp_ingest_nlgz_dpint = hp_ingest_nlgz_dpint * (1.0/FEISTY%convers_Mz) * (1.0/FEISTY%d2s)
 
     ! Calculation of the hight trophic level predation on zooplankton at every depth: 
-    ! integrated zooplankton biomass has to be reconverted into mol of nitrogen per kg
-    
+    ! integrated zooplankton biomass has dimension of [g WW C m-2]
+    ! med_zoo_N(k) and Lrg_zoo_N(k) are in [mol N kg]
     if (FEISTY%Mz .le. FEISTY%zero) then 
         hp_ingest_nmdz(1:layer_id_dpint) = FEISTY%zero
     else 
         Do k = 1, layer_id_dpint
-            hp_ingest_nmdz(k) = hp_ingest_nmdz_dpint * med_zoo_N(k)/(FEISTY%Mz/FEISTY%convers_Mz)
+            hp_ingest_nmdz(k) = hp_ingest_nmdz_dpint * med_zoo_N(k) / (FEISTY%Mz / FEISTY%convers_Mz + FEISTY%eps) / dzt(k)
         endDo
     endif
     if (FEISTY%Lz .le. FEISTY%zero) then 
         hp_ingest_nlgz(1:layer_id_dpint) = FEISTY%zero
     else 
         Do k = 1, layer_id_dpint
-            hp_ingest_nlgz(k) = hp_ingest_nlgz_dpint * Lrg_zoo_N(k)/(FEISTY%Lz/FEISTY%convers_Mz)
+            hp_ingest_nlgz(k) = hp_ingest_nlgz_dpint * Lrg_zoo_N(k) / (FEISTY%Lz / FEISTY%convers_Mz+ FEISTY%eps) / dzt(k) 
         endDo
     endif
 
-    
+    ! predation only in the first 100m depth [mol N kg s-1]
     hp_ingest_nmdz((layer_id_dpint + int(1)): nk) = FEISTY%zero
     hp_ingest_nlgz((layer_id_dpint + int(1)): nk) = FEISTY%zero
 
