@@ -36,7 +36,7 @@
 !              fall below 1/4 maximum values
 !           3) The default parameterization has elevated N:P ratios for both
 !              diazotrophs and small phytoplankton
-!	    4) Remineralization of sinking detritus is now based on the temperature
+!	       4) Remineralization of sinking detritus is now based on the temperature
 !              and oxygen dependences described in Laufkotter et al., 2017; O2
 !              dependence of other aerobic processes have also been adjusted
 !              for consistency.
@@ -7550,14 +7550,14 @@ contains
           call g_tracer_add(tracer_list, package_name,&
           name       = 'hp_ingest_nmdz',         &
           longname   = 'High trophic level ingestion of medium zooplankton',  &
-          units      = 'mol N m-3 s-1',      &
+          units      = 'mol N kg-1 s-1',      &
           prog       = .true.) !,       &
           ! init_value = 1.e-10           )
 
           call g_tracer_add(tracer_list, package_name,&
           name       = 'hp_ingest_nlgz',         &
           longname   = 'High trophic level ingestion of large zooplankton',  &
-          units      = 'mol N m-3 s-1',      &
+          units      = 'mol N kg-1 s-1',      &
           prog       = .true.) !,       &
           ! init_value = 1.e-10           
      end if
@@ -9317,6 +9317,10 @@ contains
           hp_pa_vec(8) = hp_ipa_vec(8)*(food2**cobalt%nswitch_hp / &
                     (sw_fac_denom+epsln) )**(1.0/cobalt%mswitch_hp)
           tot_prey_hp = hp_pa_vec(7)*prey_vec(7) + hp_pa_vec(8)*prey_vec(8)
+
+          ! write(outunit,*) "hp_ingest_nmdz", cobalt%hp_ingest_nmdz(i,j,k)
+          ! write(outunit,*) "hp_ingest_nlgz", cobalt%hp_ingest_nlgz(i,j,k)
+          
           hp_ingest_vec(7) = cobalt%hp_ingest_nmdz(i,j,k) + nonFmort * cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)*cobalt%imax_hp* &
                               hp_pa_vec(7)*prey_vec(7)*tot_prey_hp**(cobalt%coef_hp-1.0)/ &
                               (cobalt%ki_hp+tot_prey_hp)
@@ -10001,7 +10005,7 @@ contains
                ! cobalt%Pop_btm(i,j): detritus usable for benthic comunities: 
                cobalt%Pop_btm(i,j) =    cobalt%fntot_btm(i,j) - cobalt%fn_burial(i,j) - &
                                         cobalt%fno3denit_sed(i,j)/cobalt%n_2_n_denit
-
+               
                if (do_FEISTY) then 
                     call generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PREY, &
                                                                  Temp(i,j,1:nk), cobalt%Pop_btm(i,j),&
