@@ -5,7 +5,7 @@ ln -fs ../../datasets/OM4_025.JRA.single_column/atmos_mosaic.nc ./atmos_mosaic.n
 ln -fs ../../datasets/OM4_025.JRA.single_column/atmos_mosaic_tile1Xocean_mosaic_tile1.nc ./atmos_mosaic_tile1Xocean_mosaic_tile1.nc
 ln -fs ../../datasets/OceanBGC_dataset/bgc_woa_esper_ics_1993_2023-04_BATS.nc ./bgc_woa_esper_ics_1993_2023-04_BATS.nc
 ln -fs ../../datasets/OM4_025.JRA.single_column/cfc.bc.nc ./cfc.bc.nc
-ln -fs ../../datasets/OceanBGC_dataset/COBALT_2023_10_spinup_2003_subset.nc ./COBALT_2023_10_spinup_2003_subset.nc
+# ln -fs ../../datasets/OceanBGC_dataset/COBALT_2023_10_spinup_2003_subset.nc ./COBALT_2023_10_spinup_2003_subset.nc
 ln -fs ../../datasets/OceanBGC_dataset/depflux_total.mean.1860.nc ./depflux_total.mean.1860.nc
 ln -fs ../../datasets/OM4_025.JRA.single_column/diag_rho2.nc ./diag_rho2.nc
 ln -fs ../../datasets/OM4_025.JRA.single_column/geothermal_davies2013_v1.nc ./geothermal_davies2013_v1.nc

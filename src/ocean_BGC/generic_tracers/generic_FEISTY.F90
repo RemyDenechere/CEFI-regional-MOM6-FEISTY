@@ -1672,8 +1672,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real,                        intent(inout) :: det  ! Flux detritus at the bottom layer (fn_residual_btm in COBALT)
     real,                           intent(in) :: dt
     real, dimension(nk),            intent(in) :: zt, dzt ! layer depth and thikness
-    real, dimension(nk),            intent(in) :: med_zoo_N, Lrg_zoo_N
-    real, dimension(nk),         intent(inout) :: hp_ingest_nmdz, hp_ingest_nlgz
+    real, dimension(nk),            intent(in) :: med_zoo_N, Lrg_zoo_N          ! Medium and Large zooplankton concentration (mol N Kg-1)
+    real, dimension(nk),         intent(inout) :: hp_ingest_nmdz, hp_ingest_nlgz ! high trophic level ingestion rate (mol N Kg-1 s-1)
    
     ! Internal variables : ---------------------------------------------------
     real :: Tp, Tb
@@ -1684,7 +1684,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real :: Delta_t             ! conversion from COBALT to FEISTY time step 
     real :: pred_BE             ! predation on benthic resource 
     real :: r_BE                ! Benthic growth rate
-    real ::  m2_to_m2 = 100.00
     real, dimension(11) :: Resource ! total prey than a predator can encounter (used in type III functional response calculation)
 
     integer :: m                ! index loop fish
@@ -1718,20 +1717,23 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     !======================================================================!
     !                   Convertion from COBALT to FEISTY
     ! Converting zooplankton unit from [mol N m-2] to [gww m-2]
-    FEISTY%Mz = SUM(med_zoo_N(1:layer_id_dpint)) * FEISTY%convers_Mz
+    FEISTY%Mz = SUM(med_zoo_N(1:layer_id_dpint) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz
     ! Check for Negative or nul values for zooplankton  
     if ( FEISTY%Mz .le. 0.0 ) then
-        ! print *, 'FEISTY Medium Zooplankton <= 0 !!!'
+        write(outunit,*) 'FEISTY Medium Zooplankton <= 0', FEISTY%Mz ,'!!! replacing by 0 ' 
+        FEISTY%Mz = FEISTY%zero
     end if
-    FEISTY%Lz = SUM(Lrg_zoo_N(1:layer_id_dpint)) * FEISTY%convers_Mz
+    FEISTY%Lz = SUM(Lrg_zoo_N(1:layer_id_dpint) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz
     ! Check for Negative or nul values for zooplankton  
     if ( FEISTY%Lz .le. 0.0 ) then
-        ! print *, 'FEISTY Large Zooplankton <= 0 !!!'
+        write(outunit,*) 'FEISTY Large Zooplankton <= 0', FEISTY%Lz ,' replacing by 0 !!!'
+        FEISTY%Lz = FEISTY%zero
     end if
 
     ! Detritus convertion 
     FEISTY%det = det * FEISTY%convers_det   ! Convert in g ww m-2 d-1)
     
+    ! Update fish time step based on actual cobalt time step (dt) from seconds to day
     ! Update fish time step based on actual cobalt time step (dt) from seconds to day
 	Delta_t = dt/FEISTY%d2s
 
@@ -1761,7 +1763,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     
     ! Calcul average temperature in surface and take bottom temp
     Tp = SUM(Temp(1:layer_id_dpint)) / real(layer_id_dpint)
-    Tb = Temp(nk)
+    Tp = Temp(1)  ! Temp at surface
+    Tb = Temp(nk) ! Temp at bottom
     ! initialisation tpel: 
     tpel = (/1,1,1,1,1,0,1,0/)
 
@@ -1780,14 +1783,17 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         Texp(m) = (Tp * tpel(m)) + (Tb*(1.0-tpel(m)))
         fish(m)%Tcorr_e = exp(FEISTY%ke * (Texp(m)-10.0))                                       ! save Temp effect on encounter rate and Cmax
         fish(m)%Tcorr_met = exp(FEISTY%kmet * (Texp(m)-10.0))                                   ! save Temp effect on met
-        fish(m)%V = fish(m)%Tcorr_e * fish(m)%V_w * m2_to_m2        ! update clearance rate with temp effect
+        fish(m)%V = fish(m)%Tcorr_e * fish(m)%V_w                   ! update clearance rate with temp effect
         fish(m)%cmax = fish(m)%cmax_w * fish(m)%Tcorr_e             ! update cmax with temp effect
-        fish(m)%met(i,j) = fish(m)%met_w * fish(m)%Tcorr_met      ! Temperature corrected metabolism
+        fish(m)%met(i,j) = fish(m)%met_w * fish(m)%Tcorr_met        ! Temperature corrected metabolism
     end do 
 
     if (do_print_FEISTY_diagnostic) then 
+        write(outunit,*) "Mz : ", FEISTY%Mz
+        write(outunit,*) "Lz : ", FEISTY%Lz
         write(outunit,*) "Tp : ", Tp
         write(outunit,*) "Tb : ", Tb
+        write(outunit,*) "det :", FEISTY%det
         write(outunit,*) "tpel : ", tpel
         write(outunit,*) "Texp : ", Texp
         write(outunit,*) "T_e : ", fish(m)%Tcorr_e
@@ -1917,8 +1923,8 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     hp_ingest_nlgz_dpint = (fish(MF)%cons_Lz(i,j) * fish(MF)%B + fish(MP)%cons_Lz(i,j) * fish(MP)%B)
 	
 	! Converting zooplankton consumption back from [g WW m-2 d-1] to [mol N kg s-1] to be unsed in COBALT
-	hp_ingest_nmdz_dpint = hp_ingest_nmdz_dpint * (1.0/FEISTY%convers_Mz) * (1.0/FEISTY%d2s)
-	hp_ingest_nlgz_dpint = hp_ingest_nlgz_dpint * (1.0/FEISTY%convers_Mz) * (1.0/FEISTY%d2s)
+	hp_ingest_nmdz_dpint = hp_ingest_nmdz_dpint / (FEISTY%convers_Mz * FEISTY%d2s)
+	hp_ingest_nlgz_dpint = hp_ingest_nlgz_dpint / (FEISTY%convers_Mz * FEISTY%d2s)
 
     ! Calculation of the hight trophic level predation on zooplankton at every depth: 
     ! integrated zooplankton biomass has dimension of [g WW C m-2]
@@ -1927,14 +1933,14 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         hp_ingest_nmdz(1:layer_id_dpint) = FEISTY%zero
     else 
         Do k = 1, layer_id_dpint
-            hp_ingest_nmdz(k) = hp_ingest_nmdz_dpint * med_zoo_N(k) / (FEISTY%Mz / FEISTY%convers_Mz + FEISTY%eps) / dzt(k)
+            hp_ingest_nmdz(k) = hp_ingest_nmdz_dpint * med_zoo_N(k) * FEISTY%convers_Mz * (1.00/(FEISTY%Mz + FEISTY%eps)) * (1.00/dzt(k))
         endDo
     endif
     if (FEISTY%Lz .le. FEISTY%zero) then 
         hp_ingest_nlgz(1:layer_id_dpint) = FEISTY%zero
     else 
         Do k = 1, layer_id_dpint
-            hp_ingest_nlgz(k) = hp_ingest_nlgz_dpint * Lrg_zoo_N(k) / (FEISTY%Lz / FEISTY%convers_Mz+ FEISTY%eps) / dzt(k) 
+            hp_ingest_nlgz(k) = hp_ingest_nlgz_dpint * Lrg_zoo_N(k) * FEISTY%convers_Mz * (1.00/(FEISTY%Lz + FEISTY%eps)) * (1.00/dzt(k))
         endDo
     endif
 
@@ -2062,7 +2068,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     if (do_print_FEISTY_diagnostic) then 
         
         write (outunit,*)  '------------ input for FEISTY ------------'
-        write (outunit,*)  'depth =                   ', k
+        write (outunit,*)  'depth =                   ', zt(nk)
         write (outunit,*)  'Temperature               ', Temp
         write (outunit,*)  'small zooplankton biomass ', med_zoo_N * FEISTY%convers_Mz
         write (outunit,*)  'large zooplankton biomass ', Lrg_zoo_N * FEISTY%convers_Mz
@@ -2072,13 +2078,20 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         do m = 1, FEISTY%nFishGroup
             write (outunit,*)  fish(m)%B
         end do 
+        write (outunit,*)  "BE : ", FEISTY%BE
+
 
         write (outunit,*)  '-------------- FEISTY derivative --------------'
         do m = 1, FEISTY%nFishGroup
             write (outunit,*)  fish(m)%dBdt_fish(i,j)
         end do 
+        write (outunit,*)  FEISTY%dBdt_BE(i,j) 
 
         write (outunit,*)  '-------------- Non diagnostic parameters --------------'
+
+        write (outunit,*)  '-------------- Benthic parameters --------------'
+        write (outunit,*)  'r_BE : ', r_BE
+        write (outunit,*)  'pred_BE : ', pred_BE
 
         if (FunctRspons_typeIII) then 
             write (outunit,*)  '-------------- Functional type matrixes --------------'
