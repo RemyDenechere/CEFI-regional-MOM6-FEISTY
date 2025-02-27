@@ -26,7 +26,7 @@ else
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/atmos_mosaic.nc ./atmos_mosaic.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/bgc_woa_esper_ics_1993_2023-04_BATS.nc ./bgc_woa_esper_ics_1993_2023-04_BATS.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/cfc.bc.nc ./cfc.bc.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/COBALT_2023_10_spinup_2003_subset.nc ./COBALT_2023_10_spinup_2003_subset.nc
+	# ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/COBALT_2023_10_spinup_2003_subset.nc ./COBALT_2023_10_spinup_2003_subset.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/depflux_total.mean.1860.nc ./depflux_total.mean.1860.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/diag_rho2.nc ./diag_rho2.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/geothermal_davies2013_v1.nc ./geothermal_davies2013_v1.nc
@@ -65,7 +65,6 @@ if [ -z "${CEFI_DATASET_LOC}" ]; then
     echo "CEFI_DATASET_LOC is not set."
 else
     echo "CEFI_DATASET_LOC is set to '${CEFI_DATASET_LOC}'."
-
 	
 	ln -fs ${CEFI_DATASET_LOC}/grid_spec.nc ./grid_spec.nc
 	ln -fs ${CEFI_DATASET_LOC}/land_mosaic_tile1Xocean_mosaic_tile1.nc ./land_mosaic_tile1Xocean_mosaic_tile1.nc
@@ -74,14 +73,11 @@ else
 	ln -fs ${CEFI_DATASET_LOC}/land_mask.nc ./land_mask.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_hgrid.nc ./ocean_hgrid.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_topog.nc ./ocean_topog.nc
-	ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc 		./FEISTY_2023_10_spinup_subset.nc
+	# ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc 		./FEISTY_2023_10_spinup_subset.nc
 	ln -fs ${CEFI_DATASET_LOC}/FEISTY_2D_2023_10_spinup_subset.nc 	./FEISTY_2D_2023_10_spinup_subset.nc
 	ln -fs ${CEFI_DATASET_LOC}/land_mosaic.nc ./land_mosaic.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_mask.nc ./ocean_mask.nc
-
-	ln -fs ocean_topog.nc ./topog.nc
-
-	
+	ln -fs ${CEFI_DATASET_LOC}/COBALT_2023_10_spinup_2003_subset.nc ./COBALT_2023_10_spinup_2003_subset.nc	
 fi
 
 
