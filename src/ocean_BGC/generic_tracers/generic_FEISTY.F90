@@ -141,8 +141,9 @@ type, public :: fish_type
     	prod, & 	    !    Productivity = E_A* Biomass
     	Fout, & 	    !    flux of biomass to next size class
     	rho, & 		    !    rho
-    	yield, &        !    Yield = nu_F * Biomass 
+    	yield           !    Yield = nu_F * Biomass 
 
+    real, allocatable, dimension(:,:,:) :: &
         dBdt_fish       !    Derivative for fish in m-2 d-1 
 	
     
@@ -275,7 +276,7 @@ type, public :: FEISTY_type
 
 	
     ! Tracers: variables that need to be passed from on time step to the next: 
-    real, dimension(:,:), allocatable ::Sf_B,  &
+    real, dimension(:,:,:), allocatable ::Sf_B,  &
                                         Sp_B,  &
                                         Sd_B,  &
                                         Mf_B,  &
@@ -297,7 +298,7 @@ type, public :: FEISTY_type
                 id_BE_B = -1
 
     ! pointers of the tracers: 
-    real, dimension(:,:,:), pointer ::  p_Sf_B,  &
+    real, dimension(:,:,:,:), pointer ::  p_Sf_B,  &
                                         p_Sp_B,  &
                                         p_Sd_B,  &
                                         p_Mf_B,  &
@@ -1338,8 +1339,8 @@ subroutine user_add_params_FEISTY
     call g_tracer_add_param('Bent_eff'  , FEISTY%Bent_eff  , 0.075)
 
     ! Conversion from cobalt zooplankton and detritus to FEISTY  
-    call g_tracer_add_param('convers_Mz', FEISTY%convers_Mz, 6.625*12.01*9.0 * 1000.0)       ! zooplankton biomass unit conversion conversion 
-    call g_tracer_add_param('convers_det', FEISTY%convers_det, 6.625*12.01*9.0*FEISTY%d2s)   ! detritus unit conversion
+    call g_tracer_add_param('convers_Mz', FEISTY%convers_Mz, 6.625 * 12.01 * 9.0 * 1000.0)       ! zooplankton biomass unit conversion conversion 
+    call g_tracer_add_param('convers_det', FEISTY%convers_det, 6.625 * 12.01 * 9.0 * FEISTY%d2s)   ! detritus unit conversion
 
     call g_tracer_add_param('PI_be_cutoff', FEISTY%PI_be_cutoff, 200.0)   ! demersal time in pel cutoff
     
@@ -1363,16 +1364,16 @@ subroutine user_allocate_arrays_FEISTY
 
     call g_tracer_get_common(isc,iec,jsc,jec,isd,ied,jsd,jed,nk,ntau)
     
-    allocate(FEISTY%Sf_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%Sp_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%Sd_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%Mf_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%Mp_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%Md_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%Lp_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%Ld_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%BE_B(isd:ied,jsd:jed));     
-    allocate(FEISTY%dBdt_BE(isd:ied,jsd:jed));         FEISTY%dBdt_BE  = 0.0 ! Derivative for Benthic resource
+    allocate(FEISTY%Sf_B(isd:ied, jsd:jed, 1:nk));     
+    allocate(FEISTY%Sp_B(isd:ied, jsd:jed, 1:nk));     
+    allocate(FEISTY%Sd_B(isd:ied, jsd:jed, 1:nk));     
+    allocate(FEISTY%Mf_B(isd:ied, jsd:jed, 1:nk));     
+    allocate(FEISTY%Mp_B(isd:ied, jsd:jed, 1:nk));     
+    allocate(FEISTY%Md_B(isd:ied, jsd:jed, 1:nk));     
+    allocate(FEISTY%Lp_B(isd:ied, jsd:jed, 1:nk));     
+    allocate(FEISTY%Ld_B(isd:ied, jsd:jed, 1:nk));     
+    allocate(FEISTY%BE_B(isd:ied, jsd:jed, 1:nk));     
+    allocate(FEISTY%dBdt_BE(isd:ied, jsd:jed, 1:nk));         FEISTY%dBdt_BE  = 0.0 ! Derivative for Benthic resource
 
     ! Diagnostic variables: 
     do m = 1, FEISTY%nFishGroup
@@ -1401,7 +1402,7 @@ subroutine user_allocate_arrays_FEISTY
         allocate(fish(m)%rho(isd:ied,jsd:jed));        fish(m)%rho = 0.0 		            !    rho
         allocate(fish(m)%yield(isd:ied,jsd:jed));      fish(m)%yield = 0.0                  !    Yield = nu_F * Biomass 
 
-        allocate(fish(m)%dBdt_fish(isd:ied,jsd:jed));  fish(m)%dBdt_fish = 0.0              ! Derivative for fish in m-2 d-1
+        allocate(fish(m)%dBdt_fish(isd:ied,jsd:jed,1:nk));  fish(m)%dBdt_fish = 0.0              ! Derivative for fish in m-2 d-1
     end do 
 end subroutine user_allocate_arrays_FEISTY
 
@@ -1519,76 +1520,56 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         name       = 'Sf_B',         &
         longname   = 'Small forage fish biomass',  &
         units      = 'g m-2',      &
-        btm_reservoir = .true.,         &
-        prog       = .false.,           &
-        init_value = FEISTY%IC)
+        prog       = .false.)
 
     call g_tracer_add(tracer_list, package_name,&
         name       = 'Mf_B',         &
         longname   = 'Medium forage fish biomass',  &
         units      = 'g m-2',      &
-        btm_reservoir = .true.,         &
-        prog       = .false.,           &
-        init_value = FEISTY%IC)
+        prog       = .false.)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sp_B',         &
         longname   = 'Small large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        btm_reservoir = .true.,         &
-        prog       = .false.,           &
-        init_value = FEISTY%IC)
+        prog       = .false.)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Mp_B',         &
         longname   = 'Medium large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        btm_reservoir = .true.,         &
-        prog       = .false.,           &
-        init_value = FEISTY%IC)			
+        prog       = .false.)			
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Lp_B',         &
         longname   = 'Large pelagic fish biomass',  &
         units      = 'g m-2',      &
-        btm_reservoir = .true.,         &
-        prog       = .false.,           &
-        init_value = FEISTY%IC)
+        prog       = .false.)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sd_B',         &
         longname   = 'Small demersal fish biomass',  &
         units      = 'g m-2',      &
-        btm_reservoir = .true.,         &
-        prog       = .false.,           &
-        init_value = FEISTY%IC)
+        prog       = .false.)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Md_B',         &
         longname   = 'Medium demersal fish biomass',  &
         units      = 'g m-2',      &
-        btm_reservoir = .true.,         &
-        prog       = .false.,           &
-        init_value = FEISTY%IC)
+        prog       = .false.)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Ld_B',         &
         longname   = 'Large demersal fish biomass',  &
         units      = 'g m-2',      &
-        btm_reservoir = .true.,         &
-        prog       = .false.,           &
-        init_value = FEISTY%IC)			
+        prog       = .false.)		
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'BE_B',         &
         longname   = 'Benthic invertebrate biomass',  &
         units      = 'g m-2',      &
-        btm_reservoir = .true.,         &
-        prog       = .false.,           &
-        init_value = FEISTY%IC)
-
+        prog       = .false.)
 end subroutine user_add_tracers_FEISTY
-
 
 
 ! Get tracer values to make next time step calculation. 
@@ -1599,15 +1580,15 @@ subroutine generic_FEISTY_tracer_get_values(tracer_list, isd, jsd, tau)
     integer, intent(in) :: isd, jsd, tau 
 
     ! Get values of the prognostic variable : ----------------------------------------------
-    call g_tracer_get_values(tracer_list, 'Sf_B' ,'btm_reservoir', FEISTY%Sf_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Sp_B' ,'btm_reservoir', FEISTY%Sp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Sd_B' ,'btm_reservoir', FEISTY%Sd_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Mf_B' ,'btm_reservoir', FEISTY%Mf_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Mp_B' ,'btm_reservoir', FEISTY%Mp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Md_B' ,'btm_reservoir', FEISTY%Md_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Lp_B' ,'btm_reservoir', FEISTY%Lp_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'Ld_B' ,'btm_reservoir', FEISTY%Ld_B(:,:), isd, jsd)
-    call g_tracer_get_values(tracer_list, 'BE_B' ,'btm_reservoir', FEISTY%BE_B(:,:), isd, jsd)
+    call g_tracer_get_values(tracer_list, 'Sf_B' ,'field', FEISTY%Sf_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
+    call g_tracer_get_values(tracer_list, 'Sp_B' ,'field', FEISTY%Sp_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
+    call g_tracer_get_values(tracer_list, 'Sd_B' ,'field', FEISTY%Sd_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
+    call g_tracer_get_values(tracer_list, 'Mf_B' ,'field', FEISTY%Mf_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
+    call g_tracer_get_values(tracer_list, 'Mp_B' ,'field', FEISTY%Mp_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
+    call g_tracer_get_values(tracer_list, 'Md_B' ,'field', FEISTY%Md_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
+    call g_tracer_get_values(tracer_list, 'Lp_B' ,'field', FEISTY%Lp_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
+    call g_tracer_get_values(tracer_list, 'Ld_B' ,'field', FEISTY%Ld_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
+    call g_tracer_get_values(tracer_list, 'BE_B' ,'field', FEISTY%BE_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
 
 end subroutine generic_FEISTY_tracer_get_values
 
@@ -1697,15 +1678,15 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     stdoutunit=stdout(); stdlogunit=stdlog()
     
     ! Affect value for each tracer: 
-    fish(SF)%B = FEISTY%Sf_B(i,j)
-    fish(SP)%B = FEISTY%Sp_B(i,j)
-    fish(SD)%B = FEISTY%Sd_B(i,j)
-    fish(MF)%B = FEISTY%Mf_B(i,j)
-    fish(MP)%B = FEISTY%Mp_B(i,j)
-    fish(MD)%B = FEISTY%Md_B(i,j)
-    fish(LP)%B = FEISTY%Lp_B(i,j)
-    fish(LD)%B = FEISTY%Ld_B(i,j)
-    FEISTY%BE  = FEISTY%BE_B(i,j)
+    fish(SF)%B = FEISTY%Sf_B(i,j,1)
+    fish(SP)%B = FEISTY%Sp_B(i,j,1)
+    fish(SD)%B = FEISTY%Sd_B(i,j,1)
+    fish(MF)%B = FEISTY%Mf_B(i,j,1)
+    fish(MP)%B = FEISTY%Mp_B(i,j,1)
+    fish(MD)%B = FEISTY%Md_B(i,j,1)
+    fish(LP)%B = FEISTY%Lp_B(i,j,1)
+    fish(LD)%B = FEISTY%Ld_B(i,j,1)
+    FEISTY%BE  = FEISTY%BE_B(i,j,1)
     
     ! get id of 100 m depth
     Do k = 1, nk
@@ -1770,7 +1751,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
 
     ! Calcul of biomass experience in pelagic for demersals by demersals
     biop = FEISTY%pref_Ld_Mf * fish(MF)%B + FEISTY%pref_Ld_Mp * fish(MD)%B
-    biob = FEISTY%pref_Ld_Md * fish(MD)%B  + FEISTY%pref_Ld_BE * FEISTY%BE_B(i,j)
+    biob = FEISTY%pref_Ld_Md * fish(MD)%B  + FEISTY%pref_Ld_BE * FEISTY%BE_B(i,j,1)
 
     if (zt(nk) < FEISTY%PI_be_cutoff) then  ! zt(nk) is the sea floor depth 
         tpel(FEISTY%nFishGroup) = biop / (biop + biob)
@@ -1894,7 +1875,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
             fish(m)%cons_p(i,j) = FEISTY%zero
             fish(m)%cons_d(i,j) = FEISTY%zero
 
-            ! Calculate encounter rate:  enc_i = V * B * pref  = f_i*cmax / (1-f_tot) 
+            ! Calculate encounter rate: enc_i = V * B * pref  = f_i*cmax / (1-f_tot) 
             fish(m)%enc_Mz(i,j) = FEISTY%zero
             fish(m)%enc_Lz(i,j) = FEISTY%zero
             fish(m)%enc_BE(i,j) = FEISTY%zero
@@ -2036,18 +2017,18 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! Calcul derivative for each group : -----------------------------------------
     
     ! Small size (no loss from reproduction)
-    fish(SF)%dBdt_fish(i,j) = FEISTY%eps_R * fish(MF)%rho(i,j) * fish(MF)%B + (fish(SF)%E_A(i,j) - fish(SF)%Fout(i,j) - fish(SF)%mu) * fish(SF)%B
-    fish(SP)%dBdt_fish(i,j) = FEISTY%eps_R * fish(LP)%rho(i,j) * fish(LP)%B + (fish(SP)%E_A(i,j) - fish(SP)%Fout(i,j) - fish(SP)%mu) * fish(SP)%B
-    fish(SD)%dBdt_fish(i,j) = FEISTY%eps_R * fish(LD)%rho(i,j) * fish(LD)%B + (fish(SD)%E_A(i,j) - fish(SD)%Fout(i,j) - fish(SD)%mu) * fish(SD)%B  
+    fish(SF)%dBdt_fish(i,j,1) = FEISTY%eps_R * fish(MF)%rho(i,j) * fish(MF)%B + (fish(SF)%E_A(i,j) - fish(SF)%Fout(i,j) - fish(SF)%mu) * fish(SF)%B
+    fish(SP)%dBdt_fish(i,j,1) = FEISTY%eps_R * fish(LP)%rho(i,j) * fish(LP)%B + (fish(SP)%E_A(i,j) - fish(SP)%Fout(i,j) - fish(SP)%mu) * fish(SP)%B
+    fish(SD)%dBdt_fish(i,j,1) = FEISTY%eps_R * fish(LD)%rho(i,j) * fish(LD)%B + (fish(SD)%E_A(i,j) - fish(SD)%Fout(i,j) - fish(SD)%mu) * fish(SD)%B  
     
     ! Medium size (reproduction loss for Mf)
-    fish(MF)%dBdt_fish(i,j) = fish(SF)%Fout(i,j) * fish(SF)%B + (fish(MF)%E_A(i,j) - fish(MF)%rho(i,j) - fish(MF)%mu) * fish(MF)%B 
-    fish(MP)%dBdt_fish(i,j) = fish(SP)%Fout(i,j) * fish(SP)%B + (fish(MP)%E_A(i,j) - fish(MP)%Fout(i,j)  - fish(MP)%mu) * fish(MP)%B 
-    fish(MD)%dBdt_fish(i,j) = fish(SD)%Fout(i,j) * fish(SD)%B + (fish(MD)%E_A(i,j) - fish(MD)%Fout(i,j)  - fish(MD)%mu) * fish(MD)%B 
+    fish(MF)%dBdt_fish(i,j,1) = fish(SF)%Fout(i,j) * fish(SF)%B + (fish(MF)%E_A(i,j) - fish(MF)%rho(i,j) - fish(MF)%mu) * fish(MF)%B 
+    fish(MP)%dBdt_fish(i,j,1) = fish(SP)%Fout(i,j) * fish(SP)%B + (fish(MP)%E_A(i,j) - fish(MP)%Fout(i,j)  - fish(MP)%mu) * fish(MP)%B 
+    fish(MD)%dBdt_fish(i,j,1) = fish(SD)%Fout(i,j) * fish(SD)%B + (fish(MD)%E_A(i,j) - fish(MD)%Fout(i,j)  - fish(MD)%mu) * fish(MD)%B 
 
     ! Large fish (reproduction Fout = 0) 
-    fish(LP)%dBdt_fish(i,j) = fish(MP)%Fout(i,j) * fish(MP)%B + (fish(LP)%E_A(i,j) - fish(LP)%rho(i,j) - fish(LP)%mu) * fish(LP)%B
-    fish(LD)%dBdt_fish(i,j) = fish(MD)%Fout(i,j) * fish(MD)%B + (fish(LD)%E_A(i,j) - fish(LD)%rho(i,j) - fish(LD)%mu) * fish(LD)%B 
+    fish(LP)%dBdt_fish(i,j,1) = fish(MP)%Fout(i,j) * fish(MP)%B + (fish(LP)%E_A(i,j) - fish(LP)%rho(i,j) - fish(LP)%mu) * fish(LP)%B
+    fish(LD)%dBdt_fish(i,j,1) = fish(MD)%Fout(i,j) * fish(MD)%B + (fish(LD)%E_A(i,j) - fish(LD)%rho(i,j) - fish(LD)%mu) * fish(LD)%B 
 
     !:======================================================================
     ! Calcul the Benthic biomass from detritus flux to benthic 
@@ -2060,9 +2041,9 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! CC = 80            : Carring Capacity for benthic chemostat
     ! FEISTY%BE          : former benthic biomass
     !:======================================================================
-    pred_BE = fish(MD)%cons_BE(i,j) * FEISTY%Md_B(i,j) + fish(LD)%cons_BE(i,j) * FEISTY%Ld_B(i,j)
+    pred_BE = fish(MD)%cons_BE(i,j) * fish(MD)%B + fish(LD)%cons_BE(i,j) * fish(LD)%B
     r_BE = FEISTY%Bent_eff * FEISTY%det / (FEISTY%BE + FEISTY%eps)
-    FEISTY%dBdt_BE(i,j) = (r_BE * FEISTY%BE * (1 - FEISTY%BE/FEISTY%CC) - pred_BE) 
+    FEISTY%dBdt_BE(i,j,1) = (r_BE * FEISTY%BE * (1 - FEISTY%BE/FEISTY%CC) - pred_BE) 
 
     ! Print Fish outputs at second time step (tau =2):
     if (do_print_FEISTY_diagnostic) then 
@@ -2083,9 +2064,9 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
 
         write (outunit,*)  '-------------- FEISTY derivative --------------'
         do m = 1, FEISTY%nFishGroup
-            write (outunit,*)  fish(m)%dBdt_fish(i,j)
+            write (outunit,*)  fish(m)%dBdt_fish(i,j,1)
         end do 
-        write (outunit,*)  FEISTY%dBdt_BE(i,j) 
+        write (outunit,*)  FEISTY%dBdt_BE(i,j,1) 
 
         write (outunit,*)  '-------------- Non diagnostic parameters --------------'
 
@@ -2262,8 +2243,8 @@ end subroutine generic_FEISTY_fish_update_from_source
 !   The grid_tmask(:,:,1)(i,j) might be unecessary for fish.
 ! 
 ! </DESCRIPTION>
-subroutine generic_FEISTY_update_pointer(i, j, tau, dt)
-    integer, intent(in) :: i, j, tau
+subroutine generic_FEISTY_update_pointer(i, j, k, tau, dt)
+    integer, intent(in) :: i, j, k, tau
     real,    intent(in) :: dt
     real                :: Delta_t
     ! FEISTY%d2s: Conversion from Day to second
@@ -2272,15 +2253,15 @@ subroutine generic_FEISTY_update_pointer(i, j, tau, dt)
     ! dBdt in g ww C d-1 in g ww C s-1 
     Delta_t = dt / FEISTY%d2s
 
-    FEISTY%p_Sf_B(i,j,tau) = FEISTY%p_Sf_B(i,j,tau) +  fish(SF)%dBdt_fish(i,j) * Delta_t 
-    FEISTY%p_Sp_B(i,j,tau) = FEISTY%p_Sp_B(i,j,tau) +  fish(SP)%dBdt_fish(i,j) * Delta_t 
-    FEISTY%p_Sd_B(i,j,tau) = FEISTY%p_Sd_B(i,j,tau) +  fish(SD)%dBdt_fish(i,j) * Delta_t 
-    FEISTY%p_Mf_B(i,j,tau) = FEISTY%p_Mf_B(i,j,tau) +  fish(MF)%dBdt_fish(i,j) * Delta_t 
-    FEISTY%p_Mp_B(i,j,tau) = FEISTY%p_Mp_B(i,j,tau) +  fish(MP)%dBdt_fish(i,j) * Delta_t 
-    FEISTY%p_Md_B(i,j,tau) = FEISTY%p_Md_B(i,j,tau) +  fish(MD)%dBdt_fish(i,j) * Delta_t 
-    FEISTY%p_Lp_B(i,j,tau) = FEISTY%p_Lp_B(i,j,tau) +  fish(LP)%dBdt_fish(i,j) * Delta_t 
-    FEISTY%p_Ld_B(i,j,tau) = FEISTY%p_Ld_B(i,j,tau) +  fish(LD)%dBdt_fish(i,j) * Delta_t 
-    FEISTY%p_BE_B(i,j,tau) = FEISTY%p_BE_B(i,j,tau) +  FEISTY%dBdt_BE(i,j)     * Delta_t 
+    FEISTY%p_Sf_B(i,j,k,tau) = FEISTY%p_Sf_B(i,j,k,tau) +  fish(SF)%dBdt_fish(i,j,k) * Delta_t 
+    FEISTY%p_Sp_B(i,j,k,tau) = FEISTY%p_Sp_B(i,j,k,tau) +  fish(SP)%dBdt_fish(i,j,k) * Delta_t 
+    FEISTY%p_Sd_B(i,j,k,tau) = FEISTY%p_Sd_B(i,j,k,tau) +  fish(SD)%dBdt_fish(i,j,k) * Delta_t 
+    FEISTY%p_Mf_B(i,j,k,tau) = FEISTY%p_Mf_B(i,j,k,tau) +  fish(MF)%dBdt_fish(i,j,k) * Delta_t 
+    FEISTY%p_Mp_B(i,j,k,tau) = FEISTY%p_Mp_B(i,j,k,tau) +  fish(MP)%dBdt_fish(i,j,k) * Delta_t 
+    FEISTY%p_Md_B(i,j,k,tau) = FEISTY%p_Md_B(i,j,k,tau) +  fish(MD)%dBdt_fish(i,j,k) * Delta_t 
+    FEISTY%p_Lp_B(i,j,k,tau) = FEISTY%p_Lp_B(i,j,k,tau) +  fish(LP)%dBdt_fish(i,j,k) * Delta_t 
+    FEISTY%p_Ld_B(i,j,k,tau) = FEISTY%p_Ld_B(i,j,k,tau) +  fish(LD)%dBdt_fish(i,j,k) * Delta_t 
+    FEISTY%p_BE_B(i,j,k,tau) = FEISTY%p_BE_B(i,j,k,tau) +  FEISTY%dBdt_BE(i,j,k)     * Delta_t 
 
 end subroutine generic_FEISTY_update_pointer
 
