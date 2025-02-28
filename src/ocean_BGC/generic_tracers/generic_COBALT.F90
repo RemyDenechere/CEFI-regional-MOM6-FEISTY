@@ -9024,7 +9024,7 @@ contains
        prey_vec(5) = max(bact(1)%f_n(i,j,k) - cobalt%refuge_conc,0.0)
        prey_vec(6) = max(zoo(1)%f_n(i,j,k) - cobalt%refuge_conc,0.0)
        prey_vec(7) = max(zoo(2)%f_n(i,j,k) - cobalt%refuge_conc, 0.0)
-       prey_vec(8) = max(zoo(3)%f_n(i,j,k) - cobalt%refuge_conc,0.0)*cobalt%dp_fac(i,j)
+       prey_vec(8) = max(zoo(3)%f_n(i,j,k) - cobalt%refuge_conc, 0.0) * cobalt%dp_fac(i,j)
        prey_vec(9) = max(cobalt%f_ndet(i,j,k) - cobalt%refuge_conc,0.0)
        !
        ! Set dynamic stoichiometric rations inside k,j,i loop
@@ -10443,10 +10443,8 @@ contains
           do k = 1, nk ; do j = jsc, jec ; do i = isc, iec  !{
                cobalt%p_hp_ingest_nmdz(i,j,k,tau) = cobalt%hp_ingest_nmdz(i,j,k)
                cobalt%p_hp_ingest_nlgz(i,j,k,tau) = cobalt%hp_ingest_nlgz(i,j,k)
+               call generic_FEISTY_update_pointer(i, j, k, tau, dt)
           enddo; enddo ; enddo  !} i,j,k
-          do j = jsc, jec ; do i = isc, iec  !{
-               call generic_FEISTY_update_pointer(i, j, tau, dt)
-          enddo ; enddo  !} i,j
      end if 
 
     !
