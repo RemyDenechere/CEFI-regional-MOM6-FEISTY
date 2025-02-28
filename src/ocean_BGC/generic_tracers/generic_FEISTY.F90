@@ -1717,18 +1717,18 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     !======================================================================!
     !                   Convertion from COBALT to FEISTY
     ! Converting zooplankton unit from [mol N m-2] to [gww m-2]
-    FEISTY%Mz = SUM(med_zoo_N(1:layer_id_dpint) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz
+    FEISTY%Mz = SUM(max(med_zoo_N(1:layer_id_dpint) - 1.0e-10, 0.0) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz
     ! Check for Negative or nul values for zooplankton  
-    if ( FEISTY%Mz .le. 0.0 ) then
-        write(outunit,*) 'FEISTY Medium Zooplankton <= 0', FEISTY%Mz ,'!!! replacing by 0 ' 
-        FEISTY%Mz = FEISTY%zero
-    end if
-    FEISTY%Lz = SUM(Lrg_zoo_N(1:layer_id_dpint) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz
+    ! if ( FEISTY%Mz .le. 0.0 ) then
+    !     write(outunit,*) 'FEISTY Medium Zooplankton <= 0', FEISTY%Mz ,'!!! replacing by 0 ' 
+    !     FEISTY%Mz = FEISTY%zero
+    ! end if
+    FEISTY%Lz = SUM(max(Lrg_zoo_N(1:layer_id_dpint) - 1.0e-10, 0.0) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz ! should we add diapose factor? 
     ! Check for Negative or nul values for zooplankton  
-    if ( FEISTY%Lz .le. 0.0 ) then
-        write(outunit,*) 'FEISTY Large Zooplankton <= 0', FEISTY%Lz ,' replacing by 0 !!!'
-        FEISTY%Lz = FEISTY%zero
-    end if
+    ! if ( FEISTY%Lz .le. 0.0 ) then
+    !     write(outunit,*) 'FEISTY Large Zooplankton <= 0', FEISTY%Lz ,' replacing by 0 !!!'
+    !     FEISTY%Lz = FEISTY%zero
+    ! end if
 
     ! Detritus convertion 
     FEISTY%det = det * FEISTY%convers_det   ! Convert in g ww m-2 d-1)
