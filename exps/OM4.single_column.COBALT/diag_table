@@ -725,15 +725,15 @@ OM4_single_column
 #  12/102024: Remy DENECHERE <rdenechere@ucsd.edu> COBALT output for offline FEISTY run
 # FEISTY tracers output
 "ocean_model", "volcello",     "volcello",         "ocean_feisty_tracers",      "all", "mean", "none",2 # Cell measure for 3d data
-"generic_feisty", "Sf_B",  "Sf_B",     "ocean_feisty_tracers","all","mean","none",2
-"generic_feisty", "Sp_B",  "Sp_B",     "ocean_feisty_tracers","all","mean","none",2
-"generic_feisty", "Sd_B",  "Sd_B",     "ocean_feisty_tracers","all","mean","none",2
-"generic_feisty", "Mf_B",  "Mf_B",     "ocean_feisty_tracers","all","mean","none",2
-"generic_feisty", "Mp_B",  "Mp_B",     "ocean_feisty_tracers","all","mean","none",2
-"generic_feisty", "Md_B",  "Md_B",     "ocean_feisty_tracers","all","mean","none",2
-"generic_feisty", "Lp_B",  "Lp_B",     "ocean_feisty_tracers","all","mean","none",2
-"generic_feisty", "Ld_B",  "Ld_B",     "ocean_feisty_tracers","all","mean","none",2
-"generic_feisty", "BE_B",  "BE_B",     "ocean_feisty_tracers","all","mean","none",2
+"generic_feisty", "Sf_B",  "Sf_B",     "ocean_feisty_tracers",  "all","mean","none",2
+"generic_feisty", "Sp_B",  "Sp_B",     "ocean_feisty_tracers",  "all","mean","none",2
+"generic_feisty", "Sd_B",  "Sd_B",     "ocean_feisty_tracers",  "all","mean","none",2
+"generic_feisty", "Mf_B",  "Mf_B",     "ocean_feisty_tracers",  "all","mean","none",2
+"generic_feisty", "Mp_B",  "Mp_B",     "ocean_feisty_tracers",  "all","mean","none",2
+"generic_feisty", "Md_B",  "Md_B",     "ocean_feisty_tracers",  "all","mean","none",2
+"generic_feisty", "Lp_B",  "Lp_B",     "ocean_feisty_tracers",  "all","mean","none",2
+"generic_feisty", "Ld_B",  "Ld_B",     "ocean_feisty_tracers",  "all","mean","none",2
+"generic_feisty", "BE_B",  "BE_B",     "ocean_feisty_tracers",  "all","mean","none",2
 #
 # FEISTY diagnostic output
 "ocean_model",    "volcello", "volcello",     "ocean_feisty_fluxes","all","mean","none",2 # Cell measure for 3d data
