@@ -1900,10 +1900,11 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! Calcul total consumption (integrated) for each Zooplankton group: [g WW m-2 d-1]
     hp_ingest_nmdz_dpint = (fish(SF)%cons_Mz(i,j) * fish(SF)%B + fish(SP)%cons_Mz(i,j) * fish(SP)%B + & 
                 fish(SD)%cons_Mz(i,j) * fish(SD)%B + fish(MF)%cons_Mz(i,j) * fish(MF)%B + &
-                fish(MP)%cons_Mz(i,j) * fish(MP)%B)  
-    hp_ingest_nlgz_dpint = (fish(MF)%cons_Lz(i,j) * fish(MF)%B + fish(MP)%cons_Lz(i,j) * fish(MP)%B)
+                fish(MP)%cons_Mz(i,j) * fish(MP)%B) / FEISTY%Mz
+    hp_ingest_nlgz_dpint = (fish(MF)%cons_Lz(i,j) * fish(MF)%B + fish(MP)%cons_Lz(i,j) * fish(MP)%B) / FEISTY%Lz
 	
 	! Converting zooplankton consumption back from [g WW m-2 d-1] to [mol N kg s-1] to be unsed in COBALT
+    ! added division by zoolpankton biomass to get the rate in per unit of zooplankton biomass
 	hp_ingest_nmdz_dpint = hp_ingest_nmdz_dpint / (FEISTY%convers_Mz * FEISTY%d2s)
 	hp_ingest_nlgz_dpint = hp_ingest_nlgz_dpint / (FEISTY%convers_Mz * FEISTY%d2s)
 
@@ -1965,7 +1966,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         fish(m)%mu = fish(m)%mu_p(i,j) + fish(m)%mu_a + fish(m)%mu_f                       ! Total mortality 
         fish(m)%prod(i,j) = max(fish(m)%E_A(i,j) * fish(m)%B, FEISTY%zero)               ! Productivity (E_a * Biomass) if E_a < 0 prod = 0 
     end do
-
 
     !:======================================================================
     ! calcul the flux of biomass out of a size class for each fish group  

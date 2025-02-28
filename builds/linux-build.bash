@@ -46,7 +46,7 @@ source $MODULESHOME/init/bash
 source $rootdir/$machine_name/$platform.env
 . $rootdir/$machine_name/$platform.env
 
-makeflags="NETCDF=3"
+makeflags="NETCDF=3 -j 8"
 
 if [[ "$target" =~ "openmp" ]] ; then 
    makeflags="$makeflags OPENMP=1" 
