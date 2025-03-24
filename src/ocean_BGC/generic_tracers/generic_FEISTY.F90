@@ -31,7 +31,6 @@ module generic_FEISTY
 
     use fm_util_mod,        only: fm_util_start_namelist, fm_util_end_namelist
     use fms_mod,            only: open_namelist_file, close_file
-
 implicit none; private  
 
 character(len=128) :: version = '$FEISTY_setupbasic2$'
@@ -49,21 +48,10 @@ public generic_FEISTY_tracer_get_values
 public generic_FEISTY_tracer_get_pointer
 public generic_FEISTY_update_from_coupler
 public generic_FEISTY_fish_update_from_source
+public generic_FEISTY_calc_fout
 public generic_FEISTY_end
 public generic_FEISTY_update_pointer
 public generic_FEISTY_send_diagnostic_data
-
-!#########################################################################################!  
-!                                       FEISTY namelist 
-logical :: FunctRspons_typeIII = .false.
-logical :: do_print_FEISTY_diagnostic = .false.
-real    :: a_enc = 70.0
-real    :: dp_int = 100.0
-real    :: k_fct_tp = 1.0
-real    :: k50 = 1.0
-
-namelist /generic_FEISTY_nml/ do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, k_fct_tp, k50
-
 
 !#########################################################################################!  
 !                        Definition of the types used for FEISTY
@@ -187,6 +175,15 @@ type, public :: FEISTY_type
     character(len=fm_field_name_len)           :: long_suffix    = ' '
     character(len=fm_string_len)               :: version
                 
+    ! -----------------------------------
+    ! Parameters from namelist
+    logical :: do_print_FEISTY_diagnostic, FunctRspons_typeIII
+    real    :: a_enc, dp_int, Rfug
+
+    ! old parameters from name list
+    real :: k_fct_tp
+    real :: k50             ! 
+
     ! Biomass of the resource: 
     real :: Mz = 0
     real :: Lz = 0
@@ -211,14 +208,12 @@ type, public :: FEISTY_type
     real :: d2s                 ! conversion second to day
     real :: y2d                 ! conversion day to year 
     real :: IC                  ! Initial Conditions 
-    real :: conv_m2_to_m2       ! conversion from m2 to m2 searching rates! 
+    ! real :: conv_m2_to_m2       ! conversion from m2 to m2 searching rates! 
 
 
     ! Parameters physiology: ------------------------------------------
     real :: ke              ! [°c-1]                Temperature correction for cmax and encounter
     real :: kmet            ! [°c-1]                Temperature correction for Metabolic cost cost
-    real :: k_fct_tp
-    real :: a_enc           ! []                    Coeff for mass-specific Encounter rate             
     real :: b_enc           ! [m-2 g^(b_enc−1) d−1] Exponent for mass-specific Encounter rate 
     real :: a_cmax          ! [d g^(b_cmax)]        Coeff for Cmax 
     real :: b_cmax          ! []                    Exponent for Cmax 
@@ -268,6 +263,8 @@ type, public :: FEISTY_type
     real :: pref_Ld_BE              ! Preference for Benthos
 
     real :: Bent_eff
+
+    
 
     ! Conversion from cobalt zooplankton and detritus to FEISTY  
     real :: convers_Mz              ! zooplankton biomass 
@@ -347,14 +344,21 @@ logical, parameter :: do_Benthic_pred_detritus = .false. ! Do predation from ben
 integer, parameter :: NUM_FISH = 8
 type(fish_type), dimension(NUM_FISH) :: fish
 type(FEISTY_type) :: FEISTY
+
+logical :: do_print_FEISTY_diagnostic, FunctRspons_typeIII
+real    :: a_enc, dp_int, Rfug
+
+namelist /generic_FEISTY_nml/ do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug
 	
 contains
 
-subroutine generic_FEISTY_register(tracer_list)    
+subroutine generic_FEISTY_register(tracer_list)      
     type(g_tracer_type), pointer, intent(inout) :: tracer_list
+    
     integer                                     :: ioun
     integer                                     :: ierr
     integer                                     :: io_status
+   
 
     !-----------------------------------------------------------------------
     ! Error: 
@@ -369,7 +373,7 @@ subroutine generic_FEISTY_register(tracer_list)
 
     ! Test adding a namelist override for FEISTY 
     ioun = open_namelist_file()
-    read  (ioun, generic_FEISTY_nml,iostat=io_status)
+    read  (ioun, nml=generic_FEISTY_nml,iostat=io_status)
     ierr = check_nml_error(io_status,'generic_FEISTY_nml')
     call close_file (ioun)
 
@@ -377,7 +381,6 @@ subroutine generic_FEISTY_register(tracer_list)
     call user_add_tracers_FEISTY(tracer_list)
 
 end subroutine generic_FEISTY_register
-
 
 
 !  <SUBROUTINE NAME="generic_FEISTY_init">
@@ -401,13 +404,16 @@ end subroutine generic_FEISTY_register
 !   Pointer to the head of generic tracer list.
 !  </IN>
 ! </SUBROUTINE>
-subroutine generic_FEISTY_init(tracer_list)
+subroutine generic_FEISTY_init(tracer_list, do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug)
     type(g_tracer_type), pointer :: tracer_list
     integer :: m
     character(len=fm_string_len), parameter :: sub_name = 'generic_FEISTY_init'
+    logical, intent(in) :: do_print_FEISTY_diagnostic, FunctRspons_typeIII
+    real, intent(in) :: a_enc, dp_int, Rfug
+
 
     !Specify and initialize all parameters used by this package
-    call user_add_params_FEISTY
+    call user_add_params_FEISTY(do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug)
 
     !Allocate all the private work arrays used by this module.
     call user_allocate_arrays_FEISTY
@@ -1257,7 +1263,9 @@ end subroutine generic_FEISTY_update_from_coupler
 !       Stop parameter list: g_tracer_end_param_list(package_name)       
 !   </TEMPLATE>
 ! </SUBROUTINE>
-subroutine user_add_params_FEISTY
+subroutine user_add_params_FEISTY(do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug)
+    logical, intent(in) :: do_print_FEISTY_diagnostic, FunctRspons_typeIII
+    real, intent(in) :: a_enc, dp_int, Rfug
     ! Initialiser param list:     
     call g_tracer_start_param_list(package_name)
     
@@ -1268,6 +1276,12 @@ subroutine user_add_params_FEISTY
     !
     ! FEISTY parameters: -------------------------------------------------------
     !
+    ! Parameters from namelist: 
+    call g_tracer_add_param('do_print_FEISTY_diagnostic', FEISTY%do_print_FEISTY_diagnostic, do_print_FEISTY_diagnostic) ! Print diagnostic information
+    call g_tracer_add_param('FunctRspons_typeIII', FEISTY%FunctRspons_typeIII, FunctRspons_typeIII) ! Type of functional response
+    call g_tracer_add_param('a_enc', FEISTY%a_enc, a_enc) ! Coefficient for mass-specific Encounter rate
+    call g_tracer_add_param('dp_int', FEISTY%dp_int, dp_int) ! Initial proportion of the population in the intermediate size class
+    call g_tracer_add_param('Rfug', FEISTY%Rfug, Rfug) ! Fraction of the population that is not available to the predators
  
 
     ! Functional Group information: ---------------------------------------------
@@ -1277,17 +1291,18 @@ subroutine user_add_params_FEISTY
     call g_tracer_add_param('nDeriv', FEISTY%nDeriv, FEISTY%nFishGroup + FEISTY%nBenthos)       ! Number of group for witch the derivative is calculated
 
     call g_tracer_add_param('zero', FEISTY%zero, 0.0)               ! Zero
-    call g_tracer_add_param('eps', FEISTY%eps, 1e-30)               ! Small number for divisions 
+    call g_tracer_add_param('eps', FEISTY%eps, 1e-15)               ! Small number for divisions 
     call g_tracer_add_param('d2s', FEISTY%d2s, 24.0*60.0*60.0)      ! conversion second to day
     call g_tracer_add_param('y2d', FEISTY%y2d, 365.0)               ! conversion day to year 
     call g_tracer_add_param('IC', FEISTY%IC,  10.0**(-5))            ! value for initial condition    
-    call g_tracer_add_param('conv_m2_to_m2', FEISTY%conv_m2_to_m2, 100.0)
+    ! call g_tracer_add_param('conv_m2_to_m2', FEISTY%conv_m2_to_m2, 100.0)
 
     ! Parameters physiology: ------------------------------------------
     call g_tracer_add_param('ke', FEISTY%ke, 0.0630)                ! [°c-1]                Temperature correction for cmax and encounter
     call g_tracer_add_param('kmet', FEISTY%kmet, 0.08550)           ! [°c-1]                Temperature correction for Metabolic cost cost
     call g_tracer_add_param('a_enc', FEISTY%a_enc, a_enc)     !      ! []                   Coeff for mass-specific Encounter rate             
-    call g_tracer_add_param('k_fct_tp', FEISTY%k_fct_tp, k_fct_tp)                       ! []                    Coefficient for the functional response type! if k =1 then type 2 if k .gt. 1 type 3 
+    call g_tracer_add_param('k_fct_tp', FEISTY%k_fct_tp, 1.0)         ! []                    Coefficient for the functional response type! if k =1 then type 2 if k .gt. 1 type 3 
+    call g_tracer_add_param('k50', FEISTY%k50, 1.0)                   ! []                    Coefficient for the functional response type! if k =1 then type 2 if k .gt. 1 type 3 
     call g_tracer_add_param('b_enc', FEISTY%b_enc, 0.20)            ! [m-2 g^(b_enc−1) d−1] Exponent for mass-specific Encounter rate 
     call g_tracer_add_param('a_cmax', FEISTY%a_cmax, 20.0)          ! [d g^(b_cmax)]        Coeff for Cmax 
     call g_tracer_add_param('b_cmax', FEISTY%b_cmax, 0.250)         ! []                    Exponent for Cmax 
@@ -1655,7 +1670,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real, dimension(nk),            intent(in) :: zt, dzt ! layer depth and thikness
     real, dimension(nk),            intent(in) :: med_zoo_N, Lrg_zoo_N          ! Medium and Large zooplankton concentration (mol N Kg-1)
     real, dimension(nk),         intent(inout) :: hp_ingest_nmdz, hp_ingest_nlgz ! high trophic level ingestion rate (mol N Kg-1 s-1)
-   
+
     ! Internal variables : ---------------------------------------------------
     real :: Tp, Tb
     real :: biop, biob
@@ -1676,6 +1691,15 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real :: hp_ingest_nmdz_dpint, hp_ingest_nlgz_dpint ! Depth integrated zooplankton ingestion from fish predation
 
     stdoutunit=stdout(); stdlogunit=stdlog()
+
+    ! Print the values to verify they are read correctly
+    print *, 'do_print_FEISTY_diagnostic:', do_print_FEISTY_diagnostic
+    print *, 'FunctRspons_typeIII:', FunctRspons_typeIII
+    print *, 'a_enc:', a_enc
+    print *, 'dp_int:', dp_int
+    print *, 'Rfug:', Rfug
+
+    stop 
     
     ! Affect value for each tracer: 
     fish(SF)%B = FEISTY%Sf_B(i,j,1)
@@ -1690,7 +1714,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     
     ! get id of 100 m depth
     Do k = 1, nk
-        if (zt(k) .le. dp_int) then ! BRZENSKI k used to be 'm'
+        if (zt(k) .le. FEISTY%dp_int) then ! BRZENSKI k used to be 'm'
             layer_id_dpint = k
         end if
     endDo
@@ -1698,13 +1722,13 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     !======================================================================!
     !                   Convertion from COBALT to FEISTY
     ! Converting zooplankton unit from [mol N m-2] to [gww m-2]
-    FEISTY%Mz = SUM(max(med_zoo_N(1:layer_id_dpint) - 1.0e-10, 0.0) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz
+    FEISTY%Mz = SUM(max(med_zoo_N(1:layer_id_dpint) - FEISTY%Rfug, 0.0) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz
     ! Check for Negative or nul values for zooplankton  
     ! if ( FEISTY%Mz .le. 0.0 ) then
     !     write(outunit,*) 'FEISTY Medium Zooplankton <= 0', FEISTY%Mz ,'!!! replacing by 0 ' 
     !     FEISTY%Mz = FEISTY%zero
     ! end if
-    FEISTY%Lz = SUM(max(Lrg_zoo_N(1:layer_id_dpint) - 1.0e-10, 0.0) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz ! should we add diapose factor? 
+    FEISTY%Lz = SUM(max(Lrg_zoo_N(1:layer_id_dpint) - FEISTY%Rfug, 0.0) * dzt(1:layer_id_dpint)) * FEISTY%convers_Mz ! should we add diapose factor? 
     ! Check for Negative or nul values for zooplankton  
     ! if ( FEISTY%Lz .le. 0.0 ) then
     !     write(outunit,*) 'FEISTY Large Zooplankton <= 0', FEISTY%Lz ,' replacing by 0 !!!'
@@ -1757,7 +1781,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         tpel(FEISTY%nFishGroup) = biop / (biop + biob)
     else 
         tpel(FEISTY%nFishGroup) = 0.0
-    end if 
+    endif 
 
     ! Temperature calculation for each fish: 
     do m = 1, FEISTY%nFishGroup
@@ -1767,9 +1791,9 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         fish(m)%V = fish(m)%Tcorr_e * fish(m)%V_w                   ! update clearance rate with temp effect
         fish(m)%cmax = fish(m)%cmax_w * fish(m)%Tcorr_e             ! update cmax with temp effect
         fish(m)%met(i,j) = fish(m)%met_w * fish(m)%Tcorr_met        ! Temperature corrected metabolism
-    end do 
+    enddo 
 
-    if (do_print_FEISTY_diagnostic) then 
+    if (FEISTY%do_print_FEISTY_diagnostic) then 
         write(outunit,*) "Mz : ", FEISTY%Mz
         write(outunit,*) "Lz : ", FEISTY%Lz
         write(outunit,*) "Tp : ", Tp
@@ -1812,7 +1836,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         do m = 1, FEISTY%nFishGroup
 
             fish(m)%f_tot(i,j) = ((fish(m)%V * SUM(FEISTY%Resource_Pref(m, :)))**FEISTY%k_fct_tp)/ & 
-                                   ((fish(m)%V * SUM(FEISTY%Resource_Pref(m, :)))**FEISTY%k_fct_tp + (k50 * fish(m)%cmax)**FEISTY%k_fct_tp)
+                                   ((fish(m)%V * SUM(FEISTY%Resource_Pref(m, :)))**FEISTY%k_fct_tp + (FEISTY%k50 * fish(m)%cmax)**FEISTY%k_fct_tp)
             
             ! Estimate feeding level per resource based on proportion of resource over total resource encounter for each fish
             fish(m)%f_Mz = fish(m)%f_tot(i,j) * FEISTY%Resource_Pref(m, 1) / (SUM(FEISTY%Resource_Pref(m, :)) + FEISTY%eps)
@@ -1900,13 +1924,23 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! Calcul total consumption (integrated) for each Zooplankton group: [g WW m-2 d-1]
     hp_ingest_nmdz_dpint = (fish(SF)%cons_Mz(i,j) * fish(SF)%B + fish(SP)%cons_Mz(i,j) * fish(SP)%B + & 
                 fish(SD)%cons_Mz(i,j) * fish(SD)%B + fish(MF)%cons_Mz(i,j) * fish(MF)%B + &
-                fish(MP)%cons_Mz(i,j) * fish(MP)%B) / FEISTY%Mz
-    hp_ingest_nlgz_dpint = (fish(MF)%cons_Lz(i,j) * fish(MF)%B + fish(MP)%cons_Lz(i,j) * fish(MP)%B) / FEISTY%Lz
+                fish(MP)%cons_Mz(i,j) * fish(MP)%B) !/ (FEISTY%Mz + FEISTY%eps)
+    hp_ingest_nlgz_dpint = (fish(MF)%cons_Lz(i,j) * fish(MF)%B + fish(MP)%cons_Lz(i,j) * fish(MP)%B) !/ (FEISTY%Lz + FEISTY%eps)
+    ! Debugging:
+    ! write(outunit,*) "------------------------------------------------------------"
+    ! write(outunit,*) "Int. ingestion rate on zooplankton: (g WW m-2 d-1)"
+    ! write(outunit,*) "hp_ingest_nmdz_dpint : ", hp_ingest_nmdz_dpint
+    ! write(outunit,*) "hp_ingest_nlgz_dpint : ", hp_ingest_nlgz_dpint
 	
 	! Converting zooplankton consumption back from [g WW m-2 d-1] to [mol N kg s-1] to be unsed in COBALT
     ! added division by zoolpankton biomass to get the rate in per unit of zooplankton biomass
 	hp_ingest_nmdz_dpint = hp_ingest_nmdz_dpint / (FEISTY%convers_Mz * FEISTY%d2s)
 	hp_ingest_nlgz_dpint = hp_ingest_nlgz_dpint / (FEISTY%convers_Mz * FEISTY%d2s)
+    ! Debugging:
+    ! write(outunit,*) "------------------------------------------------------------"
+    ! write(outunit,*) "Int. ingestion rate on zooplankton: (mol N kg s-1)"
+    ! write(outunit,*) "hp_ingest_nmdz_dpint : ", hp_ingest_nmdz_dpint
+    ! write(outunit,*) "hp_ingest_nlgz_dpint : ", hp_ingest_nlgz_dpint
 
     ! Calculation of the hight trophic level predation on zooplankton at every depth: 
     ! integrated zooplankton biomass has dimension of [g WW C m-2]
@@ -1929,6 +1963,13 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! predation only in the first 100m depth [mol N kg s-1]
     hp_ingest_nmdz((layer_id_dpint + int(1)): nk) = FEISTY%zero
     hp_ingest_nlgz((layer_id_dpint + int(1)): nk) = FEISTY%zero
+
+    ! Debugging:
+    ! write(outunit,*) "------------------------------------------------------------"
+    ! write(outunit,*) "Sum per depth ingestion rate on zooplankton: (mol N kg s-1)"
+    ! write(outunit,*) "hp_ingest_nmdz : ", hp_ingest_nmdz
+    ! write(outunit,*) "hp_ingest_nlgz : ", hp_ingest_nlgz
+
 
     ! Calcul Predation mortality fish : -----------------------------------------------
     ! mu_p [m-2 d-1]
@@ -1970,26 +2011,34 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     !:======================================================================
     ! calcul the flux of biomass out of a size class for each fish group  
     !:======================================================================
-    fish(SF)%Fout(i,j) = ((FEISTY%kappa_l * fish(SF)%E_A(i,j)) - fish(SF)%mu ) /&
-        (1 - (FEISTY%Z_s ** (1 - (fish(SF)%mu / (FEISTY%kappa_l * fish(SF)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
-    fish(SP)%Fout(i,j) = ((FEISTY%kappa_l * fish(SP)%E_A(i,j)) - fish(SP)%mu ) /&
-        (1 - (FEISTY%Z_s ** (1 - (fish(SP)%mu / (FEISTY%kappa_l * fish(SP)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
-    fish(SD)%Fout(i,j) = ((FEISTY%kappa_l * fish(SD)%E_A(i,j)) - fish(SD)%mu ) /&
-        (1 - (FEISTY%Z_s ** (1 - (fish(SD)%mu / (FEISTY%kappa_l * fish(SD)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
-    fish(MF)%Fout(i,j) = ((FEISTY%kappa_a * fish(MF)%E_A(i,j)) - fish(MF)%mu ) /&
-        (1 - (FEISTY%Z_m ** (1 - (fish(MF)%mu / (FEISTY%kappa_a * fish(MF)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
-    fish(MP)%Fout(i,j) = ((FEISTY%kappa_j * fish(MP)%E_A(i,j)) - fish(MP)%mu ) /&
-        (1 - (FEISTY%Z_m ** (1 - (fish(MP)%mu / (FEISTY%kappa_j * fish(MP)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
-    fish(MD)%Fout(i,j) = ((FEISTY%kappa_j * fish(MD)%E_A(i,j)) - fish(MD)%mu ) /&
-        (1 - (FEISTY%Z_m ** (1 - (fish(MD)%mu / (FEISTY%kappa_j * fish(MD)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
-    fish(LP)%Fout(i,j) = ((FEISTY%kappa_a * fish(LP)%E_A(i,j)) - fish(LP)%mu ) /&
-        (1 - (FEISTY%Z_l ** (1 - (fish(LP)%mu / (FEISTY%kappa_a * fish(LP)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
-    fish(LD)%Fout(i,j) = ((FEISTY%kappa_a * fish(LD)%E_A(i,j)) - fish(LD)%mu ) /&
-        (1 - (FEISTY%Z_l ** (1 - (fish(LD)%mu / (FEISTY%kappa_a * fish(LD)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
-    ! If Fout is higher than E_a take E_a, and 0 is negative: 
+    ! fish(SF)%Fout(i,j) = ((FEISTY%kappa_l * fish(SF)%E_A(i,j)) - fish(SF)%mu ) /&
+    !     (1 - (FEISTY%Z_s ** (1 - (fish(SF)%mu / (FEISTY%kappa_l * fish(SF)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
+    ! fish(SP)%Fout(i,j) = ((FEISTY%kappa_l * fish(SP)%E_A(i,j)) - fish(SP)%mu ) /&
+    !     (1 - (FEISTY%Z_s ** (1 - (fish(SP)%mu / (FEISTY%kappa_l * fish(SP)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
+    ! fish(SD)%Fout(i,j) = ((FEISTY%kappa_l * fish(SD)%E_A(i,j)) - fish(SD)%mu ) /&
+    !     (1 - (FEISTY%Z_s ** (1 - (fish(SD)%mu / (FEISTY%kappa_l * fish(SD)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
+    ! fish(MF)%Fout(i,j) = ((FEISTY%kappa_a * fish(MF)%E_A(i,j)) - fish(MF)%mu ) /&
+    !     (1 - (FEISTY%Z_m ** (1 - (fish(MF)%mu / (FEISTY%kappa_a * fish(MF)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
+    ! fish(MP)%Fout(i,j) = ((FEISTY%kappa_j * fish(MP)%E_A(i,j)) - fish(MP)%mu ) /&
+    !     (1 - (FEISTY%Z_m ** (1 - (fish(MP)%mu / (FEISTY%kappa_j * fish(MP)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
+    ! fish(MD)%Fout(i,j) = ((FEISTY%kappa_j * fish(MD)%E_A(i,j)) - fish(MD)%mu ) /&
+    !     (1 - (FEISTY%Z_m ** (1 - (fish(MD)%mu / (FEISTY%kappa_j * fish(MD)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
+    ! fish(LP)%Fout(i,j) = ((FEISTY%kappa_a * fish(LP)%E_A(i,j)) - fish(LP)%mu ) /&
+    !     (1 - (FEISTY%Z_l ** (1 - (fish(LP)%mu / (FEISTY%kappa_a * fish(LP)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
+    ! fish(LD)%Fout(i,j) = ((FEISTY%kappa_a * fish(LD)%E_A(i,j)) - fish(LD)%mu ) /&
+    !     (1 - (FEISTY%Z_l ** (1 - (fish(LD)%mu / (FEISTY%kappa_a * fish(LD)%E_A(i,j)+ FEISTY%eps)))) + FEISTY%eps)
+    
+    ! ! If Fout is higher than E_a take E_a, and 0 is negative: 
+    ! do m = 1, FEISTY%nFishGroup
+    !     fish(m)%Fout(i,j) = max(min(fish(m)%Fout(i,j), fish(m)%E_A(i,j)), FEISTY%zero)
+    ! end do 
+    
+    ! New calculation of Fout: 
     do m = 1, FEISTY%nFishGroup
-        fish(m)%Fout(i,j) = max(min(fish(m)%Fout(i,j), fish(m)%E_A(i,j)), FEISTY%zero)
+        ! write(outunit,*) 'Fout before: ', fish(m)%Fout(i,j)
+        call generic_FEISTY_calc_fout(m, i, j)
     end do 
+    
 
     !:======================================================================
     ! Calcul the reproductive flux of biomass 
@@ -1999,7 +2048,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     ! is converted to reproduction to account for a fraction of individual dying after 
     ! reproduction. 
     !:======================================================================
-    ! Only Medium forage, large pelagic and demersal reproduce: 
+    ! Only Medi    um forage, large pelagic and demersal reproduce: 
     fish(MF)%rho(i,j) = max((1.0 - FEISTY%kappa_a) * fish(MF)%E_A(i,j) + fish(MF)%Fout(i,j), FEISTY%zero)
     fish(LP)%rho(i,j) = max((1.0 - FEISTY%kappa_a) * fish(LP)%E_A(i,j) + fish(LP)%Fout(i,j), FEISTY%zero)
     fish(LD)%rho(i,j) = max((1.0 - FEISTY%kappa_a) * fish(LD)%E_A(i,j) + fish(LD)%Fout(i,j), FEISTY%zero)
@@ -2046,7 +2095,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     FEISTY%dBdt_BE(i,j,1) = (r_BE * FEISTY%BE * (1 - FEISTY%BE/FEISTY%CC) - pred_BE) 
 
     ! Print Fish outputs at second time step (tau =2):
-    if (do_print_FEISTY_diagnostic) then 
+    if (FEISTY%do_print_FEISTY_diagnostic) then 
         
         write (outunit,*)  '------------ input for FEISTY ------------'
         write (outunit,*)  'depth =                   ', zt(nk)
@@ -2074,7 +2123,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
         write (outunit,*)  'r_BE : ', r_BE
         write (outunit,*)  'pred_BE : ', pred_BE
 
-        if (FunctRspons_typeIII) then 
+        if (FEISTY%FunctRspons_typeIII) then 
             write (outunit,*)  '-------------- Functional type matrixes --------------'
             
             write (outunit,*)  '-------------- Pref_mat --------------'
@@ -2227,13 +2276,41 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     	do m = 1, FEISTY%nFishGroup
             write (outunit,*)  fish(m)%yield(i,j)
         end do 
-
         STOP
-
     end if
 
 end subroutine generic_FEISTY_fish_update_from_source
 
+subroutine generic_FEISTY_calc_fout(fish_id, i, j)
+    !:======================================================================
+    ! Calcul the flux of biomass out of a size class for each fish group
+    !:======================================================================
+    integer, intent(in) :: fish_id
+    integer, intent(in) :: i, j
+    real                :: kappa
+    integer             :: outunit
+
+    ! Determine the value of kappa for the fish group: (better if written as a vector at definition)
+    if (fish_id .eq. SF .or. fish_id .eq. SP .or. fish_id .eq. SD) then 
+        kappa = FEISTY%kappa_l
+    elseif (fish_id .eq. MF .or. fish_id .eq. LP .or. fish_id .eq. LD) then 
+        kappa = FEISTY%kappa_a
+    else 
+        kappa = FEISTY%kappa_j
+    end if
+    
+    if (fish(fish_id)%E_A(i,j) .le. (FEISTY%Nat_mrt / kappa)) then ! if E_A < mu/kappa then Fout will be negative 
+                                                                   ! we set it to 0 to avoid big calculation if E_a is too small 
+        fish(fish_id)%Fout(i,j) = 0.0
+    else 
+        fish(fish_id)%Fout(i,j) = ((kappa * fish(fish_id)%E_A(i,j)) - fish(fish_id)%mu) /&
+            (1 - (FEISTY%Z_s ** (1 - (fish(fish_id)%mu / (kappa * fish(fish_id)%E_A(i,j) + FEISTY%eps)))) + FEISTY%eps)
+    end if
+    ! print *, 'Fout after = ', fish(fish_id)%Fout(i,j)
+
+    fish(fish_id)%Fout(i,j) = max(min(fish(fish_id)%Fout(i,j), fish(fish_id)%E_A(i,j)), FEISTY%zero)
+
+end subroutine generic_FEISTY_calc_fout
 
 !#######################################################################
 ! <SUBROUTINE NAME="generic_FEISTY_update_pointer">
@@ -2243,25 +2320,26 @@ end subroutine generic_FEISTY_fish_update_from_source
 !   The grid_tmask(:,:,1)(i,j) might be unecessary for fish.
 ! 
 ! </DESCRIPTION>
-subroutine generic_FEISTY_update_pointer(i, j, k, tau, dt)
+subroutine generic_FEISTY_update_pointer(i, j, k, tau, dt, grid_tmask)
     integer, intent(in) :: i, j, k, tau
     real,    intent(in) :: dt
     real                :: Delta_t
+    real, dimension(:,:,:), pointer, intent(in) :: grid_tmask
     ! FEISTY%d2s: Conversion from Day to second
     ! FEISTY dBdt, variation of fish per time, has a dt in day. However, COBALT runs un unit of second (dt)
     ! Therefore we need to convert FEISTY derivativve from d to second, i.e., 
     ! dBdt in g ww C d-1 in g ww C s-1 
     Delta_t = dt / FEISTY%d2s
 
-    FEISTY%p_Sf_B(i,j,k,tau) = FEISTY%p_Sf_B(i,j,k,tau) +  fish(SF)%dBdt_fish(i,j,k) * Delta_t 
-    FEISTY%p_Sp_B(i,j,k,tau) = FEISTY%p_Sp_B(i,j,k,tau) +  fish(SP)%dBdt_fish(i,j,k) * Delta_t 
-    FEISTY%p_Sd_B(i,j,k,tau) = FEISTY%p_Sd_B(i,j,k,tau) +  fish(SD)%dBdt_fish(i,j,k) * Delta_t 
-    FEISTY%p_Mf_B(i,j,k,tau) = FEISTY%p_Mf_B(i,j,k,tau) +  fish(MF)%dBdt_fish(i,j,k) * Delta_t 
-    FEISTY%p_Mp_B(i,j,k,tau) = FEISTY%p_Mp_B(i,j,k,tau) +  fish(MP)%dBdt_fish(i,j,k) * Delta_t 
-    FEISTY%p_Md_B(i,j,k,tau) = FEISTY%p_Md_B(i,j,k,tau) +  fish(MD)%dBdt_fish(i,j,k) * Delta_t 
-    FEISTY%p_Lp_B(i,j,k,tau) = FEISTY%p_Lp_B(i,j,k,tau) +  fish(LP)%dBdt_fish(i,j,k) * Delta_t 
-    FEISTY%p_Ld_B(i,j,k,tau) = FEISTY%p_Ld_B(i,j,k,tau) +  fish(LD)%dBdt_fish(i,j,k) * Delta_t 
-    FEISTY%p_BE_B(i,j,k,tau) = FEISTY%p_BE_B(i,j,k,tau) +  FEISTY%dBdt_BE(i,j,k)     * Delta_t 
+    FEISTY%p_Sf_B(i,j,k,tau) = FEISTY%p_Sf_B(i,j,k,tau) +  fish(SF)%dBdt_fish(i,j,k) * Delta_t * grid_tmask(i,j,k)
+    FEISTY%p_Sp_B(i,j,k,tau) = FEISTY%p_Sp_B(i,j,k,tau) +  fish(SP)%dBdt_fish(i,j,k) * Delta_t * grid_tmask(i,j,k)
+    FEISTY%p_Sd_B(i,j,k,tau) = FEISTY%p_Sd_B(i,j,k,tau) +  fish(SD)%dBdt_fish(i,j,k) * Delta_t * grid_tmask(i,j,k)
+    FEISTY%p_Mf_B(i,j,k,tau) = FEISTY%p_Mf_B(i,j,k,tau) +  fish(MF)%dBdt_fish(i,j,k) * Delta_t * grid_tmask(i,j,k)
+    FEISTY%p_Mp_B(i,j,k,tau) = FEISTY%p_Mp_B(i,j,k,tau) +  fish(MP)%dBdt_fish(i,j,k) * Delta_t * grid_tmask(i,j,k)
+    FEISTY%p_Md_B(i,j,k,tau) = FEISTY%p_Md_B(i,j,k,tau) +  fish(MD)%dBdt_fish(i,j,k) * Delta_t * grid_tmask(i,j,k)
+    FEISTY%p_Lp_B(i,j,k,tau) = FEISTY%p_Lp_B(i,j,k,tau) +  fish(LP)%dBdt_fish(i,j,k) * Delta_t * grid_tmask(i,j,k)
+    FEISTY%p_Ld_B(i,j,k,tau) = FEISTY%p_Ld_B(i,j,k,tau) +  fish(LD)%dBdt_fish(i,j,k) * Delta_t * grid_tmask(i,j,k)
+    FEISTY%p_BE_B(i,j,k,tau) = FEISTY%p_BE_B(i,j,k,tau) +  FEISTY%dBdt_BE(i,j,k)     * Delta_t * grid_tmask(i,j,k)
 
 end subroutine generic_FEISTY_update_pointer
 

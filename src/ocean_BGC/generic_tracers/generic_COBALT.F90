@@ -208,10 +208,19 @@ module generic_COBALT
   logical :: debug              = .false.
   logical :: do_nh3_atm_ocean_exchange = .false.
 
-  ! FEISTY namelist 
-  logical :: do_FEISTY                  = .true.   
-  logical :: do_print_FEISTY_diagnostic = .false.
-  real    :: nonFmort = 0.10
+!#########################################################################################!  
+!                                       FEISTY namelist 
+!                                       REMY DENECHERE
+!#########################################################################################!
+! Declare the namelist variables for the generic_FEISTY module IN THIS MODULE
+logical :: do_FEISTY                  = .true.   
+real    :: nonFmort = 0.10
+
+logical :: FunctRspons_typeIII = .false.
+logical :: do_print_FEISTY_diagnostic = .false.
+real    :: a_enc = 70.0
+real    :: dp_int = 100.0
+real    :: Rfug = 1.0e-10
   
   ! namelist capabilities for half-sats not used in this run
   logical :: do_vertfill_pre = .false.
@@ -238,7 +247,10 @@ module generic_COBALT
 namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange, scheme_nitrif, &
      k_nh4_small,k_nh4_large,k_nh4_diazo,scheme_no3_nh4_lim,k_no3_small,k_no3_large,k_no3_diazo, &
      o2_min_nit,k_o2_nit,irr_inhibit,k_nh3_nitrif,gamma_nitrif,do_vertfill_pre,imbalance_tolerance, &
-     do_FEISTY, do_print_FEISTY_diagnostic, nonFmort
+     do_FEISTY, do_print_FEISTY_diagnostic, nonFmort, do_print_FEISTY_diagnostic, FunctRspons_typeIII, & 
+     a_enc, dp_int, Rfug
+
+
 
   ! Declare phytoplankton, zooplankton and cobalt variable types, which contain
   ! the vast majority of all variables used in this module.
@@ -1908,7 +1920,7 @@ contains
 
     ! Initialiser FEISTY: Add parameters and allocate arrays! 
     if (do_FEISTY) then
-          call generic_FEISTY_init(tracer_list)
+          call generic_FEISTY_init(tracer_list, do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug)
     end if 
 
   end subroutine generic_COBALT_init
@@ -7551,15 +7563,13 @@ contains
           name       = 'hp_ingest_nmdz',         &
           longname   = 'High trophic level ingestion of medium zooplankton',  &
           units      = 'mol N kg-1 s-1',      &
-          prog       = .true.) !,       &
-          ! init_value = 1.e-10           )
+          prog       = .true.)
 
           call g_tracer_add(tracer_list, package_name,&
           name       = 'hp_ingest_nlgz',         &
           longname   = 'High trophic level ingestion of large zooplankton',  &
           units      = 'mol N kg-1 s-1',      &
-          prog       = .true.) !,       &
-          ! init_value = 1.e-10           
+          prog       = .true.)          
      end if
 
   end subroutine user_add_tracers
@@ -7635,7 +7645,7 @@ contains
     type(time_type),    intent(in) :: model_time
     integer :: isc,iec, jsc,jec,isd,ied,jsd,jed,nk,ntau
     logical :: used
-    real, dimension(:,:,:),pointer :: grid_tmask
+    real, dimension(:,:,:), pointer :: grid_tmask
     real, dimension(:,:,:),pointer :: temp_field
 
     call g_tracer_get_common(isc,iec,jsc,jec,isd,ied,jsd,jed,nk,ntau,grid_tmask=grid_tmask)
@@ -8228,7 +8238,6 @@ contains
           call generic_FEISTY_tracer_get_values(tracer_list, isd, jsd, tau)
           call g_tracer_get_values(tracer_list, 'hp_ingest_nmdz' ,'field', cobalt%hp_ingest_nmdz(:,:,:), isd, jsd, ntau=tau, positive = .true.)
           call g_tracer_get_values(tracer_list, 'hp_ingest_nlgz' ,'field', cobalt%hp_ingest_nlgz(:,:,:), isd, jsd, ntau=tau, positive = .true.)
-
     end if 
     ! =======================================================================================
     !
@@ -9318,8 +9327,14 @@ contains
                     (sw_fac_denom+epsln) )**(1.0/cobalt%mswitch_hp)
           tot_prey_hp = hp_pa_vec(7)*prey_vec(7) + hp_pa_vec(8)*prey_vec(8)
 
+          ! write(outunit,*) "----------------------------------------------------------------"
+          ! write(outunit,*) "Ingestion of zooplankton in COBALT"
           ! write(outunit,*) "hp_ingest_nmdz", cobalt%hp_ingest_nmdz(i,j,k)
           ! write(outunit,*) "hp_ingest_nlgz", cobalt%hp_ingest_nlgz(i,j,k)
+          ! write(outunit,*) "Non fish mortality on medium zooplankton", nonFmort * cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)*cobalt%imax_hp* &
+          !                   hp_pa_vec(7)*prey_vec(7)*tot_prey_hp**(cobalt%coef_hp-1.0)/  (cobalt%ki_hp+tot_prey_hp)
+          ! write(outunit,*) "Non fish mortality on large zooplankton", nonFmort * cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)*cobalt%imax_hp* &
+          !                   hp_pa_vec(8)*prey_vec(8)*tot_prey_hp**(cobalt%coef_hp-1.0)/  (cobalt%ki_hp+tot_prey_hp)
           
           hp_ingest_vec(7) = cobalt%hp_ingest_nmdz(i,j,k) + nonFmort * cobalt%hp_temp_lim(i,j,k)*cobalt%hp_o2lim(i,j,k)*cobalt%imax_hp* &
                               hp_pa_vec(7)*prey_vec(7)*tot_prey_hp**(cobalt%coef_hp-1.0)/ &
@@ -10011,7 +10026,8 @@ contains
                                                                  Temp(i,j,1:nk), cobalt%Pop_btm(i,j),&
                                                                  dt, cobalt%zt(i, j, 1:nk), dzt(i,j, 1:nk),&
                                                                  zoo(2)%f_n(i,j,1:nk), zoo(3)%f_n(i,j,1:nk),&
-                                                                 cobalt%hp_ingest_nmdz(i,j,1:nk), cobalt%hp_ingest_nlgz(i,j,1:nk))                                             
+                                                                 cobalt%hp_ingest_nmdz(i,j,1:nk), cobalt%hp_ingest_nlgz(i,j,1:nk)) !, &
+                                                                 ! do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, k_fct_tp, Rfug)                                             
                end if
 
                if (cobalt%btm_o2(i,j) .gt. cobalt%o2_min) then  !{
@@ -10441,9 +10457,9 @@ contains
     !
     if (do_FEISTY) then 
           do k = 1, nk ; do j = jsc, jec ; do i = isc, iec  !{
-               cobalt%p_hp_ingest_nmdz(i,j,k,tau) = cobalt%hp_ingest_nmdz(i,j,k)
-               cobalt%p_hp_ingest_nlgz(i,j,k,tau) = cobalt%hp_ingest_nlgz(i,j,k)
-               call generic_FEISTY_update_pointer(i, j, k, tau, dt)
+               cobalt%p_hp_ingest_nmdz(i,j,k,tau) = cobalt%hp_ingest_nmdz(i,j,k) * dt * grid_tmask(i,j,k)
+               cobalt%p_hp_ingest_nlgz(i,j,k,tau) = cobalt%hp_ingest_nlgz(i,j,k) * dt * grid_tmask(i,j,k)
+               call generic_FEISTY_update_pointer(i, j, k, tau, dt, grid_tmask)
           enddo; enddo ; enddo  !} i,j,k
      end if 
 

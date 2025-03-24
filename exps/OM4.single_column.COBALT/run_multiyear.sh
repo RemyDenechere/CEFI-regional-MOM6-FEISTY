@@ -25,7 +25,7 @@
 # NONFMORT_DEFAULT=0.3
 # ENCOUNTER_DEFAULT=70
 # K_EXP_DEFAULT=1
-# K50_EXP_DEFAULT=1
+# Rfug_EXP_DEFAULT=1
 
 
 #FUNCTION TO KILL ALL SPAWNED PROCESSES
@@ -57,19 +57,19 @@ if [ "$#" -eq 2 ]; then
     echo "Fmort"
     echo "Encounter"
     echo "K"
-    echo "K50"
+    echo "Rfug"
     echo ""
 fi
 
 
 if [ "$#" -ne 8 ] && [ "$#" -ne 2 ]; then
     echo "Usage: $0 <Location Name> <number of (years)> <cpu_core> "
-    echo "<nonFmort Value> <encounter_val> <k value> <k50 value> <Experimentation Name>"
+    echo "<nonFmort Value> <encounter_val> <k value> <Rfug value> <Experimentation Name>"
     echo ""
     echo "nonFmort: fish mortality"
     echo "encounter val: coefficient of encounters [ 30 - 110 ]"
     echo "k value: exponent, k==1 function of 2nd type, k>1, function of thrid type"
-    echo "k50 value: exponent, 1 < k50 < 20"
+    echo "Rfug value:  10-10 < Rfug < 1"
     echo "Experimentation Name: subfolder to save data"
     echo ""
     exit 1
@@ -108,7 +108,7 @@ else
     NONFMORT="$4"
     ENCOUNTER="$5"
     K_EXP="$6"
-    K50_EXP="$7"
+    Rfug_EXP="$7"
     EXP_NAME="$8"
 fi
 
@@ -121,11 +121,11 @@ UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_${NONFMORT}_encounter_${ENCOUNTE
 
 # SETUP FOLDER FOR PARALLES RUNS
 if [ "$DEFAULT_VALUES" = true ]; then
-    UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_DEFAULT_encounter_DEFAULT_k_DEFAULT_k50_DEFAULT"
-    LONG_NAME="${LOC_NAME}_nonFmort_DEFAULT_encounter_DEFAULT_k_DEFAULT_k50_DEFAUlt"
+    UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_DEFAULT_encounter_DEFAULT_k_DEFAULT_Rfug_DEFAULT"
+    LONG_NAME="${LOC_NAME}_nonFmort_DEFAULT_encounter_DEFAULT_k_DEFAULT_Rfug_DEFAUlt"
 else
-    LONG_NAME="${LOC_NAME}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_k50_${K50_EXP}"
-    UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_k50_${K50_EXP}"
+    LONG_NAME="${LOC_NAME}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_Rfug_${Rfug_EXP}"
+    UNIQUE_ID="${LOC_NAME}_CPU_${CPU_CORE}_nonFmort_${NONFMORT}_encounter_${ENCOUNTER}_k_${K_EXP}_Rfug_${Rfug_EXP}"
 fi
 
 WORK_DIR="${SCRATCH_DIR}/${EXP_NAME}/${LONG_NAME}"
@@ -171,7 +171,7 @@ else
 fi
 #mkdir RUNS
 
-if [ "$#" -eq 7 ]; then
+if [ "$#" -eq 8 ]; then
     # EDIT THE INPUT FILE FOR nonFmort
     NEW_LINE="nonFmort = ${NONFMORT}"
     sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
@@ -184,9 +184,9 @@ if [ "$#" -eq 7 ]; then
     NEW_LINE="k_fct_tp = ${K_EXP}"
     sed -i "/k_fct_tp/c\\ ${NEW_LINE}" input.nml
 
-    # EDIT THE INPUT FILE FOR K50
-    NEW_LINE="k50 = ${K50_EXP}"
-    sed -i "/k50/c\\ ${NEW_LINE}" input.nml
+    # EDIT THE INPUT FILE FOR Rfug
+    NEW_LINE="Rfug = ${Rfug_EXP}"
+    sed -i "/Rfug/c\\ ${NEW_LINE}" input.nml
 fi
 
 
