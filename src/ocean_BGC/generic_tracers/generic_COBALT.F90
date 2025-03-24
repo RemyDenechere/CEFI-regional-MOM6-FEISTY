@@ -247,8 +247,7 @@ real    :: Rfug = 1.0e-10
 namelist /generic_COBALT_nml/ do_14c, co2_calc, debug, do_nh3_atm_ocean_exchange, scheme_nitrif, &
      k_nh4_small,k_nh4_large,k_nh4_diazo,scheme_no3_nh4_lim,k_no3_small,k_no3_large,k_no3_diazo, &
      o2_min_nit,k_o2_nit,irr_inhibit,k_nh3_nitrif,gamma_nitrif,do_vertfill_pre,imbalance_tolerance, &
-     do_FEISTY, do_print_FEISTY_diagnostic, nonFmort, do_print_FEISTY_diagnostic, FunctRspons_typeIII, & 
-     a_enc, dp_int, Rfug
+     do_FEISTY, do_print_FEISTY_diagnostic, nonFmort
 
 
 
