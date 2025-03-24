@@ -38,13 +38,12 @@
 # REQUIRES ENVIRONMENT VARIABLES:
 #
 # CEFI_DATASET_LOC     -> the location of the dataset, which link_databse needs
-# CEFI_EXECUTABLE_LOC  -> the location of MOM6SIS2 you want to run
 # SCRATCH_DIR          -> location you want to work from, must exist!!!
 # SAVE_DIR             -> location of the final saved files.This will be created
 #
 # YOU CAN ALSO SET THEM HERE, UNCOMMENT THE FOUR FOLLOWING LINES AND SET:
 export CEFI_DATASET_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/
-export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/rockfish-linux-gnu/ocean_ice/build/MOM6SIS2
+export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/monkfish-linux-gnu/ocean_ice/prod/MOM6SIS2
 export SCRATCH_DIR=/scratch
 export SAVE_DIR=/project/rdenechere/COBALT_output/parallel/
 #
@@ -101,7 +100,7 @@ if [ "$#" -ne 15 ]; then
     echo "Usage: $0 <LocationName> <number of years> 
     <number of fmort discretizations> <nonFmort Starting Value> <nonFmort Ending Value>
     <Number of encounter_coefficient discretizations> <encouter_coef start value> <encounter_coef end value>
-    <K discretizations> <K start value> <K end value><K50 discretizations> <K50 start value> <K50 end value> 
+    <K discretizations> <K start value> <K end value> <Rfug discretizations> <Rfug start value> <Rfug end value> 
     <Experimentation Name>"
     echo "If any discretizations number == 1, only the starting value is used in the range."
     echo "If K is equal to 1, this is type 2 function."
@@ -146,9 +145,9 @@ ENCOUNTER_END="$8"
 K_DISC="$9"
 K_START="${10}"
 K_END="${11}"
-K50_DISC="${12}"
-K50_START="${13}"
-K50_END="${14}"
+Rfug_DISC="${12}"
+Rfug_START="${13}"
+Rfug_END="${14}"
 EXP_NAME="${15}"
 
 ###############################################################################
@@ -206,8 +205,8 @@ echo ""
 if (( "$K_DISC" > 1 )); then
     echo "Checking K start and end values..."
     #if (( "$K_START" >= 1 && "$K_START" <= 20 )); then
-    if (( $(echo "$K_START >= 1.0" | bc -l) )); then
-        echo "K start value $K_START is >= 1 (inclusive)"
+    if (( $(echo "$K_START =< 1.0" | bc -l) )); then
+        echo "K start value $K_START is =< 1 (inclusive)"
     else
         echo "K start value $K_START is not between 1 and 20 (inclusive), exiting..."
         exit 1
@@ -225,24 +224,31 @@ fi
 echo ""
 
 ###############################################################################
-# CHECK IF THE K50 Exponent ARGUMENT IS A NUMBER BETWEEN 1 AND 20 (INCLUSIVE)
-if (( "$K50_DISC" > 1 )); then
-    echo "Checking K50 start and end values..."
-    if (( $(echo "$K50_START >= 1.0" | bc -l) )); then
-        echo "K50 start value $K50_START is >= 1 (inclusive)"
+# CHECK IF THE Rfug Exponent ARGUMENT IS A NUMBER BETWEEN 10-10 AND 1 (INCLUSIVE)
+if (( "$Rfug_DISC" > 1 )); then
+    echo "Checking Rfug start and end values..."
+    if (( $(echo "$Rfug_START =< 1" | bc -l) )); then
+        echo "Rfug start value $Rfug_START is < 1 (inclusive)"
     else
-        echo "K50 start value $K50_START is not between 1 and 20 (inclusive), exiting..."
+        echo "Rfug start value $Rfug_START is higher than 1 (inclusive), exiting..."
         exit 1
     fi
 
-    if (( $(echo "$K50_END > $K50_START" | bc -l) )); then
-        echo "K50 end value $K50_END is between $K50_START  and 20 (inclusive)"
+    if (( $(echo "$Rfug_END > $Rfug_START" | bc -l) )); then
+        echo "Rfug end value $Rfug_END is between $Rfug_START  and 1 (inclusive)"
     else
-        echo "K50 end value $K50_END is not between $K50_START and 20 (inclusive), exiting..."
+        echo "Rfug end value $Rfug_END is not between $Rfug_START and 1 (inclusive), exiting..."
         exit 1
     fi
-else
-    echo "K50, strange things happened? Check BASh logic please."
+
+    if (( $(echo "$Rfug_START =< 10-10" | bc -l) )); then
+        echo "Rfug seems too low (Rfug=" $Rfug_START "< 10^10) do you want to continue?"
+        read -p "Continue? (y/n): " -n 1 -r
+        echo ""
+        if [[ ! $REPLY =~ ^[Yy]([Ee][Ss])?$ ]]; then
+            exit 1
+        fi
+    fi
 fi
 echo ""
 ###############################################################################
@@ -298,20 +304,20 @@ echo ""
 echo "###############################################################################"
 
 ###############################################################################
-# GENERATE THE ARRAY OF VALUES TO TRY FOR K50
+# GENERATE THE ARRAY OF VALUES TO TRY FOR Rfug
 # Generate array
-if (( $K50_DISC > 1 )); then 
-    K50_ARRAY=($(generate_array $K50_START $K50_END $K50_DISC))
+if (( $Rfug_DISC > 1 )); then 
+    Rfug_ARRAY=($(generate_array $Rfug_START $Rfug_END $Rfug_DISC))
     # find last index
-    last_index=$((${#K50_ARRAY[@]} - 1))
+    last_index=$((${#Rfug_ARRAY[@]} - 1))
     # Ensure the first and last values are the two desired values
-    K50_ARRAY[0]="$K50_START"
-    K50_ARRAY[$last_index]=$K50_END
+    Rfug_ARRAY[0]="$Rfug_START"
+    Rfug_ARRAY[$last_index]=$Rfug_END
 else
-    K50_ARRAY[0]=$K50_START
+    Rfug_ARRAY[0]=$Rfug_START
 fi
 
-echo "K50 will use the following values: ${K50_ARRAY[@]}"
+echo "Rfug will use the following values: ${Rfug_ARRAY[@]}"
 echo ""
 echo "###############################################################################"
 
@@ -325,14 +331,14 @@ for i in $(seq 1 $FMORT_DISC); do
 
         for k in $(seq 1 $K_DISC); do
 
-            for m in $(seq 1 $K50_DISC); do
+            for m in $(seq 1 $Rfug_DISC); do
 
                 # ADJUST FOR STARTING AND ENDING VALUES.
                 #NONFMORT_VAL=$(bc -l <<< "scale=2; $EXP_REF+(${i}-1)/100")
                 NONFMORT_VAL="${NONFMORT_ARRAY[$i-1]}"
                 ENCOUNTER_VAL="${ENCOUNTER_ARRAY[$j-1]}"
                 K_VAL="${K_ARRAY[$k-1]}"
-                K50_VAL="${K50_ARRAY[$m-1]}"
+                Rfug_VAL="${Rfug_ARRAY[$m-1]}"
 
                 # echo "The value generated by loop ${i} is ${NONFMORT_VAL}"
 
@@ -343,10 +349,10 @@ for i in $(seq 1 $FMORT_DISC); do
                 # & SYBMOL AT THE END MEANS IT WILL NOT WAIT FOR THE PROGRAM TO FINISH BEFORE 
                 # CONTINUING THROUGH THIS LOOP
                 if [ $LOCATION_NAME == "TEST" ]; then
-                    echo "TEST -- Running./run_multiyear.sh ${LOCATION_NAME} ${NUM_YEARS} ${CPU_CORE} ${NONFMORT_VAL} ${ENCOUNTER_VAL} ${K_VAL} ${K50_VAL} ${EXP_NAME}" 
+                    echo "TEST -- Running./run_multiyear.sh ${LOCATION_NAME} ${NUM_YEARS} ${CPU_CORE} ${NONFMORT_VAL} ${ENCOUNTER_VAL} ${K_VAL} ${Rfug_VAL} ${EXP_NAME}" 
             	echo ""
                 else
-                    ./run_multiyear.sh "${LOCATION_NAME}" "${NUM_YEARS}" "${CPU_CORE}" "${NONFMORT_VAL}"  "${ENCOUNTER_VAL}" "${K_VAL}" "${K50_VAL}" "${EXP_NAME}"&
+                    ./run_multiyear.sh "${LOCATION_NAME}" "${NUM_YEARS}" "${CPU_CORE}" "${NONFMORT_VAL}"  "${ENCOUNTER_VAL}" "${K_VAL}" "${Rfug_VAL}" "${EXP_NAME}"&
                 fi
                 # Store PID for the cleanup trap function
                 pids+=($!)

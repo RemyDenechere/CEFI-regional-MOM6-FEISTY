@@ -3427,19 +3427,19 @@
 "hp_ingest_nlgz"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
     ! long_name: High trophic level ingestion of large zooplankton
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {hp_ingest_nlgz,hp_ingest_nlgz_xyave}
 "hp_ingest_nlgz_taup1"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
     ! long_name: High trophic level ingestion of large zooplankton at taup1
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {hp_ingest_nlgz_taup1,hp_ingest_nlgz_taup1_xyave}
 "hp_ingest_nlgz_aux"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
     ! long_name: hp_ingest_nlgz_aux
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {hp_ingest_nlgz_aux,hp_ingest_nlgz_aux_xyave}
 "hp_ingest_nlgz_vmove"  [Unused]
@@ -3499,44 +3499,44 @@
 "hp_ingest_nlgz_btm_reservoir"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: Bottom reservoir of hp_ingest_nlgz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "hp_ingest_nlgz_trunoff"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: River concentration of hp_ingest_nlgz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "hp_ingest_nlgz_alpha"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: Atmospheric saturation for hp_ingest_nlgz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "hp_ingest_nlgz_csurf"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: Ocean surface gas concentration of hp_ingest_nlgz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "hp_ingest_nlgz_sc_no"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: Ocean surface Schmidt Number for hp_ingest_nlgz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "hp_ingest_nmdz"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
     ! long_name: High trophic level ingestion of medium zooplankton
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {hp_ingest_nmdz,hp_ingest_nmdz_xyave}
 "hp_ingest_nmdz_taup1"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
     ! long_name: High trophic level ingestion of medium zooplankton at taup1
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {hp_ingest_nmdz_taup1,hp_ingest_nmdz_taup1_xyave}
 "hp_ingest_nmdz_aux"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
     ! long_name: hp_ingest_nmdz_aux
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {hp_ingest_nmdz_aux,hp_ingest_nmdz_aux_xyave}
 "hp_ingest_nmdz_vmove"  [Unused]
@@ -3596,27 +3596,27 @@
 "hp_ingest_nmdz_btm_reservoir"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: Bottom reservoir of hp_ingest_nmdz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "hp_ingest_nmdz_trunoff"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: River concentration of hp_ingest_nmdz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "hp_ingest_nmdz_alpha"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: Atmospheric saturation for hp_ingest_nmdz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "hp_ingest_nmdz_csurf"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: Ocean surface gas concentration of hp_ingest_nmdz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "hp_ingest_nmdz_sc_no"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: Ocean surface Schmidt Number for hp_ingest_nmdz
-    ! units: mol N m-3 s-1
+    ! units: mol N kg-1 s-1
     ! cell_methods: xh:mean yh:mean area:mean
 "nh3"  [Unused]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}

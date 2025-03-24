@@ -151,10 +151,9 @@
  &generic_FEISTY_nml
        do_print_FEISTY_diagnostic = .false.
        FunctRspons_typeIII        = .false.
-       a_enc                      = 70.0
+       a_enc                      = 10.0
        dp_int                     = 100.0
-       k_fct_tp                   = 1.0
-       k50 			  = 1.0     
+       Rfug 			      = 1.0e-10     
 /
 
 
