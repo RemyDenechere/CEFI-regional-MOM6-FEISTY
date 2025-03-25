@@ -149,7 +149,7 @@
 !      scheme_nitrif              = 3       !new nitrification scheme
 /
  &generic_FEISTY_nml
-       do_print_FEISTY_diagnostic = .false.
+       do_print_FEISTY_diagnostic = .true.
        FunctRspons_typeIII        = .false.
        a_enc                      = 10.0
        dp_int                     = 100.0

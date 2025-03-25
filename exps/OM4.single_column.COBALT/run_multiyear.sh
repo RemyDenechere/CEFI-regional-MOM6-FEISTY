@@ -172,7 +172,9 @@ else
 fi
 #mkdir RUNS
 
-if [ "$#" -eq $NUM_YEARS ]; then
+if [ "$#" -eq $NUM_ARG ]; then
+
+    echo "editing the input file for nonFmort, encounter, k, and Rfug"
     # EDIT THE INPUT FILE FOR nonFmort
     NEW_LINE="nonFmort = ${NONFMORT}"
     sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
@@ -188,6 +190,9 @@ if [ "$#" -eq $NUM_YEARS ]; then
     # EDIT THE INPUT FILE FOR Rfug
     NEW_LINE="Rfug = ${Rfug_EXP}"
     sed -i "/Rfug/c\\ ${NEW_LINE}" input.nml
+else 
+    echo "Not using values for nonFmort, encounter, k, and Rfug, exiting..."
+    exit 1
 fi
 
 
