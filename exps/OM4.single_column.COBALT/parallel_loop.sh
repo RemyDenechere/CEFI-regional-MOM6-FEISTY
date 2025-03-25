@@ -227,15 +227,15 @@ echo ""
 # CHECK IF THE Rfug Exponent ARGUMENT IS A NUMBER BETWEEN 10-10 AND 1 (INCLUSIVE)
 if (( "$Rfug_DISC" > 1 )); then
     echo "Checking Rfug start and end values..."
-    if (( $(echo "$Rfug_START =< 1" | bc -l) )); then
+    if ( $(echo "$Rfug_START =< 1" | bc -l) ); then
         echo "Rfug start value $Rfug_START is < 1 (inclusive)"
     else
-        echo "Rfug start value $Rfug_START is higher than 1 (inclusive), exiting..."
+        echo "Rfug start value $Rfug_START is higher than 1, exiting..."
         exit 1
     fi
 
     if (( $(echo "$Rfug_END > $Rfug_START" | bc -l) )); then
-        echo "Rfug end value $Rfug_END is between $Rfug_START  and 1 (inclusive)"
+        echo "Rfug end value $Rfug_END is between $Rfug_START and 1 (inclusive)"
     else
         echo "Rfug end value $Rfug_END is not between $Rfug_START and 1 (inclusive), exiting..."
         exit 1

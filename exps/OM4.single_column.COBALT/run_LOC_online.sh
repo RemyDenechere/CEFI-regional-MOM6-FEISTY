@@ -16,7 +16,7 @@ echo "Rfug value:" $value_Rfug
 # Loop through each location and run the script
 for loc in "${locations[@]}"; do
     echo "Running ./parallel_loop.sh " $loc " 20 5 0 0.4 1 70 70 1 1 1 5 $value_Rfug 1 " $exp
-    ./parallel_loop.sh $loc 20 5 0 0.4 1 70 70 1 1 1 5 $value_Rfug 1 $exp 
+    ./parallel_loop.sh $loc 20 5 0 0.4 5 50 90 1 1 1 5 $value_Rfug 1 $exp 
 done
 
 echo "All locations processed successfully."

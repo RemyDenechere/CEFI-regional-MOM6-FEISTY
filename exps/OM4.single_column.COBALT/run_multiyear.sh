@@ -26,7 +26,7 @@
 # ENCOUNTER_DEFAULT=70
 # K_EXP_DEFAULT=1
 # Rfug_EXP_DEFAULT=1
-
+NUM_ARG=8
 
 #FUNCTION TO KILL ALL SPAWNED PROCESSES
 cleanup() {
@@ -62,7 +62,7 @@ if [ "$#" -eq 2 ]; then
 fi
 
 
-if [ "$#" -ne 8 ] && [ "$#" -ne 2 ]; then
+if [ "$#" -ne $NUM_ARG ] && [ "$#" -ne 2 ]; then
     echo "Usage: $0 <Location Name> <number of (years)> <cpu_core> "
     echo "<nonFmort Value> <encounter_val> <k value> <Rfug value> <Experimentation Name>"
     echo ""
@@ -72,6 +72,7 @@ if [ "$#" -ne 8 ] && [ "$#" -ne 2 ]; then
     echo "Rfug value:  10-10 < Rfug < 1"
     echo "Experimentation Name: subfolder to save data"
     echo ""
+
     exit 1
 fi
 
@@ -171,7 +172,7 @@ else
 fi
 #mkdir RUNS
 
-if [ "$#" -eq 8 ]; then
+if [ "$#" -eq $NUM_YEARS ]; then
     # EDIT THE INPUT FILE FOR nonFmort
     NEW_LINE="nonFmort = ${NONFMORT}"
     sed -i "/nonFmort/c\\ ${NEW_LINE}" input.nml
