@@ -1919,7 +1919,7 @@ contains
 
     ! Initialiser FEISTY: Add parameters and allocate arrays! 
     if (do_FEISTY) then
-          call generic_FEISTY_init(tracer_list, do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug)
+          call generic_FEISTY_init(tracer_list)
     end if 
 
   end subroutine generic_COBALT_init

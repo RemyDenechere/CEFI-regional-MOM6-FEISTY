@@ -345,7 +345,8 @@ integer, parameter :: NUM_FISH = 8
 type(fish_type), dimension(NUM_FISH) :: fish
 type(FEISTY_type) :: FEISTY
 
-logical :: do_print_FEISTY_diagnostic, FunctRspons_typeIII
+logical :: do_print_FEISTY_diagnostic = .false. 
+logical :: FunctRspons_typeIII
 real    :: a_enc, dp_int, Rfug
 
 namelist /generic_FEISTY_nml/ do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug
@@ -358,7 +359,6 @@ subroutine generic_FEISTY_register(tracer_list)
     integer                                     :: ioun
     integer                                     :: ierr
     integer                                     :: io_status
-   
 
     !-----------------------------------------------------------------------
     ! Error: 
@@ -376,6 +376,14 @@ subroutine generic_FEISTY_register(tracer_list)
     read  (ioun, nml=generic_FEISTY_nml,iostat=io_status)
     ierr = check_nml_error(io_status,'generic_FEISTY_nml')
     call close_file (ioun)
+
+    if (do_print_FEISTY_diagnostic) then
+        print*,  'FEISTY diagnostic are printed'
+        print*, 'a_enc', a_enc
+        print*, 'dp_int', dp_int
+        print*, 'Rfug', Rfug
+        stop 
+    end if
 
     ! Specify all prognostic and diagnostic tracers of this modules.
     call user_add_tracers_FEISTY(tracer_list)
@@ -404,16 +412,14 @@ end subroutine generic_FEISTY_register
 !   Pointer to the head of generic tracer list.
 !  </IN>
 ! </SUBROUTINE>
-subroutine generic_FEISTY_init(tracer_list, do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug)
+subroutine generic_FEISTY_init(tracer_list)
     type(g_tracer_type), pointer :: tracer_list
     integer :: m
     character(len=fm_string_len), parameter :: sub_name = 'generic_FEISTY_init'
-    logical, intent(in) :: do_print_FEISTY_diagnostic, FunctRspons_typeIII
-    real, intent(in) :: a_enc, dp_int, Rfug
 
 
     !Specify and initialize all parameters used by this package
-    call user_add_params_FEISTY(do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug)
+    call user_add_params_FEISTY
 
     !Allocate all the private work arrays used by this module.
     call user_allocate_arrays_FEISTY
@@ -1263,9 +1269,8 @@ end subroutine generic_FEISTY_update_from_coupler
 !       Stop parameter list: g_tracer_end_param_list(package_name)       
 !   </TEMPLATE>
 ! </SUBROUTINE>
-subroutine user_add_params_FEISTY(do_print_FEISTY_diagnostic, FunctRspons_typeIII, a_enc, dp_int, Rfug)
-    logical, intent(in) :: do_print_FEISTY_diagnostic, FunctRspons_typeIII
-    real, intent(in) :: a_enc, dp_int, Rfug
+subroutine user_add_params_FEISTY
+    
     ! Initialiser param list:     
     call g_tracer_start_param_list(package_name)
     
@@ -1282,7 +1287,6 @@ subroutine user_add_params_FEISTY(do_print_FEISTY_diagnostic, FunctRspons_typeII
     call g_tracer_add_param('a_enc', FEISTY%a_enc, a_enc) ! Coefficient for mass-specific Encounter rate
     call g_tracer_add_param('dp_int', FEISTY%dp_int, dp_int) ! Initial proportion of the population in the intermediate size class
     call g_tracer_add_param('Rfug', FEISTY%Rfug, Rfug) ! Fraction of the population that is not available to the predators
- 
 
     ! Functional Group information: ---------------------------------------------
     call g_tracer_add_param('nFishGroup', FEISTY%nFishGroup, int(8)) ! Number of fish functional group
