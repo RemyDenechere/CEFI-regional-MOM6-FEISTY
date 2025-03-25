@@ -1692,15 +1692,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
 
     stdoutunit=stdout(); stdlogunit=stdlog()
 
-    ! Print the values to verify they are read correctly
-    print *, 'do_print_FEISTY_diagnostic:', do_print_FEISTY_diagnostic
-    print *, 'FunctRspons_typeIII:', FunctRspons_typeIII
-    print *, 'a_enc:', a_enc
-    print *, 'dp_int:', dp_int
-    print *, 'Rfug:', Rfug
-
-    stop 
-    
     ! Affect value for each tracer: 
     fish(SF)%B = FEISTY%Sf_B(i,j,1)
     fish(SP)%B = FEISTY%Sp_B(i,j,1)
