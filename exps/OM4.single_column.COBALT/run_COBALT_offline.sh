@@ -4,7 +4,6 @@
 # contact: remy denechere <rdenechere@ucsd.edu>
 # usage: ./run_COBALT_offline.sh BATS 
 #        ./run_COBALT_offline.sh CCE 
-
 # ---------------------------------------------------------------------------------------
 # Check if the correct number of arguments are provided
 if [ "$#" -ne 1 ]; then
