@@ -40,11 +40,11 @@ fi
 
 # ---------------------------------------------------------------------------------------
 ## Turn off FEISTY: 
-sed -i "s/do_FEISTY                  = .true./do_FEISTY                  = .false./g" input.nml
+NEW_LINE="do_FEISTY = .false."
+sed -i "/do_FEISTY/c\\ ${NEW_LINE}" input.nml
 
 # ---------------------------------------------------------------------------------------
 ## set up the input file for the experiment: (make this with symbolic links)
-dir_run
 rm -rf INPUT/*
 cd INPUT/ && ../../../link_database.sh "$station_name" && cd ..
 # yes | cp -i "$station_name"/* INPUT/
@@ -59,6 +59,7 @@ source ../../builds/redhat580/linux-gnu.env
 yes | cp -i *feisty*.nc "$folder_save"
 
 ## set up back to the original configuration
-sed -i "s/do_FEISTY                  = .false./do_FEISTY                  = .true./g" input.nml
+NEW_LINE="do_FEISTY = .true."
+sed -i "/do_FEISTY/c\\ ${NEW_LINE}" input.nml
 
 echo "Simulation done!"

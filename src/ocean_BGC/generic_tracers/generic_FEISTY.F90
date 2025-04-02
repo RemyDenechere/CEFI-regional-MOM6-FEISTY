@@ -373,7 +373,7 @@ subroutine generic_FEISTY_register(tracer_list)
 
     ! Test adding a namelist override for FEISTY 
     ioun = open_namelist_file()
-    read  (ioun, nml=generic_FEISTY_nml,iostat=io_status)
+    read (ioun, nml=generic_FEISTY_nml,iostat=io_status)
     ierr = check_nml_error(io_status,'generic_FEISTY_nml')
     call close_file (ioun)
 
