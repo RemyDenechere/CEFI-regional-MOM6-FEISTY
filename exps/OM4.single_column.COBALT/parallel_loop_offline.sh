@@ -60,22 +60,44 @@ pids=()
 
 # Trap Ctrl-C (SIGINT) and call cleanup function
 trap cleanup SIGINT 
+
+
+# CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
+if [ "$#" -gt 2 ]; then
+    echo "Usage: $0 <number of years> <Rockfish: true/false>"
+    echo "Usage: $0 <number of years> <Rockfish: default value false>"
+    exit 1
+
+elif [ "$#" -eq 1 ]; then
+    NUM_YEARS=$1
+    rockfish="false"
+    echo "runing offline for $with default rockfish value false"
+
+elif [ "$#" -eq 2 ]; then
+    # VALIDATE THE BOOLEAN ARGUMENT
+    if [ "$2" != "true" ] && [ "$2" != "false" ]; then
+        echo "Error: The second argument must be 'true' or 'false'."
+        exit 1
+    fi
+    NUM_YEARS=$1
+    ROCKFISH=$2
+fi
+
+# DEFINE COUNTER 
+j=0
+
+
 ########################################################################################
 # YOU CAN ALSO SET THEM HERE, UNCOMMENT THE FOUR FOLLOWING LINES AND SET:
 export CEFI_DATASET_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/
-export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/monkfish-linux-gnu/ocean_ice/prod/MOM6SIS2
 export SCRATCH_DIR=/scratch
 export SAVE_DIR=/project/rdenechere/COBALT_output/COBALT_offline_forcing_files/
-
-# CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <number of year>"
-    exit 1
+if [ "$ROCKFISH" = "false" ]; then
+    export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/monkfish-linux-gnu/ocean_ice/prod/MOM6SIS2
+else 
+    export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/rockkfish-linux-gnu/ocean_ice/prod/MOM6SIS2
 fi
 
-# GET THE NUMBER OF YEARS TO RUN
-NUM_YEARS=$1
-j=0
 
 # DEFINE THE LOCATION TO RUN:
 locations=(BATS GOM GMX) #  BATS GOM GMX CCE NS 
