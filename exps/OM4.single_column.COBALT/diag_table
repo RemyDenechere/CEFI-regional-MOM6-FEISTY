@@ -924,6 +924,25 @@ OM4_single_column
 "generic_cobalt", "nmdz",          "nmdz",              "ocean_feisty_forcing",  "all", "mean", "none",2
 "generic_cobalt", "nlgz",          "nlgz",              "ocean_feisty_forcing",  "all", "mean", "none",2
 #"ocean_model",    "eta",           "eta",               "ocean_feisty_forcing",  "all", "mean", "none",2
+# Non forcing variable we are intrested in 
+"generic_cobalt", "nbact",          "nbact",            "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "ndet",          "ndet",              "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "ndi",           "ndi",               "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "nlg",          "nlg",                "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "nmd",          "nmd",                "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "nsm",          "nsm",                "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "nh4",          "nh4",                "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "no3",          "no3",                "ocean_feisty_forcing",  "all", "mean", "none",2
+"generic_cobalt", "o2",           "o2",                 "ocean_feisty_forcing",  "all", "mean", "none",2
+#       nbact: bacteria
+#       ndet: nitrogen detritus
+#       ndi: diazotroph nitrogen
+#       nlg: large, coastal or chain-forming, phytoplankton nitrogen
+#       nmd: medium phytoplankton nitrogen
+#       nsm: high-light adapted small phytoplankton nitrogen
+#       nh4: ammonia
+#       no3: nitrate
+#       o2: oxygen
 #
 # FEISTY detritus:
 "ocean_model",    "volcello",     "volcello",         "ocean_feisty_forcing_detritus",  "all", "mean", "none",2
