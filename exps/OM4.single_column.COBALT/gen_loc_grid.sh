@@ -3,9 +3,10 @@
 #		Californie Current Ecosystem
 ######################################################################
 # Default locations: 
-./BuildExchangeGrid.sh BATS 31.6667 -64.1667 4000
-./BuildExchangeGrid.sh CCE 34.2781 -120.6810 30
+./BuildExchangeGrid.sh BATS 31.6667 -64.1667 4000 # Bermuda Atlantic Time Series
+./BuildExchangeGrid.sh CCE 34.2781 -120.6810 30 # California Current Ecosystem
 ./BuildExchangeGrid.sh GOM 43.2874 -70.5328 75	# Gold Of Main 
+./BuildExchangeGrid.sh GMX 28.8503 -89.714 200	# Gold Of Mexico 
 ./BuildExchangeGrid.sh NS  53.7217 3.2790   50  # Noth Sea
 
 # Generate initial conditions for the the various locations: 
@@ -16,6 +17,10 @@ ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 BATS/COBALT_2023_10_spinup_20
 ## GOM: 
 ncea -d lath,32,36 -d lonh,-122,-118 -d latq,32,36 -d lonq,-122,-118 ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GOM/COBALT_2023_10_spinup_2003_subset.nc
 ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GOM/COBALT_2023_10_spinup_2003_subset.nc
+
+# GMX: 
+ncea -d lath,27,31 -d lonh,-92,-88 -d latq,27,31 -d lonq,-92,-88 ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GMX/COBALT_2023_10_spinup_2003_subset.nc
+ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GMX/COBALT_2023_10_spinup_2003_subset.nc
 
 ## CCE:
 

@@ -148,7 +148,7 @@ READ_INPUT_NML: input.nml
         co2_calc = 'mocsy'
         debug = .false.
         imbalance_tolerance=1.0e+9
-        do_FEISTY                  = .true.
+  do_FEISTY = .false.
         nonFmort                   = 0.1
  !      do_nh3_atm_ocean_exchange  = .true.  !turn on exchange of NH3
  !      scheme_no3_nh4_lim         = 2       !update nh4/no3 uptake scheme
@@ -157,10 +157,9 @@ READ_INPUT_NML: input.nml
   &generic_FEISTY_nml
         do_print_FEISTY_diagnostic = .false.
         FunctRspons_typeIII        = .false.
-        a_enc                      = 70.0
+        a_enc                      = 10.0
         dp_int                     = 100.0
-        k_fct_tp                   = 1.0
-        k50 			  = 1.0
+        Rfug 			      = 1.0e-10
  /
  
  
@@ -188,7 +187,7 @@ MPP_DOMAINS module unknown
 
 MPP_IO module unknown
 
-Using netCDF library version 4.7.0 of Jul 16 2023 05:26:06 $
+Using netCDF library version 4.7.0 of Jul 16 2023 05:25:18 $
 
 ================================================================================
 FMS_IO_MOD
@@ -438,7 +437,7 @@ Number of tracers in field table for coupler model =    0
  GAMMA_NITRIF=  3500000.0000000000     ,
  DO_VERTFILL_PRE=F,
  IMBALANCE_TOLERANCE=  1000000000.0000000     ,
- DO_FEISTY=T,
+ DO_FEISTY=F,
  DO_PRINT_FEISTY_DIAGNOSTIC=F,
  NONFMORT= 0.10000000000000001     ,
  /
@@ -450,321 +449,3 @@ unknown
 ================================================================================
 coupler_types_mod
 unknown
-
-atmos model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-================================================================================
-FMSConstants: GFDL
-
-================================================================================
-DIAG_INTEGRAL_MOD
-unknown
-&DIAG_INTEGRAL_NML
- OUTPUT_INTERVAL= -1.0000000000000000     ,
- TIME_UNITS="hours   ",
- FILE_NAME="                                                                ",
- PRINT_HEADER=T,
- FIELDS_PER_PRINT_LINE=4          ,
- /
-&DATA_OVERRIDE_NML
- DEBUG_DATA_OVERRIDE=F,
- GRID_CENTER_BUG=F,
- REPRODUCE_NULL_CHAR_BUG=F,
- /
-
-================================================================================
-HORIZ_INTERP_MOD
-unknown
-&HORIZ_INTERP_NML
- REPRODUCE_SIENA=F,
- /
-
-================================================================================
-HORIZ_INTERP_CONSERVE_MOD
-unknown
-
-================================================================================
-HORIZ_INTERP_BILINEAR_MOD
-unknown
-
-================================================================================
-HORIZ_INTERP_BICUBIC_MOD
-unknown
-
-================================================================================
-horiz_interp_spherical_mod
-unknown
-
-================================================================================
-DATA_OVERRIDE_MOD
-unknown
-
-================================================================================
-TIME_INTERP_EXTERNAL_MOD
-unknown
-&TIME_INTERP_EXTERNAL_NML
- NUM_IO_BUFFERS=2          ,
- DEBUG_THIS_MODULE=F,
- MAX_FIELDS=100        ,
- MAX_FILES=40         ,
- /
-
-================================================================================
-TIME_INTERP_MOD
-unknown
-&TIME_INTERP_NML
- PERTHLIKE_BEHAVIOR=F,
- /
-
-================================================================================
-$Id$
-$Name$
-
-land model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-&DATA_OVERRIDE_NML
- DEBUG_DATA_OVERRIDE=F,
- GRID_CENTER_BUG=F,
- REPRODUCE_NULL_CHAR_BUG=F,
- /
-
-ice model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice modelc domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_MOSAIC domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_MOSAIC domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice model domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice model aux domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice model aux domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice_nohalo domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-ice_nohalo domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-&DATA_OVERRIDE_NML
- DEBUG_DATA_OVERRIDE=F,
- GRID_CENTER_BUG=F,
- REPRODUCE_NULL_CHAR_BUG=F,
- /
-&DATA_OVERRIDE_NML
- DEBUG_DATA_OVERRIDE=F,
- GRID_CENTER_BUG=F,
- REPRODUCE_NULL_CHAR_BUG=F,
- /
-
-================================================================================
-FMSConstants: GFDL
-
-================================================================================
-ASTRONOMY_MOD
-unknown
-&ASTRONOMY_NML
- ECC=  1.6709999999999999E-002,
- OBLIQ=  23.439000000000000     ,
- PER=  102.93200000000000     ,
- PERIOD=0          ,
- YEAR_AE=1998       ,
- MONTH_AE=9          ,
- DAY_AE=23         ,
- HOUR_AE=5          ,
- MINUTE_AE=37         ,
- SECOND_AE=0          ,
- NUM_ANGLES=3600       ,
- /
-&DATA_OVERRIDE_NML
- DEBUG_DATA_OVERRIDE=F,
- GRID_CENTER_BUG=F,
- REPRODUCE_NULL_CHAR_BUG=F,
- /
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_inc domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_MOSAIC domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_MOSAIC domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-================================================================================
-unknown
-&DATA_OVERRIDE_NML
- DEBUG_DATA_OVERRIDE=F,
- GRID_CENTER_BUG=F,
- REPRODUCE_NULL_CHAR_BUG=F,
- /
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-&DATA_OVERRIDE_NML
- DEBUG_DATA_OVERRIDE=F,
- GRID_CENTER_BUG=F,
- REPRODUCE_NULL_CHAR_BUG=F,
- /
-
-================================================================================
-SAT_VAPOR_PRES_MOD
-unknown
-&SAT_VAPOR_PRES_NML
- SHOW_BAD_VALUE_COUNT_BY_SLICE=T,
- SHOW_ALL_BAD_VALUES=F,
- USE_EXACT_QS=F,
- DO_SIMPLE=F,
- CONSTRUCT_TABLE_WRT_LIQ=T,
- CONSTRUCT_TABLE_WRT_LIQ_AND_ICE=T,
- /
-
-================================================================================
-$Id$
-$Name$
-&FLUX_EXCHANGE_NML
- Z_REF_HEAT=  2.0000000000000000     ,
- Z_REF_MOM=  10.000000000000000     ,
- EX_U_STAR_SMOOTH_BUG=F,
- SW1WAY_BUG=F,
- DO_AREA_WEIGHTED_FLUX=F,
- DEBUG_STOCKS=F,
- DIVERT_STOCKS_REPORT=T,
- DO_RUNOFF=T,
- DO_FORECAST=F,
- NBLOCKS=1          ,
- PARTITION_FPREC_FROM_LPREC=F,
- SCALE_PRECIP_2D=F,
- /
- ==>Note from flux_exchange_mod(flux_exchange_init): Number of exchanged tracers =            1
- Tracer field name :sphum
-
-================================================================================
-XGRID_MOD
-unknown
-&XGRID_NML
- MAKE_EXCHANGE_REPRODUCE=F,
- INTERP_METHOD="second_order                                                    ",
- DEBUG_STOCKS=F,
- XGRID_CLOCKS_ON=F,
- MONOTONIC_EXCHANGE=F,
- NSUBSET=0          ,
- DO_ALLTOALL=T,
- DO_ALLTOALLV=F,
- USE_MPP_IO=F,
- /
-
-================================================================================
-$Id$
-$Name$
-&SURFACE_FLUX_NML
- NO_NEG_Q=F,
- USE_VIRTUAL_TEMP=T,
- ALT_GUSTINESS=F,
- GUST_CONST=  1.0000000000000000     ,
- GUST_MIN=  0.0000000000000000     ,
- OLD_DTAUDV=F,
- USE_MIXING_RATIO=F,
- NCAR_OCEAN_FLUX=T,
- NCAR_OCEAN_FLUX_ORIG=F,
- NCAR_OCEAN_FLUX_MULTILEVEL=F,
- BULK_ZU=  0.0000000000000000     ,
- BULK_ZT=  0.0000000000000000     ,
- BULK_ZQ=  0.0000000000000000     ,
- RAOULT_SAT_VAP=T,
- DO_SIMPLE=F,
- /
-
-================================================================================
-MONIN_OBUKOV_MOD
-unknown
-&MONIN_OBUKHOV_NML
- RICH_CRIT=  2.0000000000000000     ,
- NEUTRAL=T,
- DRAG_MIN_HEAT=  1.0000000000000001E-005,
- DRAG_MIN_MOIST=  1.0000000000000001E-005,
- DRAG_MIN_MOM=  1.0000000000000001E-005,
- STABLE_OPTION=1          ,
- ZETA_TRANS= 0.50000000000000000     ,
- NEW_MO_OPTION=F,
- /
-
-================================================================================
-STOCK_CONSTANTS_MOD
-unknown
-
-================================================================================
-$Id$
-$Name$
-&OCEAN_ALBEDO_NML
- OCEAN_ALBEDO_OPTION=2          ,
- CONST_ALB= 0.10000000000000001     ,
- /
-
-================================================================================
-GET_CAL_TIME_MOD
-unknown
-&GET_CAL_TIME_NML
- ALLOW_CALENDAR_CONVERSION=T,
- /
-
-================================================================================
-$Id$
-$Name$
-&OCEAN_ROUGH_NML
- ROUGHNESS_INIT=  4.4000000000000002E-004,
- ROUGHNESS_HEAT=  5.8000000000000000E-005,
- ROUGHNESS_MOM=  5.8000000000000000E-005,
- ROUGHNESS_MOIST=  5.8000000000000000E-005,
- ROUGHNESS_MIN=  9.9999999999999995E-007,
- CHARNOCK=  3.2000000000000001E-002,
- ROUGH_SCHEME="beljaars                        ",
- DO_HIGHWIND=F,
- DO_CAP40=F,
- ZCOH1=  0.0000000000000000     ,
- ZCOQ1=  0.0000000000000000     ,
- V10M=  32.500000000000000     ,
- V10N=  17.500000000000000     ,
- /
-
-namelist option USE_FIXED_ROUGH is no longer supported
-use variable ROUGH_SCHEME instead

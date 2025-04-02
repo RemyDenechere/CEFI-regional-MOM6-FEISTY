@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # List of locations
-locations=(BATS GOF) # CCE NS
+locations=(GMX) # BATS GOM CCE NS GMX
 
 # Loop through each location and run the script
 for loc in "${locations[@]}"; do

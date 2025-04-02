@@ -142,14 +142,14 @@
        co2_calc = 'mocsy'
        debug = .false.
        imbalance_tolerance=1.0e+9
-       do_FEISTY                  = .true.
+ do_FEISTY = .true.
        nonFmort                   = 0.1
 !      do_nh3_atm_ocean_exchange  = .true.  !turn on exchange of NH3
 !      scheme_no3_nh4_lim         = 2       !update nh4/no3 uptake scheme
 !      scheme_nitrif              = 3       !new nitrification scheme
 /
  &generic_FEISTY_nml
-       do_print_FEISTY_diagnostic = .true.
+       do_print_FEISTY_diagnostic = .false.
        FunctRspons_typeIII        = .false.
        a_enc                      = 10.0
        dp_int                     = 100.0

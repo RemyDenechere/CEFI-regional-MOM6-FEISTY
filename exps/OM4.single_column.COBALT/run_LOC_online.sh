@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # List of locations
-locations=(BATS GOM) # BATS CCE GOM NS
+locations=(GMX) # BATS CCE GOM NS GMX
 
 # Experiment name
 if [ -z "$1" ]; then
-    exp="FEISTY--non-vertical-refuge-1"
+    exp="FEISTY--non-vertical-refuge-2"
 else
     exp=$1
 fi

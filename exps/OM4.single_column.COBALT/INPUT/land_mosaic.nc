@@ -1,1 +1,1 @@
-../BATS/land_mosaic.nc
+../GMX/land_mosaic.nc

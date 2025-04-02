@@ -1,1 +1,1 @@
-../BATS/land_mosaic_tile1Xocean_mosaic_tile1.nc
+../GMX/land_mosaic_tile1Xocean_mosaic_tile1.nc
