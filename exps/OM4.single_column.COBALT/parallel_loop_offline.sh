@@ -63,14 +63,14 @@ trap cleanup SIGINT
 
 
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
-if [ "$#" -gt 2 ]; then
+if [ "$#" -gt 2 ||  "$#" -lt 1 ]; then
     echo "Usage: $0 <number of years> <Rockfish: true/false>"
     echo "Usage: $0 <number of years> <Rockfish: default value false>"
     exit 1
 
 elif [ "$#" -eq 1 ]; then
     NUM_YEARS=$1
-    rockfish="false"
+    ROCKFISH="false"
     echo "runing offline for $with default rockfish value false"
 
 elif [ "$#" -eq 2 ]; then
@@ -100,7 +100,7 @@ fi
 
 
 # DEFINE THE LOCATION TO RUN:
-locations=(BATS GOM GMX) #  BATS GOM GMX CCE NS 
+locations=(BATS GOM) #  BATS GOM GMX CCE NS
 
 echo ""
 echo ""
