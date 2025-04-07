@@ -77,13 +77,20 @@ HOME_DIR=$(pwd)
 UNIQUE_ID=10
 
 # SETUP FOLDER FOR PARALLES RUNS
-LONG_NAME="${LOC}_offline"
+LONG_NAME="offline/${LOC}"
 WORK_DIR="${SCRATCH_DIR}/${LONG_NAME}"
 if [ -d "$WORK_DIR" ]; then
     echo "$WORK_DIR" exists 
 else 
     cd "${SCRATCH_DIR}"
-    mkdir "${LONG_NAME}"
+    if [ -d "offline" ]; then
+        echo "offline directory exists"
+    else
+        echo "offline directory does not exist, making it..."
+        mkdir offline
+    fi
+    cd offline
+    mkdir "${LOC}"
     cd "${HOME_DIR}"
 fi
 
@@ -96,9 +103,11 @@ fi
 
 ###############################################################################
 # COPY EVERYTHING TO THE SCRATCH DIRECTORY
+# clean work dir
+rm -rf "${WORK_DIR}"/*
 cp -rf * "${WORK_DIR}"
 
-# MOVE TO WROKING DIRECTORY
+# MOVE TO WORKING DIRECTORY
 cd "${WORK_DIR}"
 
 # MAKE THE RUNS DIRECTORY
@@ -131,6 +140,26 @@ else
   echo exit 1 
 fi
 
+#########################################################
+#  CHECK IF MODEL IS IN RESTART OR INITIALIZATION MODE 
+#########################################################
+# sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
+# Check if the line contains input_filename = 'r' in input.nml
+if grep -q "input_filename = 'r'" input.nml; then
+    echo "Found 'input_filename = 'r'' in input.nml. Changing it to 'n'."
+    sed -i "s/input_filename = 'r'/input_filename = 'n'/g" input.nml
+    echo "Change complete."
+else
+    if grep -q "input_filename = 'n'" input.nml; then
+         echo "'input_filename = 'n'' continuing..."
+    else 
+        echo "input_filename value not found or invalid."
+        echo "Exiting..."
+        exit 1
+    fi
+fi
+
+
 
 ####################################################
 #  RUN THE MODEL FOR YEAR 1 
@@ -145,6 +174,7 @@ wait
 ####################################################
 # MOVE THE DATA TO A FOLDER IN RUN DIRECTORY: 
 ####################################################
+
 FOLDER_SAVE_LOC="RUNS/${LOC}"
 if [ -d "$FOLDER_SAVE_LOC" ]; then
     echo "$FOLDER_SAVE_LOC" exist 
@@ -152,8 +182,7 @@ else
     mkdir "${FOLDER_SAVE_LOC}"
 fi
 
-YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LOC}_yr_1"
-
+YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LOC}_offline_yr_1"
 if [ -d "$YEAR_FOLDER_PATH" ]; then
     echo "$YEAR_FOLDER_PATH" exist 
     rm -rf "$YEAR_FOLDER_PATH"/*
@@ -162,7 +191,7 @@ else
 fi
 
 echo "Saving feisty files to specific YEAR_FOLDER_PATH"
-yes | cp -i *feisty*.nc "$FOLDER_SAVE_LOC"
+yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
 
 
 ####################################################
@@ -184,7 +213,7 @@ do
     wait 
 
     # MOVE THE DATA TO A NEW FOLDER: 
-    YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LOC}_yr_${i}"
+    YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LOC}_offline_yr_${i}"
     if [ -d "$YEAR_FOLDER_PATH" ]; then 
         rm -rf "$YEAR_FOLDER_PATH"/*
     else 
@@ -224,34 +253,6 @@ cd "$HOME_DIR"
 
 echo "Simulation done!"
 
-#####################################################
-#   ALTERNATIVE FOR CHEAKING do_FEISTY WITH AWK
-#####################################################
-# #!/bin/bash
-# FILE="input.nml"
+## Set up restart in input.nml file and move restart files into the INPUT folder: 
+sed -i "s/input_filename = 'r'/input_filename = 'n'/g" input.nml
 
-# # Function to return FEISTY value using awk
-# get_feisty_value() {
-# awk -F "=" '/do_FEISTY/ {
-#     # Trim spaces and periods around the value after the equal sign
-#     gsub(/^[. \t]+|[. \t]+$/, "", $2);
-#     print $2;
-#     }' "$FILE"
-# }
-
-# # Call the function and store the result
-# FEISTY_VALUE=$(get_feisty_value)
-
-# echo do_FEISTY value is: $FEISTY_VALUE
-
-# # Check the result and perform actions
-# if [[ "$FEISTY_VALUE" == "true" ]]; then
-#     echo "FEISTY is true. Performing Action 1."
-#     echo
-# elif [[ "$FEISTY_VALUE" == "false" ]]; then
-#     echo "FEISTY is false. Performing Action 2."
-#     echo
-# else
-#     echo "FEISTY value not found or invalid."
-#     echo
-# fi
