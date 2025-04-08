@@ -168,7 +168,7 @@ echo "Copying executable from ${CEFI_EXECUTABLE_LOC} to here"
 cp "${CEFI_EXECUTABLE_LOC}" . 
 
 mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
-pids+=($1)
+pids+=($!)
 wait 
 
 ####################################################
@@ -209,7 +209,7 @@ do
     
     # RUN THE MODEL
     mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
-    pids+=($1)
+    pids+=($!)
     wait 
 
     # MOVE THE DATA TO A NEW FOLDER: 

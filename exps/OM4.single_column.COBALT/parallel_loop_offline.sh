@@ -139,7 +139,7 @@ for loc in "${locations[@]}"; do
     # INCREMENT THE LOOP COUNTER
     j=$((j+1))
 
-    # RUN ON SPECIFIC CPU CORE. START AT 10
+    # RUN ON SPECIFIC CPU CORE. START AT 11
     CPU_CORE=$((j+10))
     echo ""
     echo "###############################################################################"
@@ -149,7 +149,8 @@ for loc in "${locations[@]}"; do
     # & SYBMOL AT THE END MEANS IT WILL NOT WAIT FOR THE PROGRAM TO FINISH BEFORE 
     # CONTINUING THROUGH THIS LOOP
     ./run_multiyear_offline.sh "${loc}" "${NUM_YEARS}" "${CPU_CORE}"&
-    
+    # Store PID for the cleanup trap function
+    pids+=($!)
 done
 
 # WAIT FOR ALL OF THE COMMANDS TO COMPLETE, THIS OVERRULES THE & SYMBOL

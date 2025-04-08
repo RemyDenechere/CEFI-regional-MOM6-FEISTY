@@ -1,1 +1,1 @@
-../GMX/ocean_mask.nc
+../BATS/ocean_mask.nc

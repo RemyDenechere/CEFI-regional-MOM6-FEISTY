@@ -1,1 +1,1 @@
-../GMX/land_mask.nc
+../BATS/land_mask.nc

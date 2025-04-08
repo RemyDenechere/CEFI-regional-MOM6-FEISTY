@@ -1,1 +1,1 @@
-../GMX/grid_spec.nc
+../BATS/grid_spec.nc

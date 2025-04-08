@@ -1,1 +1,1 @@
-../GMX/COBALT_2023_10_spinup_2003_subset.nc
+../BATS/COBALT_2023_10_spinup_2003_subset.nc

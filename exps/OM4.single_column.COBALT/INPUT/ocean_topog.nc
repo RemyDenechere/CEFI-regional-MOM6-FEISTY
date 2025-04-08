@@ -1,1 +1,1 @@
-../GMX/ocean_topog.nc
+../BATS/ocean_topog.nc
