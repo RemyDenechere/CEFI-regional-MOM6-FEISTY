@@ -19,11 +19,11 @@ ncea -d lath,32,36 -d lonh,-122,-118 -d latq,32,36 -d lonq,-122,-118 ../datasets
 ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GOM/COBALT_2023_10_spinup_2003_subset.nc
 
 # GMX: 
-ncea -d lath,27,31 -d lonh,-92,-88 -d latq,27,31 -d lonq,-92,-88 ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GMX/COBALT_2023_10_spinup_2003_subset.nc
+ncea -d lath,27,31 -d lonh,-92,-88 -d latq,27,31 -d lonq,-92,-88 . GMX/COBALT_2023_10_spinup_2003_subset.nc
 ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GMX/COBALT_2023_10_spinup_2003_subset.nc
 
 ## CCE:
-
+./datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc
 ## NS:
 
 
