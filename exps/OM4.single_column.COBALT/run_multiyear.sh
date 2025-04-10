@@ -47,6 +47,7 @@ trap cleanup SIGINT
 
 DEFAULT_VALUES=false
 
+
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
 if [ "$#" -eq 2 ]; then
     DEFAULT_VALUES=true

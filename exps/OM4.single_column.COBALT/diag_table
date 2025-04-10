@@ -923,7 +923,6 @@ OM4_single_column
 "generic_cobalt", "jhploss_n_Lgz", "jhploss_n_Lgz",     "ocean_feisty_forcing",  "all", "mean", "none",2
 "generic_cobalt", "nmdz",          "nmdz",              "ocean_feisty_forcing",  "all", "mean", "none",2
 "generic_cobalt", "nlgz",          "nlgz",              "ocean_feisty_forcing",  "all", "mean", "none",2
-#"ocean_model",    "eta",           "eta",               "ocean_feisty_forcing",  "all", "mean", "none",2
 # Non forcing variable we are intrested in 
 "generic_cobalt", "nbact",          "nbact",            "ocean_feisty_forcing",  "all", "mean", "none",2
 "generic_cobalt", "ndet",          "ndet",              "ocean_feisty_forcing",  "all", "mean", "none",2
