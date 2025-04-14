@@ -18,6 +18,7 @@ OM4_single_column
 "ocean_feisty_fluxes",          24, "hours",  1, "days", "time",
 "ocean_feisty_forcing",         24, "hours",  1, "days", "time", 
 "ocean_feisty_forcing_detritus", 24, "hours",  1, "days", "time", 
+"ocean_cobalt_restart",          24, "hours",  1, "days", "time",
 #
 #======================
 # GENERIC OCEAN COBALT DIAGNOSTICS
@@ -175,6 +176,7 @@ OM4_single_column
  "generic_cobalt","fcased_redis_surfresp","fcased_redis_surfresp","ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","cased_redis_coef",     "cased_redis_coef",     "ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","cased_redis_delz",     "cased_redis_delz",     "ocean_cobalt_btm","all","mean","none",2
+#
 #======================
 # Generic COBALT downward fluxes at 100 meters
 #======================
@@ -923,16 +925,17 @@ OM4_single_column
 "generic_cobalt", "jhploss_n_Lgz", "jhploss_n_Lgz",     "ocean_feisty_forcing",  "all", "mean", "none",2
 "generic_cobalt", "nmdz",          "nmdz",              "ocean_feisty_forcing",  "all", "mean", "none",2
 "generic_cobalt", "nlgz",          "nlgz",              "ocean_feisty_forcing",  "all", "mean", "none",2
-# Non forcing variable we are intrested in 
-"generic_cobalt", "nbact",          "nbact",            "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "ndet",          "ndet",              "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "ndi",           "ndi",               "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "nlg",          "nlg",                "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "nmd",          "nmd",                "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "nsm",          "nsm",                "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "nh4",          "nh4",                "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "no3",          "no3",                "ocean_feisty_forcing",  "all", "mean", "none",2
-"generic_cobalt", "o2",           "o2",                 "ocean_feisty_forcing",  "all", "mean", "none",2
+# Non forcing variable we are intrested in (COBALT tracers)
+# "generic_cobalt", "nbact",          "nbact",            "ocean_feisty_forcing",  "all", "mean", "none",2
+# "generic_cobalt", "ndet",          "ndet",              "ocean_feisty_forcing",  "all", "mean", "none",2
+# "generic_cobalt", "ndi",           "ndi",               "ocean_feisty_forcing",  "all", "mean", "none",2
+# "generic_cobalt", "nlg",          "nlg",                "ocean_feisty_forcing",  "all", "mean", "none",2
+# "generic_cobalt", "nmd",          "nmd",                "ocean_feisty_forcing",  "all", "mean", "none",2
+# "generic_cobalt", "nsm",          "nsm",                "ocean_feisty_forcing",  "all", "mean", "none",2
+# "generic_cobalt", "nh4",          "nh4",                "ocean_feisty_forcing",  "all", "mean", "none",2
+# "generic_cobalt", "no3",          "no3",                "ocean_feisty_forcing",  "all", "mean", "none",2
+# "generic_cobalt", "o2",           "o2",                 "ocean_feisty_forcing",  "all", "mean", "none",2
+# Tracer names:
 #       nbact: bacteria
 #       ndet: nitrogen detritus
 #       ndi: diazotroph nitrogen
@@ -942,6 +945,140 @@ OM4_single_column
 #       nh4: ammonia
 #       no3: nitrate
 #       o2: oxygen
+#
+# FEISTY forcing files for offline simulation:
+"ocean_model",    "volcello",      "volcello",          "ocean_cobalt_restart",  "all", "mean", "none",2
+"ocean_model",    "thetao",        "thetao",            "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "alk",           "alk",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "cadet_arag",    "cadet_arag",        "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "cadet_calc",    "cadet_calc",        "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "dic",           "dic",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "fed",           "fed",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "fedet",         "fedet",             "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "fedi",          "fedi",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "felg",          "felg",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "femd",          "femd",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "fesm",          "fesm",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "pdi",           "pdi",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "plg",           "plg",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "pmd",           "pmd",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "psm",           "psm",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "ldon",          "ldon",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "ldop",          "ldop",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "lith",          "lith",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "lithdet",       "lithdet",           "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "nbact",         "nbact",             "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "ndet",          "ndet",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "ndi",           "ndi",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "nlg",           "nlg",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "nmd",           "nmd",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "nsm",           "nsm",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "nh4",           "nh4",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "no3",           "no3",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "o2",            "o2",                "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "po4",           "po4",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "srdon",         "srdon",             "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "srdop",         "srdop",             "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "sldon",         "sldon",             "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "sldop",         "sldop",             "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "sidet",         "sidet",             "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "silg",          "silg",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "simd",          "simd",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "sio4",          "sio4",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "nsmz",          "nsmz",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "nmdz",          "nmdz",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "nlgz",          "nlgz",              "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "cased",         "cased",             "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "chl",           "chl",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "co3_ion",       "co3_ion",           "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "htotal",        "htotal",            "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "irr_aclm",      "irr_aclm",          "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "irr_aclm_sfc",  "irr_aclm_sfc",      "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "irr_aclm_z",    "irr_aclm_z",        "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "irr_mem_dp",    "irr_mem_dp",        "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "mu_mem_ndi",    "mu_mem_ndi",        "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "mu_mem_nlg",    "mu_mem_nlg",        "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "mu_mem_nmd",    "mu_mem_nmd",        "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "mu_mem_nsm",    "mu_mem_nsm",        "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "nh3",           "nh3",               "ocean_cobalt_restart",  "all", "mean", "none",2
+#  LIST OF TRACERS AND NAMES:
+#       alk: Alkalinity
+#       cadet_arag: Detrital CaCO3
+#       cadet_calc: Detrital CaCO3
+#       dic: Dissolved Inorganic Carbon
+#       fed: Dissolved Iron
+#       fedet: Detrital Iron
+#       fedi: Diazotroph Iron
+#       felg: Large Phytoplankton Iron
+#       femd: Medium Phytoplankton Iron
+#       fesm: Small Phytoplankton Iron
+#       pdi: Diazotroph Phosphorus
+#       plg: Large Phytoplankton Phosphorus
+#       pmd: Medium Phytoplankton Phosphorus
+#       psm: Small Phytoplankton Phosphorus
+#       ldon: labile DON
+#       ldop: labile DOP
+#       lith: Lithogenic Aluminosilicate
+#       lithdet: lithdet
+#       nbact: bacterial
+#       ndet: ndet
+#       ndi: Diazotroph Nitrogen
+#       nlg: Large Phytoplankton Nitrogen
+#       nmd: Medium Phytoplankton Nitrogen
+#       nsm: Small Phytoplankton Nitrogen
+#       nh4: Ammonia
+#       nh3_flux: Ammonia
+#       no3: Nitrate
+#       o2: Oxygen
+#       o2_flux: Detrital Phosphorus
+#       po4: Phosphate
+#       srdon: Semi-Refractory DON
+#       srdop: Semi-Refractory DOP
+#       sldon: Semilabile DON
+#       sldop: Semilabile DOP
+#       sidet: Detrital Silicon
+#       silg: Large Phytoplankton Silicon
+#       simd: Medium Phytoplankton Silicon
+#       sio4: Silicate
+#       nsmz: Small Zooplankton Nitrogen
+#       nmdz: Medium-sized zooplankton Nitrogen
+#       nlgz: large Zooplankton Nitrogen
+#       c14o2_flux: DO14C
+#       cased: Sediment CaCO3
+#       chl: Chlorophyll
+#       co3_ion: Carbonate ion
+#       cadet_arag_btf: aragonite flux to Sediments
+#       cadet_calc_btf: calcite flux to Sediments
+#       lithdet_btf: Lith flux to Sediments
+#       ndet_btf: N flux to Sediments
+#       pdet_btf: P flux to Sediments
+#       sidet_btf: SiO2 flux to Sediments
+#       fedet_btf: Fe flux to Sediments
+#       nsm_btf: nsm flux to Sediments
+#       nmd_btf: nmd flux to Sediments
+#       nlg_btf: nlg flux to Sediments
+#       ndi_btf: ndi flux to Sediments
+#       fesm_btf: fesm flux to Sediments
+#       femd_btf: femd flux to Sediments
+#       felg_btf: felg flux to Sediments
+#       fedi_btf: fedi flux to Sediments
+#       psm_btf: psm flux to Sediments
+#       pmd_btf: pmd flux to Sediments
+#       plg_btf: plg flux to Sediments
+#       pdi_btf: pdi flux to Sediments
+#       simd_btf: simd flux to Sediments
+#       silg_btf: silg flux to Sediments
+#       htotal: H+ ion concentration
+#       irr_aclm: photoacclimation irradiance
+#       irr_aclm_sfc: Surface photoacclimation irradiance
+#       irr_aclm_z: depth-resolved photoacclim irrad
+#       irr_mem_dp: Irradiance memory, diapause
+#       mu_mem_ndi: Growth memory
+#       mu_mem_nlg: Growth memory
+#       mu_mem_nmd: Growth memory
+#       mu_mem_nsm: Growth memory
+#       nh3: NH3
+#
 #
 # FEISTY detritus:
 "ocean_model",    "volcello",     "volcello",         "ocean_feisty_forcing_detritus",  "all", "mean", "none",2

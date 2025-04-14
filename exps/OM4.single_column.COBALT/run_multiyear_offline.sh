@@ -165,7 +165,7 @@ fi
 #  RUN THE MODEL FOR YEAR 1 
 ####################################################
 echo "Copying executable from ${CEFI_EXECUTABLE_LOC} to here"
-cp "${CEFI_EXECUTABLE_LOC}" . 
+yes | cp "${CEFI_EXECUTABLE_LOC}" . 
 
 mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
 pids+=($!)
@@ -192,13 +192,15 @@ fi
 
 echo "Saving feisty files to specific YEAR_FOLDER_PATH"
 yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
+yes | cp -i ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"
 
 
 ####################################################
 # Loop after 1st year: -----------------------------------
-## Set up restart in input.nml file and move restart files into the INPUT folder: 
-sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
-yes | cp -i RESTART/*.nc INPUT/
+## Set up restart in input.nml file get last time step from previous year and build a new COBALT and FEITY input file
+
+./restart_COBALT.sh ${LOC} 
+
 
 # LOOP THROUGH THE NUMBER OF YEARS
 for ((i=2; i<=NUM_YEARS; i++))
