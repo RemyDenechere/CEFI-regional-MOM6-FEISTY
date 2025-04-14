@@ -1,1 +1,1 @@
-../BATS/ocean_mosaic.nc
+../../datasets/OM4_025.JRA.single_column/ocean_mosaic.nc

@@ -1,1 +1,1 @@
-../BATS/land_mosaic.nc
+../../datasets/OM4_025.JRA.single_column/land_mosaic.nc

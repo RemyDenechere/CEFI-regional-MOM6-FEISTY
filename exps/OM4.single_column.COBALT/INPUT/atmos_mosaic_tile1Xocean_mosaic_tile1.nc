@@ -1,1 +1,1 @@
-../BATS/atmos_mosaic_tile1Xocean_mosaic_tile1.nc
+../../datasets/OM4_025.JRA.single_column/atmos_mosaic_tile1Xocean_mosaic_tile1.nc

@@ -1,1 +1,1 @@
-/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OM4_025.JRA.single_column/vas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010000-200412312100.padded.nc
+../../datasets/OM4_025.JRA.single_column/vas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010000-200412312100.padded.nc

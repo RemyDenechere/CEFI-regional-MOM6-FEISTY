@@ -100,7 +100,7 @@ fi
 
 
 # DEFINE THE LOCATION TO RUN:
-locations=(BATS GOM) #  BATS GOM GMX CCE NS
+locations=(BATS) #  BATS GOM GMX CCE NS
 
 echo ""
 echo ""

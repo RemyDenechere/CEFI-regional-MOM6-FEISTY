@@ -1,1 +1,1 @@
-../BATS/grid_spec.nc
+../../datasets/OM4_025.JRA.single_column/grid_spec.nc
