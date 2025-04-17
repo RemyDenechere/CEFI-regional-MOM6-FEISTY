@@ -1,7 +1,7 @@
 #!/bin/bash
 # module nco/5.1.6-ok5oedt or cdo/2.2.2-rgmyuut 
 
-set -x 
+# set -x 
 
 # Define file paths
 SOURCE_FILE_4D="20040101.ocean_cobalt_restart.nc"
@@ -18,12 +18,14 @@ if [ "$#" -ne 1 ]; then
     exit 1
 fi
 
+# ALLOCATE INPUT
+LOC=$1
+
 # Get input file from loc 
 yes | cp -i ${LOC}/COBALT_2023_10_spinup_2003_subset.nc .
 
 # Rename dimensions in the source file
 yes | cp "$SOURCE_FILE_4D" "$MODIFIED_SOURCE_FILE_4D"
-yes | cp "$SOURCE_FILE_3D" "$MODIFIED_SOURCE_FILE_3D"
 ncrename -d xh,lonh -d yh,lath -d zl,Layer -d time,Time "$MODIFIED_SOURCE_FILE_4D"
 ncrename -d xh,lonh -d yh,lath -d time,Time "$MODIFIED_SOURCE_FILE_3D"
 
@@ -49,6 +51,9 @@ VARIABLES_3D=( cadet_arag_btf cadet_calc_btf lithdet_btf ndet_btf pdet_btf sidet
                pmd_btf plg_btf pdi_btf simd_btf silg_btf )
 
 # Loop through variables and add them to the target file
+ncap2 -O -s 'defdim("Layer",1)' $SOURCE_FILE_3D $MODIFIED_SOURCE_FILE_3D
+ncrename -d xh,lonh -d yh,lath -d time,Time  "$MODIFIED_SOURCE_FILE_3D"
+
 for VAR_TARGET in "${VARIABLES_3D[@]}"; do
     # get proper variable name
     VAR_SOURCE="f${VAR_TARGET%btf}btm" 
@@ -56,16 +61,22 @@ for VAR_TARGET in "${VARIABLES_3D[@]}"; do
     # Replace name in Modified Source file:
     ncrename -v "$VAR_SOURCE,$VAR_TARGET" "$MODIFIED_SOURCE_FILE_3D"
 
-    # Replace the first Layer of the 4D variable in the target file with the 3D variable values
-    ncap2 -s "$VAR_TARGET=double($VAR_TARGET)" "$MODIFIED_SOURCE_FILE_3D" -O "$MODIFIED_SOURCE_FILE_3D"
+    # change format to double 
+    # ncap2 -s "$VAR_TARGET=double($VAR_TARGET)" "$MODIFIED_SOURCE_FILE_3D" -O "$MODIFIED_SOURCE_FILE_3D"
 
     # Resize the variables: 
-    ncap2 -s "defdim(\"Layer\",1); ${VAR_TARGET}[Time,Layer,lath,lonh] = ${VAR_TARGET}(:,:,:)" $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
+    ncap2 -O -s "${VAR_TARGET}_4D[Time,Layer,lath,lonh] = 0.0;" $MODIFIED_SOURCE_FILE_3D $MODIFIED_SOURCE_FILE_3D
+    ncap2 -O -s "${VAR_TARGET}_4D(:,0,:,:) = double(${VAR_TARGET}(:,:,:)); " $MODIFIED_SOURCE_FILE_3D $MODIFIED_SOURCE_FILE_3D
+    ncap2 -O -s "${VAR_TARGET} = ${VAR_TARGET}_4D;" $MODIFIED_SOURCE_FILE_3D $MODIFIED_SOURCE_FILE_3D
+
+    #ncap2 -s "cadet_arag_btf_4D[Time,Layer,lath,lonh]=array(0.0,[Time,Layer,lath,lonh])" $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
+    # ncap2 -s "defdim(\"Layer\",1)"  $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
+    # ncap2 -s "${VAR_TARGET}[Time,Layer,lath,lonh]=${VAR_TARGET}(:,:,:)"  $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
+    # ncap2 -s "${VAR}[$VAR.dim(0),Layer,$VAR.dim(1),$VAR.dim(2)] = ${VAR}(:,:,:)"  $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
+    # ncap2 -s "${VAR}=${VAR}.reshape(${VAR}.shape[0],1,${VAR}.shape[1],${VAR}.shape[2])"  $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
     
     # assigne to target file: 
-    ncks -A -d Layer,0,0 -v $VAR_TARGET $MODIFIED_SOURCE_FILE_3D $TARGET_FILE
- 
-    
+    ncks -A -d Layer,0,0 -v $VAR_TARGET $MODIFIED_SOURCE_FILE_3D $TARGET_FILE 
     if [ $? -eq 0 ]; then
         echo "Replaced first Layer of $VAR_TARGET in $TARGET_FILE from $VAR_SOURCE in $MODIFIED_SOURCE_FILE_3D."
     else
@@ -77,8 +88,12 @@ done
 yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
 
 echo "All variables processed successfully. cleaning up temporary files ..."
+
 # Remove the modified source files
+echo "Removing temporary files ..."
 rm -f "$MODIFIED_SOURCE_FILE_4D" "$MODIFIED_SOURCE_FILE_3D"
+
+# set +x 
 
 #  LIST OF TRACERS AND NAMES:
 #       alk: Alkalinity
