@@ -192,14 +192,15 @@ fi
 
 echo "Saving feisty files to specific YEAR_FOLDER_PATH"
 yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
-yes | cp -i ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"
+yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"
+yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
 
 
 ####################################################
 # Loop after 1st year: -----------------------------------
 ## Set up restart in input.nml file get last time step from previous year and build a new COBALT and FEITY input file
-
-./restart_COBALT.sh ${LOC} 
+./restart_COBALT ${LOC} 
+yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
 
 
 # LOOP THROUGH THE NUMBER OF YEARS
@@ -214,6 +215,10 @@ do
     pids+=($!)
     wait 
 
+    # CREATE A NEW INITIALISATION FILE FOR BGC TRACERS 
+    ./restart_COBALT ${LOC} 
+    yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+
     # MOVE THE DATA TO A NEW FOLDER: 
     YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LOC}_offline_yr_${i}"
     if [ -d "$YEAR_FOLDER_PATH" ]; then 
@@ -224,6 +229,8 @@ do
 
     echo "Saving feisty files to specific YEAR_FOLDER_PATH"
     yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
+    yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"
+    yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
 done
 
 ###############################################################################

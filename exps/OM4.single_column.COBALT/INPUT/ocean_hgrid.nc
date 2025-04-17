@@ -1,1 +1,1 @@
-../../datasets/OM4_025.JRA.single_column/ocean_hgrid.nc
+../BATS/ocean_hgrid.nc

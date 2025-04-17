@@ -1,1 +1,1 @@
-../../datasets/OceanBGC_dataset/river_iron.nc
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OceanBGC_dataset/river_iron.nc

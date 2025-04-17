@@ -34,15 +34,15 @@ else
 	ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/GLODAPv2.2016b.oi-filled.20180322.nc ./GLODAPv2.2016b.oi-filled.20180322.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/init_ocean_cobalt_nh3.res.nc ./init_ocean_cobalt_nh3.res.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/init_ocean_cobalt.res.nc ./init_ocean_cobalt.res.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/huss_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010000-200412312100.padded.nc ./JRA_huss.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/prra_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010130-200412312230.padded.nc ./JRA_prra.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/prsn_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010130-200412312230.padded.nc ./JRA_prsn.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/psl_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010000-200412312100.padded.nc ./JRA_psl.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/rlds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010130-200412312230.padded.nc ./JRA_rlds.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/rsds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010130-200412312230.padded.nc ./JRA_rsds.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/tas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010000-200412312100.padded.nc ./JRA_tas.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/uas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010000-200412312100.padded.nc ./JRA_uas.nc
-	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/vas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-4-0_gr_200401010000-200412312100.padded.nc ./JRA_vas.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/huss_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-6-0_gr_200401010000-200412312100.nc ./JRA_huss.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/prra_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-6-0_gr_200401010130-200412312230.nc ./JRA_prra.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/prsn_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-6-0_gr_200401010130-200412312230.nc ./JRA_prsn.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/psl_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-6-0_gr_200401010000-200412312100.nc ./JRA_psl.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/rlds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-6-0_gr_200401010130-200412312230.nc ./JRA_rlds.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/rsds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-6-0_gr_200401010130-200412312230.nc ./JRA_rsds.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/tas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-6-0_gr_200401010000-200412312100.nc ./JRA_tas.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/uas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-6-0_gr_200401010000-200412312100.nc ./JRA_uas.nc
+	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/vas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-6-0_gr_200401010000-200412312100.nc ./JRA_vas.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/Mineral_Fe_Flux_PI.nc ./Mineral_Fe_Flux_PI.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/MOM_GENERICS.res.nc ./MOM_GENERICS.res.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OceanBGC_dataset/MOM_IC.nc ./MOM_IC.nc
@@ -73,7 +73,7 @@ else
 	ln -fs ${CEFI_DATASET_LOC}/land_mask.nc ./land_mask.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_hgrid.nc ./ocean_hgrid.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_topog.nc ./ocean_topog.nc
-	# ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc 		./FEISTY_2023_10_spinup_subset.nc
+	#ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc 		./FEISTY_2023_10_spinup_subset.nc
 	ln -fs ${CEFI_DATASET_LOC}/FEISTY_2D_2023_10_spinup_subset.nc 	./FEISTY_2D_2023_10_spinup_subset.nc
 	ln -fs ${CEFI_DATASET_LOC}/land_mosaic.nc ./land_mosaic.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_mask.nc ./ocean_mask.nc

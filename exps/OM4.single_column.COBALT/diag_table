@@ -7,7 +7,7 @@ OM4_single_column
 # Proposed ESM4 production diagnostics (CAS, 1/11/18)
 #==========================================================================================
 "ocean_cobalt_sfc",             1,  "months", 1, "days", "time",
-"ocean_cobalt_btm",             1,  "months", 1, "days", "time",
+"ocean_cobalt_btm",             24, "hours",   1, "days", "time",
 "ocean_cobalt_tracers_int",     1,  "months", 1, "days", "time",
 "ocean_cobalt_fluxes_int",      1,  "months", 1, "days", "time",
 "ocean_cobalt_fdet_100",        1,  "months", 1, "days", "time",
@@ -153,8 +153,9 @@ OM4_single_column
  "generic_cobalt","fnlg_btm",         "fnlg_btm",        "ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","fpdet_btm",        "fpdet_btm",       "ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","fpdi_btm",         "fpdi_btm",        "ocean_cobalt_btm","all","mean","none",2
- "generic_cobalt","fptot_btm",         "fptot_btm",        "ocean_cobalt_btm","all","mean","none",2
+ "generic_cobalt","fptot_btm",        "fptot_btm",        "ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","fpmd_btm",         "fpmd_btm",        "ocean_cobalt_btm","all","mean","none",2
+ "generic_cobalt","fpsm_btm",         "fpsm_btm",        "ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","fplg_btm",         "fplg_btm",        "ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","fsidet_btm",       "fsidet_btm",      "ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","fsimd_btm",        "fsimd_btm",       "ocean_cobalt_btm","all","mean","none",2

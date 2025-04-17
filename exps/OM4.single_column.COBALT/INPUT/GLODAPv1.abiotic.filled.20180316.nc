@@ -1,1 +1,1 @@
-../../datasets/OceanBGC_dataset/GLODAPv1.abiotic.filled.20180316.nc
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OceanBGC_dataset/GLODAPv1.abiotic.filled.20180316.nc
