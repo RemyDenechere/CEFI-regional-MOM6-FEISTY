@@ -69,7 +69,7 @@ for VAR_TARGET in "${VARIABLES_3D[@]}"; do
     ncap2 -O -s "${VAR_TARGET}_4D(:,0,:,:) = double(${VAR_TARGET}(:,:,:)); " $MODIFIED_SOURCE_FILE_3D $MODIFIED_SOURCE_FILE_3D
     ncap2 -O -s "${VAR_TARGET} = ${VAR_TARGET}_4D;" $MODIFIED_SOURCE_FILE_3D $MODIFIED_SOURCE_FILE_3D
 
-    #ncap2 -s "cadet_arag_btf_4D[Time,Layer,lath,lonh]=array(0.0,[Time,Layer,lath,lonh])" $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
+    # ncap2 -s "cadet_arag_btf_4D[Time,Layer,lath,lonh]=array(0.0,[Time,Layer,lath,lonh])" $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
     # ncap2 -s "defdim(\"Layer\",1)"  $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
     # ncap2 -s "${VAR_TARGET}[Time,Layer,lath,lonh]=${VAR_TARGET}(:,:,:)"  $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D
     # ncap2 -s "${VAR}[$VAR.dim(0),Layer,$VAR.dim(1),$VAR.dim(2)] = ${VAR}(:,:,:)"  $MODIFIED_SOURCE_FILE_3D -O $MODIFIED_SOURCE_FILE_3D

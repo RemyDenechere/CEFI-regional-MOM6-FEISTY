@@ -41,8 +41,8 @@ pids=()
 trap cleanup SIGINT
 
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <Location name> <number of year> <cpu_core>"
+if [ "$#" -ne 4 ]; then
+    echo "Usage: $0 <Location name> <number of year> <cpu_core> <Exp>"
     exit 1
 fi
 
@@ -50,6 +50,13 @@ fi
 LOC=$1
 NUM_YEARS=$2
 CPU_CORE=$3
+EXP=$4
+
+# Print the values of the arguments
+echo "Location name: $LOC"
+echo "Number of years: $NUM_YEARS"
+echo "CPU core: $CPU_CORE"
+echo "Experiment name: $EXP"
 
 ###############################################################################
 # CHECK TO SEE IF OTHER ENVIRONMENTAL VARIABLES ARE SET
@@ -94,6 +101,7 @@ else
     cd "${HOME_DIR}"
 fi
 
+# CHECK IF THE WORKING DIRECTORY EXISTS
 if [ -d "$WORK_DIR" ]; then
 	echo "${WORK_DIR} exists, continuing..."
 else
@@ -160,26 +168,45 @@ else
 fi
 
 
-
 ####################################################
 #  RUN THE MODEL FOR YEAR 1 
 ####################################################
 echo "Copying executable from ${CEFI_EXECUTABLE_LOC} to here"
 yes | cp "${CEFI_EXECUTABLE_LOC}" . 
 
-mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
-pids+=($!)
-wait 
+# mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+# pids+=($!)
+# wait 
 
 ####################################################
 # MOVE THE DATA TO A FOLDER IN RUN DIRECTORY: 
 ####################################################
 
-FOLDER_SAVE_LOC="RUNS/${LOC}"
+FOLDER_SAVE_LOC="RUNS/${LOC}/${EXP}"
 if [ -d "$FOLDER_SAVE_LOC" ]; then
     echo "$FOLDER_SAVE_LOC" exist 
+    rm -rf "$FOLDER_SAVE_LOC"/*
+    echo "Cleaning up $FOLDER_SAVE_LOC"
 else 
-    mkdir "${FOLDER_SAVE_LOC}"
+    cd RUNS 
+    if [ -d "${LOC}" ]; then
+        echo "RUNS/${LOC} exists... making a new folder for ${EXP}"
+        mkdir "${EXP}"
+    else
+        echo "RUNS/${LOC} does not exist, making it..."
+        mkdir "${LOC}"
+        cd "${LOC}"
+        mkdir "${EXP}"
+    fi
+    cd "${WORK_DIR}"
+fi
+
+# CHECK IF THE WORKING DIRECTORY EXISTS
+if [ -d "$FOLDER_SAVE_LOC" ]; then
+    echo "${FOLDER_SAVE_LOC} exists, continuing..."
+else
+    echo "${FOLDER_SAVE_LOC} does not exist, exiting..."
+    exit 1
 fi
 
 YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LOC}_offline_yr_1"
@@ -187,6 +214,7 @@ if [ -d "$YEAR_FOLDER_PATH" ]; then
     echo "$YEAR_FOLDER_PATH" exist 
     rm -rf "$YEAR_FOLDER_PATH"/*
 else 
+
     mkdir "$YEAR_FOLDER_PATH"
 fi
 
@@ -199,8 +227,8 @@ yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
 ####################################################
 # Loop after 1st year: -----------------------------------
 ## Set up restart in input.nml file get last time step from previous year and build a new COBALT and FEITY input file
-./restart_COBALT ${LOC} 
-yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+# ./restart_COBALT ${LOC} 
+# yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
 
 
 # LOOP THROUGH THE NUMBER OF YEARS
@@ -211,13 +239,13 @@ do
     echo "Running year ${i} of ${NUM_YEARS}..."
     
     # RUN THE MODEL
-    mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
-    pids+=($!)
-    wait 
+    # mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+    # pids+=($!)
+    # wait 
 
     # CREATE A NEW INITIALISATION FILE FOR BGC TRACERS 
-    ./restart_COBALT ${LOC} 
-    yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+    # ./restart_COBALT ${LOC} 
+    # yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
 
     # MOVE THE DATA TO A NEW FOLDER: 
     YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LOC}_offline_yr_${i}"
