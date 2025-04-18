@@ -62,25 +62,34 @@ pids=()
 trap cleanup SIGINT 
 
 
+echo ""
+echo ""
+echo "###############################################################################"
+echo "# Starting parallel run of single column MOM6                                 #"
+echo "###############################################################################"
+echo ""
+
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
-if [ "$#" -gt 2 ||  "$#" -lt 1 ]; then
-    echo "Usage: $0 <number of years> <Rockfish: true/false>"
-    echo "Usage: $0 <number of years> <Rockfish: default value false>"
+if [[ "$#" -gt 3 ||  "$#" -lt 2 ]]; then
+    echo "Usage: $0 <number of years> <Experimentation name> <Rockfish: true/false>"
+    echo "Usage: $0 <20> <2D> <Rockfish: default value false>"
     exit 1
 
-elif [ "$#" -eq 1 ]; then
+elif [ "$#" -eq 2 ]; then
     NUM_YEARS=$1
+    EXP=$2	
     ROCKFISH="false"
     echo "runing offline for $with default rockfish value false"
 
-elif [ "$#" -eq 2 ]; then
+elif [ "$#" -eq 3 ]; then
     # VALIDATE THE BOOLEAN ARGUMENT
     if [ "$2" != "true" ] && [ "$2" != "false" ]; then
         echo "Error: The second argument must be 'true' or 'false'."
         exit 1
     fi
     NUM_YEARS=$1
-    ROCKFISH=$2
+    EXP=$2	
+    ROCKFISH=$3
 fi
 
 # DEFINE COUNTER 
@@ -102,12 +111,6 @@ fi
 # DEFINE THE LOCATION TO RUN:
 locations=(BATS) #  BATS GOM GMX CCE NS
 
-echo ""
-echo ""
-echo "###############################################################################"
-echo "# Starting parallel run of single column MOM6                                 #"
-echo "###############################################################################"
-echo ""
 
 # CHECK TO SEE IF OTHER ENVIRONMENTAL VARIABLES ARE SET
 if [ -z "${CEFI_DATASET_LOC}" ]; then
@@ -148,7 +151,7 @@ for loc in "${locations[@]}"; do
     # ACTUAL COMMAND TO RUN THE MULTIYEAR OFFLINE BASH SCRIPT.
     # & SYBMOL AT THE END MEANS IT WILL NOT WAIT FOR THE PROGRAM TO FINISH BEFORE 
     # CONTINUING THROUGH THIS LOOP
-    ./run_multiyear_offline.sh "${loc}" "${NUM_YEARS}" "${CPU_CORE}"&
+    ./run_multiyear_offline.sh "${loc}" "${NUM_YEARS}" "${CPU_CORE}" "${EXP}"&
     # Store PID for the cleanup trap function
     pids+=($!)
 done
