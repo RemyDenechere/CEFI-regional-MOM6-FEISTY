@@ -23,6 +23,7 @@ exps/OM4.single_column.COBALT/CCE_restart/
 exps/OM4.single_column.COBALT/GOM_restart/
 exps/OM4.single_column.COBALT/GMX_restart/
 exps/OM4.single_column.COBALT/NS_restart/
+exps/OM4.single_column.COBALT/*OFFLINE_RESTART/
 
 # Ignore the programs produced
 /builds/build/
