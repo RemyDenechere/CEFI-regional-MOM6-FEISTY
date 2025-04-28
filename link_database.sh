@@ -87,6 +87,8 @@ else
 	ln -fs ${CEFI_DATASET_LOC}/land_mosaic.nc ./land_mosaic.nc
 	ln -fs ${CEFI_DATASET_LOC}/ocean_mask.nc ./ocean_mask.nc
 	ln -fs ${CEFI_DATASET_LOC}/COBALT_2023_10_spinup_2003_subset.nc ./COBALT_2023_10_spinup_2003_subset.nc	
+	ln -fs ${CEFI_DATASET_LOC}/temp_restore_woa13_decav.nc ./temp_restore_woa13_decav.nc
+	ln -fs ${CEFI_DATASET_LOC}/salt_restore_woa13_decav.nc ./salt_restore_woa13_decav.nc
 fi
 
 

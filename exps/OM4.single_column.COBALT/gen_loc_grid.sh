@@ -48,8 +48,7 @@ echo "COBALT_2023_10_spinup_2003_subset.nc created for GMX_2"
 ## NS:
 
 
-
-# # CCE locations to test : 
+## CCE locations to test : 
 # ./BuildExchangeGrid.sh CCE_loc1  34.2781 -120.6810 30
 # ./BuildExchangeGrid.sh CCE_loc2  34.2023 -119.7996 126
 # ./BuildExchangeGrid.sh CCE_loc3  33.7756 -118,9783 100
