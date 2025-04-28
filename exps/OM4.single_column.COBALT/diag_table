@@ -177,6 +177,7 @@ OM4_single_column
  "generic_cobalt","fcased_redis_surfresp","fcased_redis_surfresp","ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","cased_redis_coef",     "cased_redis_coef",     "ocean_cobalt_btm","all","mean","none",2
  "generic_cobalt","cased_redis_delz",     "cased_redis_delz",     "ocean_cobalt_btm","all","mean","none",2
+ "generic_cobalt","ffesm_btm",            "ffesm_btm",     "ocean_cobalt_btm","all","mean","none",2
 #
 #======================
 # Generic COBALT downward fluxes at 100 meters
@@ -1002,6 +1003,7 @@ OM4_single_column
 "generic_cobalt", "mu_mem_nmd",    "mu_mem_nmd",        "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "mu_mem_nsm",    "mu_mem_nsm",        "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "nh3",           "nh3",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "pdet",           "pdet",               "ocean_cobalt_restart",  "all", "mean", "none",2
 #  LIST OF TRACERS AND NAMES:
 #       alk: Alkalinity
 #       cadet_arag: Detrital CaCO3
@@ -1079,6 +1081,7 @@ OM4_single_column
 #       mu_mem_nmd: Growth memory
 #       mu_mem_nsm: Growth memory
 #       nh3: NH3
+#       pdet: phosphorous detritus
 #
 #
 # FEISTY detritus:

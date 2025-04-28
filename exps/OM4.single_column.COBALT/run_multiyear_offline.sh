@@ -132,6 +132,9 @@ cd INPUT/
 /project/rdenechere/CEFI-regional-MOM6-FEISTY/link_database.sh "${LOC}"
 cd ..
 
+#########################################################
+#   CHESK IF FEISTY IS SETUP TO FALSE 
+#########################################################
 # Check if the line do_FEISTY = .false. in input.nml
 if sed -n '/^\s*do_FEISTY\s*=\s*\.true\.\s*$/p' input.nml > /dev/null; then
   echo "Found 'do_FEISTY = .true.' in input.nlm: COBALT is setup to run online with FEISTY"
@@ -150,8 +153,8 @@ fi
 
 #########################################################
 #  CHECK IF MODEL IS IN RESTART OR INITIALIZATION MODE 
+#  MODEL SHOULD BE IN INITIALIZATION MODE
 #########################################################
-# sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
 # Check if the line contains input_filename = 'r' in input.nml
 if grep -q "input_filename = 'r'" input.nml; then
     echo "Found 'input_filename = 'r'' in input.nml. Changing it to 'n'."
@@ -174,9 +177,9 @@ fi
 echo "Copying executable from ${CEFI_EXECUTABLE_LOC} to here"
 yes | cp "${CEFI_EXECUTABLE_LOC}" . 
 
-# mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
-# pids+=($!)
-# wait 
+mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+pids+=($!)
+wait 
 
 ####################################################
 # MOVE THE DATA TO A FOLDER IN RUN DIRECTORY: 
@@ -214,11 +217,10 @@ if [ -d "$YEAR_FOLDER_PATH" ]; then
     echo "$YEAR_FOLDER_PATH" exist 
     rm -rf "$YEAR_FOLDER_PATH"/*
 else 
-
     mkdir "$YEAR_FOLDER_PATH"
 fi
 
-echo "Saving feisty files to specific YEAR_FOLDER_PATH"
+echo "Saving feisty files to specific YEAR_FOLDER_PATH: $YEAR_FOLDER_PATH"
 yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
 yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"
 yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
@@ -226,9 +228,24 @@ yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
 
 ####################################################
 # Loop after 1st year: -----------------------------------
-## Set up restart in input.nml file get last time step from previous year and build a new COBALT and FEITY input file
-# ./restart_COBALT ${LOC} 
-# yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+## Set up restart in input.nml file and get restart files: (OLD METHOD)
+# if [ $RESTART = "OLD" ]; then 
+#     sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
+#     yes | cp -i RESTART/*.nc INPUT/
+# elif [ $RESTART = "NEW" ]; then
+#     ./restart_COBALT ${LOC} 
+#     yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+#     echo "Copied restart files to the INPUT folder"
+# else 
+#     echo "RESTART variable not set to OLD or NEW. Exiting..."
+#     exit 1
+# fi
+
+rm -r INPUT/COBALT_2023_10_spinup_2003_subset.nc
+rm -r COBALT_2023_10_spinup_2003_subset.nc
+./restart_COBALT ${LOC} 
+yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+echo "Copied restart files to the INPUT folder"
 
 
 # LOOP THROUGH THE NUMBER OF YEARS
@@ -239,13 +256,9 @@ do
     echo "Running year ${i} of ${NUM_YEARS}..."
     
     # RUN THE MODEL
-    # mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
-    # pids+=($!)
-    # wait 
-
-    # CREATE A NEW INITIALISATION FILE FOR BGC TRACERS 
-    # ./restart_COBALT ${LOC} 
-    # yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+    mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+    pids+=($!)
+    wait 
 
     # MOVE THE DATA TO A NEW FOLDER: 
     YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LOC}_offline_yr_${i}"
@@ -259,6 +272,24 @@ do
     yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
     yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"
     yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
+
+    # get restart files: 
+    rm -r INPUT/COBALT_2023_10_spinup_2003_subset.nc
+    rm -r COBALT_2023_10_spinup_2003_subset.nc
+    ./restart_COBALT ${LOC} 
+    yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+    echo "Copied restart files to the INPUT folder"
+    # if [ $RESTART = "OLD" ]; then 
+    #     sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
+    #     yes | cp -i RESTART/*.nc INPUT/
+    # elif [ $RESTART = "NEW" ]; then
+    #     ./restart_COBALT ${LOC} 
+    #     yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+    #     echo "Copied restart files to the INPUT folder"
+    # else 
+    #     echo "RESTART variable not set to OLD or NEW. Exiting..."
+    #     exit 1
+    # fi
 done
 
 ###############################################################################
@@ -266,9 +297,11 @@ done
 ## save the restart files of last year for potential resimulation: 
 FOLDER_SAVE_RESTART="${LOC}_yr_${NUM_YEARS}_OFFLINE_RESTART"
 if [ -d "$FOLDER_SAVE_RESTART" ]; then
-    echo "$FOLDER_SAVE_RESTART" exist 
+    echo $FOLDER_SAVE_RESTART" exist "
+    echo "Cleaning up $FOLDER_SAVE_RESTART"
     rm -rf "$FOLDER_SAVE_RESTART"/*
 else 
+    echo $FOLDER_SAVE_RESTART" does not exist making it..."
     mkdir "$FOLDER_SAVE_RESTART"
 fi
 
@@ -291,5 +324,8 @@ cd "$HOME_DIR"
 echo "Simulation done!"
 
 ## Set up restart in input.nml file and move restart files into the INPUT folder: 
-sed -i "s/input_filename = 'r'/input_filename = 'n'/g" input.nml
+if [ $RESTART = "OLD" ]; then 
+    sed -i "s/input_filename = 'r'/input_filename = 'n'/g" input.nml
+fi
+
 
