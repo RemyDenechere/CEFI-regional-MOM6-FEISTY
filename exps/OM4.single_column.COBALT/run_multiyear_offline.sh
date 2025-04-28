@@ -229,23 +229,19 @@ yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
 ####################################################
 # Loop after 1st year: -----------------------------------
 ## Set up restart in input.nml file and get restart files: (OLD METHOD)
-# if [ $RESTART = "OLD" ]; then 
-#     sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
-#     yes | cp -i RESTART/*.nc INPUT/
-# elif [ $RESTART = "NEW" ]; then
-#     ./restart_COBALT ${LOC} 
-#     yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
-#     echo "Copied restart files to the INPUT folder"
-# else 
-#     echo "RESTART variable not set to OLD or NEW. Exiting..."
-#     exit 1
-# fi
-
-rm -r INPUT/COBALT_2023_10_spinup_2003_subset.nc
-rm -r COBALT_2023_10_spinup_2003_subset.nc
-./restart_COBALT ${LOC} 
-yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
-echo "Copied restart files to the INPUT folder"
+if [ $RESTART = "OLD" ]; then 
+    sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
+    yes | cp -i RESTART/*.nc INPUT/
+elif [ $RESTART = "NEW" ]; then
+    rm -r INPUT/COBALT_2023_10_spinup_2003_subset.nc
+    rm -r COBALT_2023_10_spinup_2003_subset.nc
+    ./restart_COBALT ${LOC} 
+    yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+    echo "Copied restart files to the INPUT folder"
+else 
+    echo "RESTART variable not set to OLD or NEW. Exiting..."
+    exit 1
+fi
 
 
 # LOOP THROUGH THE NUMBER OF YEARS
@@ -274,22 +270,19 @@ do
     yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
 
     # get restart files: 
-    rm -r INPUT/COBALT_2023_10_spinup_2003_subset.nc
-    rm -r COBALT_2023_10_spinup_2003_subset.nc
-    ./restart_COBALT ${LOC} 
-    yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
-    echo "Copied restart files to the INPUT folder"
-    # if [ $RESTART = "OLD" ]; then 
-    #     sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
-    #     yes | cp -i RESTART/*.nc INPUT/
-    # elif [ $RESTART = "NEW" ]; then
-    #     ./restart_COBALT ${LOC} 
-    #     yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
-    #     echo "Copied restart files to the INPUT folder"
-    # else 
-    #     echo "RESTART variable not set to OLD or NEW. Exiting..."
-    #     exit 1
-    # fi
+    if [ $RESTART = "OLD" ]; then 
+        sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
+        yes | cp -i RESTART/*.nc INPUT/
+    elif [ $RESTART = "NEW" ]; then
+        rm -r INPUT/COBALT_2023_10_spinup_2003_subset.nc
+        rm -r COBALT_2023_10_spinup_2003_subset.nc
+        ./restart_COBALT ${LOC} 
+        yes | cp -i COBALT_2023_10_spinup_2003_subset.nc INPUT/
+        echo "Copied restart files to the INPUT folder"
+    else 
+        echo "RESTART variable not set to OLD or NEW. Exiting..."
+        exit 1
+    fi
 done
 
 ###############################################################################

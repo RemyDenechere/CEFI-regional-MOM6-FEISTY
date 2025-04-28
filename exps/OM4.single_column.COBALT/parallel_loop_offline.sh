@@ -106,7 +106,7 @@ if [ "$ROCKFISH" = "false" ]; then
 else 
     export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/rockkfish-linux-gnu/ocean_ice/prod/MOM6SIS2
 fi
-export RESTART="NEW" 
+export RESTART="OLD" 
 
 # TEST RESTART VALUE to ensure not overwriting previous simulations
 if [ $EXP == 2D ]; then 
@@ -117,7 +117,7 @@ if [ $EXP == 2D ]; then
     fi
 fi
 # DEFINE THE LOCATION TO RUN:
-locations=(GOM) #  BATS GOM GMX GMX_2 GOM_2 CCE NS 
+locations=(BATS) #  BATS GOM GMX GMX_2 GOM_2 CCE NS 
 
 # CHECK TO SEE IF OTHER ENVIRONMENTAL VARIABLES ARE SET
 if [ -z "${CEFI_DATASET_LOC}" ]; then

@@ -6,7 +6,7 @@ READ_INPUT_NML: unknown
 READ_INPUT_NML: input.nml 
   &MOM_input_nml
           output_directory = '.',
-          input_filename = 'n'
+          input_filename = 'r'
           restart_input_dir = 'INPUT',
           restart_output_dir = 'RESTART',
           parameter_filename = 'MOM_input',
@@ -631,6 +631,12 @@ MOM_in domain decomposition:     1 X    1
 MOM_in domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
+MOM_in domain decomposition:     1 X    1
+   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
+
 ================================================================================
 unknown
 &DATA_OVERRIDE_NML
@@ -751,21 +757,3 @@ unknown
 ================================================================================
 $Id$
 $Name$
-&OCEAN_ROUGH_NML
- ROUGHNESS_INIT=  4.4000000000000002E-004,
- ROUGHNESS_HEAT=  5.8000000000000000E-005,
- ROUGHNESS_MOM=  5.8000000000000000E-005,
- ROUGHNESS_MOIST=  5.8000000000000000E-005,
- ROUGHNESS_MIN=  9.9999999999999995E-007,
- CHARNOCK=  3.2000000000000001E-002,
- ROUGH_SCHEME="beljaars                        ",
- DO_HIGHWIND=F,
- DO_CAP40=F,
- ZCOH1=  0.0000000000000000     ,
- ZCOQ1=  0.0000000000000000     ,
- V10M=  32.500000000000000     ,
- V10N=  17.500000000000000     ,
- /
-
-namelist option USE_FIXED_ROUGH is no longer supported
-use variable ROUGH_SCHEME instead

@@ -7013,7 +7013,7 @@
     ! long_name: Ocean surface Schmidt Number for po4
     ! units: mol/kg
     ! cell_methods: xh:mean yh:mean area:mean
-"pdet"  [Unused]
+"pdet"  [Used]
     ! modules: {generic_cobalt,generic_cobalt_z,generic_cobalt_rho2,generic_cobalt_d2,generic_cobalt_z_d2,generic_cobalt_rho2_d2}
     ! long_name: Detrital Phosphorus
     ! units: mol/kg
@@ -11696,7 +11696,7 @@
     ! long_name: medium phyto Fe sinking flux to bottom
     ! units: mol m-2 s-1
     ! cell_methods: xh:mean yh:mean area:mean
-"ffesm_btm"  [Unused]
+"ffesm_btm"  [Used]
     ! modules: {generic_cobalt,generic_cobalt_d2}
     ! long_name: small phyto Fe sinking flux to bottom
     ! units: mol m-2 s-1
