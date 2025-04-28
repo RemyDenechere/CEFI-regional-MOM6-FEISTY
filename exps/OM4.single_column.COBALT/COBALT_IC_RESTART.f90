@@ -27,7 +27,7 @@ program COBALT_IC_RESTART
     end if
 
     ! Define directories and files based on loc: -----------------------------------
-    root_dir_output_loc = trim(root_dir_output) // trim(loc) // "/" // trim(loc) // "_offline_yr_1/"
+    root_dir_output_loc = trim(root_dir_output) // trim(loc) // "/" // "2D" // "/" //trim(loc) // "_offline_yr_1/"
     root_dir_loc = trim(root_dir) // trim(loc) // "/"
     dir_Temp = trim(root_dir_output_loc)    // "20040101.ocean_feisty_forcing.nc"
     dir_zt = trim(root_dir_output_loc)      // "20040101.ocean_feisty_forcing_detritus.nc"

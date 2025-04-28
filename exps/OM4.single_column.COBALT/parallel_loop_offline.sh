@@ -68,11 +68,12 @@ echo "##########################################################################
 echo "# Starting parallel run of single column MOM6                                 #"
 echo "###############################################################################"
 echo ""
+echo ""
 
 # CHECK IF THE CORRECT NUMBER OF ARGUMENTS ARE PROVIDED
 if [[ "$#" -gt 3 ||  "$#" -lt 2 ]]; then
     echo "Usage: $0 <number of years> <Experimentation name> <Rockfish: true/false>"
-    echo "Usage: $0 <20> <2D> <Rockfish: default value false>"
+    echo "Usage: $0 <20> <test_restart> <Rockfish: default value false>"
     exit 1
 
 elif [ "$#" -eq 2 ]; then
@@ -95,7 +96,6 @@ fi
 # DEFINE COUNTER 
 j=0
 
-
 ########################################################################################
 # YOU CAN ALSO SET THEM HERE, UNCOMMENT THE FOUR FOLLOWING LINES AND SET:
 export CEFI_DATASET_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/
@@ -106,11 +106,18 @@ if [ "$ROCKFISH" = "false" ]; then
 else 
     export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/rockkfish-linux-gnu/ocean_ice/prod/MOM6SIS2
 fi
+export RESTART="NEW" 
 
-
+# TEST RESTART VALUE to ensure not overwriting previous simulations
+if [ $EXP == 2D ]; then 
+    if [ "$RESTART" = "NEW" ]; then
+        echo "RESTART is set to NEW, but EXP to: "$EXP", Considering changing exp name to avoid overwriting"
+        echo "previous simulations... exiting"
+        exit 1
+    fi
+fi
 # DEFINE THE LOCATION TO RUN:
-locations=(BATS) #  BATS GOM GMX CCE NS
-
+locations=(GOM) #  BATS GOM GMX GMX_2 GOM_2 CCE NS 
 
 # CHECK TO SEE IF OTHER ENVIRONMENTAL VARIABLES ARE SET
 if [ -z "${CEFI_DATASET_LOC}" ]; then
