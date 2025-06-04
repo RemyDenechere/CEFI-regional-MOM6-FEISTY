@@ -867,6 +867,7 @@ contains
        g_tracer%requires_restart = .false.
     endif
 
+    ! 
     if(present(init_value))  g_tracer%initial_value = init_value
 
     !

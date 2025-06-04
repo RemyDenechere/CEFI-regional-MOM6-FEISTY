@@ -6,7 +6,7 @@ READ_INPUT_NML: unknown
 READ_INPUT_NML: input.nml 
   &MOM_input_nml
           output_directory = '.',
-          input_filename = 'r'
+          input_filename = 'n'
           restart_input_dir = 'INPUT',
           restart_output_dir = 'RESTART',
           parameter_filename = 'MOM_input',
@@ -23,6 +23,10 @@ READ_INPUT_NML: input.nml
          parameter_filename = 'SIS_input',
                               'SIS_layout',
                               'SIS_override' /
+ 
+ ! &COBALT_input_nml
+ !	parameter_filename = 'COBALT_input',
+ !			     'COBALT_override' /
  
   &atmos_model_nml
             layout = 1, 1
@@ -139,6 +143,7 @@ READ_INPUT_NML: input.nml
         do_generic_abiotic=.false.
         do_generic_CFC=.false.
         do_generic_COBALT=.true.
+ !       do_generic_FEISTY=.true.	
         do_generic_SF6=.false.
         force_update_fluxes=.true.
         as_param='unused'
@@ -149,7 +154,7 @@ READ_INPUT_NML: input.nml
         co2_calc = 'mocsy'
         debug = .false.
         imbalance_tolerance=1.0e+9
-        do_FEISTY = .false.
+        do_FEISTY = .true.
         nonFmort                   = 0.1
  !      do_nh3_atm_ocean_exchange  = .true.  !turn on exchange of NH3
  !      scheme_no3_nh4_lim         = 2       !update nh4/no3 uptake scheme
@@ -439,7 +444,7 @@ Number of tracers in field table for coupler model =    0
  GAMMA_NITRIF=  3500000.0000000000     ,
  DO_VERTFILL_PRE=F,
  IMBALANCE_TOLERANCE=  1000000000.0000000     ,
- DO_FEISTY=F,
+ DO_FEISTY=T,
  DO_PRINT_FEISTY_DIAGNOSTIC=F,
  NONFMORT= 0.10000000000000001     ,
  /
@@ -631,18 +636,19 @@ MOM_in domain decomposition:     1 X    1
 MOM_in domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
-MOM_in domain decomposition:     1 X    1
-   pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
-
 ================================================================================
 unknown
 &DATA_OVERRIDE_NML
  DEBUG_DATA_OVERRIDE=F,
  GRID_CENTER_BUG=F,
  REPRODUCE_NULL_CHAR_BUG=F,
+ /
+
+================================================================================
+GET_CAL_TIME_MOD
+unknown
+&GET_CAL_TIME_NML
+ ALLOW_CALENDAR_CONVERSION=T,
  /
 
 MOM_in domain decomposition:     1 X    1
@@ -748,12 +754,23 @@ $Name$
  /
 
 ================================================================================
-GET_CAL_TIME_MOD
-unknown
-&GET_CAL_TIME_NML
- ALLOW_CALENDAR_CONVERSION=T,
- /
-
-================================================================================
 $Id$
 $Name$
+&OCEAN_ROUGH_NML
+ ROUGHNESS_INIT=  4.4000000000000002E-004,
+ ROUGHNESS_HEAT=  5.8000000000000000E-005,
+ ROUGHNESS_MOM=  5.8000000000000000E-005,
+ ROUGHNESS_MOIST=  5.8000000000000000E-005,
+ ROUGHNESS_MIN=  9.9999999999999995E-007,
+ CHARNOCK=  3.2000000000000001E-002,
+ ROUGH_SCHEME="beljaars                        ",
+ DO_HIGHWIND=F,
+ DO_CAP40=F,
+ ZCOH1=  0.0000000000000000     ,
+ ZCOQ1=  0.0000000000000000     ,
+ V10M=  32.500000000000000     ,
+ V10N=  17.500000000000000     ,
+ /
+
+namelist option USE_FIXED_ROUGH is no longer supported
+use variable ROUGH_SCHEME instead

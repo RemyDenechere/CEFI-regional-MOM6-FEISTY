@@ -18,3 +18,7 @@
  "ICE", "dhdt",               "",         "",                        "none",      80.0
  "ICE", "dedt",               "",         "",                        "none",       2.0e-6
  "ICE", "drdt",               "",         "",                        "none",      10.0
+"ATM", "o2_flux_pcair_atm",  ""     , ""               , "none", 0.214
+"ATM", "co2_flux_pcair_atm", "", "", "none", 278e-06
+"ATM", "co2_bot",            "", "", "none", 278e-06
+"ATM", "co2_dvmr_restore",   "", "", "none", 278e-06

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # List of locations
-locations=(GMX) # BATS CCE GOM NS GMX
+locations=(BATS) # BATS CCE GOM NS GMX
 
 # Experiment name
 if [ -z "$1" ]; then
-    exp="FEISTY--non-vertical-refuge-2"
+    exp="FEISTY--non-vertical-new-fast"
 else
     exp=$1
 fi
@@ -15,8 +15,8 @@ echo "Rfug value:" $value_Rfug
 
 # Loop through each location and run the script
 for loc in "${locations[@]}"; do
-    echo "Running ./parallel_loop.sh " $loc " 20 5 0 0.4 1 70 70 1 1 1 5 $value_Rfug 1 " $exp
-    ./parallel_loop.sh $loc 20 5 0 0.4 5 50 90 1 1 1 5 $value_Rfug 1 $exp 
+    echo "Running ./parallel_loop.sh " $loc " 1 5 0 0.4 1 70 70 1 1 1 5 $value_Rfug 1 " $exp
+    ./parallel_loop.sh $loc 1 1 0.1 0.1 1 70 70 1 1 1 1 $value_Rfug $value_Rfug $exp 
 done
 
 echo "All locations processed successfully."

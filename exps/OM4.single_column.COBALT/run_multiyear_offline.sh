@@ -119,7 +119,6 @@ cp -rf * "${WORK_DIR}"
 cd "${WORK_DIR}"
 
 # MAKE THE RUNS DIRECTORY
-
 if [ -d "${WORK_DIR}/RUNS" ]; then
     echo "RUNS Directory exists."
 else
@@ -170,21 +169,9 @@ else
     fi
 fi
 
-
 ####################################################
-#  RUN THE MODEL FOR YEAR 1 
+#  CREATE DIRECTORY FOR THE ECPERIEMENT
 ####################################################
-echo "Copying executable from ${CEFI_EXECUTABLE_LOC} to here"
-yes | cp "${CEFI_EXECUTABLE_LOC}" . 
-
-mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
-pids+=($!)
-wait 
-
-####################################################
-# MOVE THE DATA TO A FOLDER IN RUN DIRECTORY: 
-####################################################
-
 FOLDER_SAVE_LOC="RUNS/${LOC}/${EXP}"
 if [ -d "$FOLDER_SAVE_LOC" ]; then
     echo "$FOLDER_SAVE_LOC" exist 
@@ -212,6 +199,19 @@ else
     exit 1
 fi
 
+####################################################
+#  RUN THE MODEL FOR YEAR 1 
+####################################################
+echo "Copying executable from ${CEFI_EXECUTABLE_LOC} to here"
+yes | cp "${CEFI_EXECUTABLE_LOC}" . 
+
+mpiexec --cpu-set "${CPU_CORE}" --bind-to core --report-bindings -np 1 ./MOM6SIS2 |& tee stdout."${UNIQUE_ID}".env&
+pids+=($!)
+wait 
+
+####################################################
+# MOVE THE DATA TO A FOLDER IN RUN DIRECTORY: 
+####################################################
 YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LOC}_offline_yr_1"
 if [ -d "$YEAR_FOLDER_PATH" ]; then
     echo "$YEAR_FOLDER_PATH" exist 
@@ -229,7 +229,8 @@ yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
 ####################################################
 # Loop after 1st year: -----------------------------------
 ## Set up restart in input.nml file and get restart files: (OLD METHOD)
-if [ $RESTART = "OLD" ]; then 
+if [ $RESTART = "OLD" ]; then *
+    echo "RESTART is set to OLD, copying restart files to INPUT folder"
     sed -i "s/input_filename = 'n'/input_filename = 'r'/g" input.nml
     yes | cp -i RESTART/*.nc INPUT/
 elif [ $RESTART = "NEW" ]; then
@@ -320,5 +321,3 @@ echo "Simulation done!"
 if [ $RESTART = "OLD" ]; then 
     sed -i "s/input_filename = 'r'/input_filename = 'n'/g" input.nml
 fi
-
-

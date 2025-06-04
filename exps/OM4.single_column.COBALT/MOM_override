@@ -12,9 +12,9 @@ REENTRANT_X = True
 ! Use KPP
 !#override ENERGETICS_SFC_PBL = False
 !#override USE_JACKSON_PARAM = False
-#override ALE_COORDINATE_CONFIG = "FNC1:2,6500,6,.01"
+#override ALE_COORDINATE_CONFIG = "FNC1:2,4680,6,.01" ! Default FNC1:2,6500,6,.01
 #override INTERPOLATION_SCHEME = "PPM_H4"
-#override REGRIDDING_COORDINATE_MODE = "Z*"
+#override REGRIDDING_COORDINATE_MODE = "Z*" ! 
 ! Newest ePBL
 !#override EPBL_IS_ADDITIVE = False
 !#override TKE_DECAY = 0.001
@@ -42,7 +42,7 @@ REENTRANT_X = True
 !!More ePBL Changes
 !MIX_LEN_EXPONENT = 2.0
 !!!!!!!!
-#override KD = 5.e-4
+#override KD = 1.e-5
 #override RESOLN_SCALED_KH = False
 #override RESOLN_SCALED_KHTH = False
 #override HENYEY_IGW_BACKGROUND = False
@@ -52,8 +52,10 @@ REENTRANT_X = True
 #override SMAGORINSKY_AH = False
 !Extra flags needed
 Z_INIT_HOMOGENIZE = True
-ROTATION = "betaplane"
-F_0 = 0
+!ROTATION = "betaplane"
+!F_0 = 32
+ROTATION = "2omegasinlat"
+OMEGA = 7.2921E-05
 HOMOGENIZE_IOB_FORCINGS = True
 !!OBGC tracers
 #override USE_OCMIP2_CFC = False
@@ -67,13 +69,22 @@ HOMOGENIZE_IOB_FORCINGS = True
 #override TRACERS_MAY_REINIT = True
 #override DO_GEOTHERMAL = True 
 #override GEOTHERMAL_SCALE = 0.0 
-! GEOTHERMAL_FILE = "geothermal_davies2013_v1.nc"
-! GEOTHERMAL_VARNAME = "geothermal_hf" ! default = "geo_heat"
+!GEOTHERMAL_FILE = "geothermal_davies2013_v1.nc"
+!GEOTHERMAL_VARNAME = "geothermal_hf" ! default = "geo_heat"
 #override MAX_FIELDS=105
-! Restoration files for temperature and salinity
+!!Restoration files for temperature and salinity
 #override RESTORE_SALINITY = True
 #override RESTORE_TEMPERATURE = True
 #override SALT_RESTORE_FILE = "salt_restore_woa13_decav.nc"
 #override SST_RESTORE_FILE  = "temp_restore_woa13_decav.nc"
-
-
+#DIAG_COORD_DEF_01 = "FNC1:2,4680,6,.01" ! default = "UNIFORM"
+! Nudging: 
+! #override SPONGE = True
+! #override SPONGE_UV = False
+! #override SPONGE_DAMPING_FILE = "damping_full_t_30.nc"
+! #override SPONGE_IDAMP_VAR = "Idamp"
+! #override SPONGE_STATE_FILE = "nudging_monthly_woa.nc"
+! #override SPONGE_PTEMP_VAR = "ptemp_an"
+! #override SPONGE_SALT_VAR = "s_an"
+! #override INTERPOLATE_SPONGE_TIME_SPACE = True
+! #override SPONGE_DATA_ONGRID = True

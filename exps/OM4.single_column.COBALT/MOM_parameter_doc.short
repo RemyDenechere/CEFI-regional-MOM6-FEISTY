@@ -106,12 +106,6 @@ MASKING_DEPTH = 0.0             !   [m] default = -9999.0
                                 ! zeroed out. MASKING_DEPTH is ignored if it has the special default value.
 MAXIMUM_DEPTH = 6500.0          !   [m]
                                 ! The maximum depth of the ocean.
-ROTATION = "betaplane"          ! default = "2omegasinlat"
-                                ! This specifies how the Coriolis parameter is specified:
-                                !     2omegasinlat - Use twice the planetary rotation rate
-                                !       times the sine of latitude.
-                                !     betaplane - Use a beta-plane or f-plane.
-                                !     USER - call a user modified routine.
 
 ! === module MOM_verticalGrid ===
 ! Parameters providing information about the vertical grid.
@@ -149,7 +143,7 @@ REGRIDDING_COORDINATE_MODE = "Z*" ! default = "LAYER"
                                 !  HYCOM1 - HyCOM-like hybrid coordinate
                                 !  HYBGEN - Hybrid coordinate from the Hycom hybgen code
                                 !  ADAPTIVE - optimize for smooth neutral density surfaces
-ALE_COORDINATE_CONFIG = "FNC1:2,6500,6,.01" ! default = "UNIFORM"
+ALE_COORDINATE_CONFIG = "FNC1:2,4680,6,.01" ! default = "UNIFORM"
                                 ! Determines how to specify the coordinate resolution. Valid options are:
                                 !  PARAM       - use the vector-parameter ALE_RESOLUTION
                                 !  UNIFORM[:N] - uniformly distributed
@@ -163,7 +157,7 @@ ALE_COORDINATE_CONFIG = "FNC1:2,6500,6,.01" ! default = "UNIFORM"
                                 !                the filename and two variable names, separated
                                 !                by a comma or space, for sigma-2 and dz. e.g.
                                 !                HYBRID:vgrid.nc,sigma2,dz
-!ALE_RESOLUTION = 11*2.0, 2*2.01, 2.02, 2.03, 2.04, 2.06, 2.08, 2.12, 2.16, 2.22, 2.3, 2.4, 2.52, 2.67, 2.85, 3.08, 3.35, 3.6799999999999997, 4.08, 4.54, 5.1, 5.75, 6.51, 7.39, 8.42, 9.600000000000001, 10.96, 12.51, 14.280000000000001, 16.3, 18.580000000000002, 21.16, 24.07, 27.330000000000002, 30.990000000000002, 35.07, 39.63, 44.69, 50.32, 56.54, 63.42, 71.01, 79.37, 88.55, 98.63, 109.66, 121.72, 134.89000000000001, 149.24, 164.86, 181.84, 200.27, 220.25, 241.88, 265.27, 290.52, 317.76, 347.12, 378.71, 412.68, 449.16, 488.31, 530.27, 575.19 !   [m]
+!ALE_RESOLUTION = 12*2.0, 2*2.01, 2.02, 2.03, 2.04, 2.06, 2.08, 2.12, 2.16, 2.21, 2.2800000000000002, 2.37, 2.48, 2.61, 2.77, 2.96, 3.2, 3.48, 3.8200000000000003, 4.21, 4.67, 5.220000000000001, 5.85, 6.58, 7.42, 8.39, 9.5, 10.76, 12.200000000000001, 13.83, 15.67, 17.740000000000002, 20.07, 22.68, 25.59, 28.84, 32.46, 36.47, 40.910000000000004, 45.82, 51.230000000000004, 57.19, 63.75, 70.93, 78.8, 87.41, 96.8, 107.04, 118.18, 130.3, 143.45000000000002, 157.70000000000002, 173.13, 189.81, 207.83, 227.26, 248.20000000000002, 270.74, 294.97, 321.0, 348.92, 378.86, 410.91 !   [m]
                                 ! The distribution of vertical resolution for the target
                                 ! grid used for Eulerian-like coordinates. For example,
                                 ! in z-coordinate mode, the parameter is a list of level
@@ -183,6 +177,30 @@ REMAPPING_SCHEME = "PPM_H4"     ! default = "PLM"
                                 ! PQM_IH6IH5  (5th-order accurate)
 
 ! === module MOM_state_initialization ===
+INIT_LAYERS_FROM_Z_FILE = True  !   [Boolean] default = False
+                                ! If true, initialize the layer thicknesses, temperatures, and salinities from a
+                                ! Z-space file on a latitude-longitude grid.
+
+! === module MOM_initialize_layers_from_Z ===
+TEMP_SALT_Z_INIT_FILE = ""      ! default = "temp_salt_z.nc"
+                                ! The name of the z-space input file used to initialize temperatures (T) and
+                                ! salinities (S). If T and S are not in the same file, TEMP_Z_INIT_FILE and
+                                ! SALT_Z_INIT_FILE must be set.
+TEMP_Z_INIT_FILE = "woa13_decav_ptemp_monthly_fulldepth_01.nc" ! default = ""
+                                ! The name of the z-space input file used to initialize temperatures, only.
+SALT_Z_INIT_FILE = "woa13_decav_s_monthly_fulldepth_01.nc" ! default = ""
+                                ! The name of the z-space input file used to initialize temperatures, only.
+Z_INIT_FILE_PTEMP_VAR = "ptemp_an" ! default = "ptemp"
+                                ! The name of the potential temperature variable in TEMP_Z_INIT_FILE.
+Z_INIT_FILE_SALT_VAR = "s_an"   ! default = "salt"
+                                ! The name of the salinity variable in SALT_Z_INIT_FILE.
+Z_INIT_HOMOGENIZE = True        !   [Boolean] default = False
+                                ! If True, then horizontally homogenize the interpolated initial conditions.
+Z_INIT_ALE_REMAPPING = True     !   [Boolean] default = False
+                                ! If True, then remap straight to model coordinate from file.
+Z_INIT_REMAP_OLD_ALG = True     !   [Boolean] default = False
+                                ! If false, uses the preferred remapping algorithm for initialization. If true,
+                                ! use an older, less robust algorithm for remapping.
 
 ! === module MOM_diag_mediator ===
 NUM_DIAG_COORDS = 2             ! default = 1
@@ -343,10 +361,10 @@ USE_LOTW_BBL_DIFFUSIVITY = True !   [Boolean] default = False
 
 ! === module MOM_bkgnd_mixing ===
 ! Adding static vertical background mixing coefficients
-KD = 5.0E-04                    !   [m2 s-1] default = 0.0
+KD = 1.0E-05                    !   [m2 s-1] default = 0.0
                                 ! The background diapycnal diffusivity of density in the interior. Zero or the
                                 ! molecular value, ~1e-7 m2 s-1, may be used.
-KD_MIN = 2.0E-06                !   [m2 s-1] default = 5.0E-06
+KD_MIN = 2.0E-06                !   [m2 s-1] default = 1.0E-07
                                 ! The minimum diapycnal diffusivity.
 KD_MAX = 0.1                    !   [m2 s-1] default = -1.0
                                 ! The maximum permitted increment for the diapycnal diffusivity from TKE-based
@@ -474,9 +492,27 @@ MAX_P_SURF = 0.0                !   [Pa] default = -1.0
                                 ! structure does not limit the water that can be frozen out of the ocean and the
                                 ! ice-ocean heat fluxes are treated explicitly.  No limit is applied if a
                                 ! negative value is used.
+RESTORE_SALINITY = True         !   [Boolean] default = False
+                                ! If true, the coupled driver will add a globally-balanced fresh-water flux that
+                                ! drives sea-surface salinity toward specified values.
+RESTORE_TEMPERATURE = True      !   [Boolean] default = False
+                                ! If true, the coupled driver will add a  heat flux that drives sea-surface
+                                ! temperature toward specified values.
 ADJUST_NET_FRESH_WATER_TO_ZERO = True !   [Boolean] default = False
                                 ! If true, adjusts the net fresh-water forcing seen by the ocean (including
                                 ! restoring) to zero.
+FLUXCONST = 0.1667              !   [m day-1] default = 0.0
+                                ! The constant that relates the restoring surface fluxes to the relative surface
+                                ! anomalies (akin to a piston velocity).  Note the non-MKS units.
+SALT_RESTORE_FILE = "salt_restore_woa13_decav.nc" ! default = "salt_restore.nc"
+                                ! A file in which to find the surface salinity to use for restoring.
+SRESTORE_AS_SFLUX = True        !   [Boolean] default = False
+                                ! If true, the restoring of salinity is applied as a salt flux instead of as a
+                                ! freshwater flux.
+MAX_DELTA_SRESTORE = 5.0        !   [PSU or g kg-1] default = 999.0
+                                ! The maximum salinity difference used in restoring terms.
+SST_RESTORE_FILE = "temp_restore_woa13_decav.nc" ! default = "temp_restore.nc"
+                                ! A file in which to find the surface temperature to use for restoring.
 CD_TIDES = 0.0018               !   [nondim] default = 1.0E-04
                                 ! The drag coefficient that applies to the tides.
 USE_RIGID_SEA_ICE = True        !   [Boolean] default = False
