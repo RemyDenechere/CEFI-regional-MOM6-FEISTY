@@ -117,7 +117,7 @@ if [ $EXP == 2D ]; then
     fi
 fi
 # DEFINE THE LOCATION TO RUN:
-locations=(BATS) #  BATS GOM GMX GMX_2 GOM_2 CCE NS 
+locations=(BATS) #  BATS GBK GMX GMX_2 
 
 # CHECK TO SEE IF OTHER ENVIRONMENTAL VARIABLES ARE SET
 if [ -z "${CEFI_DATASET_LOC}" ]; then

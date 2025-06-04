@@ -1597,6 +1597,7 @@ end subroutine user_add_tracers_FEISTY
 subroutine generic_FEISTY_tracer_get_values(tracer_list, isd, jsd, tau)
     type(g_tracer_type), pointer :: tracer_list
     integer, intent(in) :: isd, jsd, tau 
+    integer             :: outunit
 
     ! Get values of the prognostic variable : ----------------------------------------------
     call g_tracer_get_values(tracer_list, 'Sf_B' ,'field', FEISTY%Sf_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
@@ -1609,6 +1610,8 @@ subroutine generic_FEISTY_tracer_get_values(tracer_list, isd, jsd, tau)
     call g_tracer_get_values(tracer_list, 'Ld_B' ,'field', FEISTY%Ld_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
     call g_tracer_get_values(tracer_list, 'BE_B' ,'field', FEISTY%BE_B(:,:,:), isd, jsd, ntau=tau, positive = .true.)
 
+    write(outunit,*) "Sf_B after g_tracer_get_values : ", FEISTY%Sf_B(:,:,1)
+    
 end subroutine generic_FEISTY_tracer_get_values
 
 
@@ -1695,6 +1698,9 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     real :: hp_ingest_nmdz_dpint, hp_ingest_nlgz_dpint ! Depth integrated zooplankton ingestion from fish predation
 
     stdoutunit=stdout(); stdlogunit=stdlog()
+
+     write(outunit,*) 'FEISTY%Ld_B(:,:,1): ', FEISTY%Ld_B(:,:,1)
+    
 
     ! Affect value for each tracer: 
     fish(SF)%B = FEISTY%Sf_B(i,j,1)

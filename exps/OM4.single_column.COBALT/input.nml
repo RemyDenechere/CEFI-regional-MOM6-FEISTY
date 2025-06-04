@@ -1,6 +1,6 @@
  &MOM_input_nml
          output_directory = '.',
-         input_filename = 'r'
+         input_filename = 'n'
          restart_input_dir = 'INPUT',
          restart_output_dir = 'RESTART',
          parameter_filename = 'MOM_input',
@@ -17,6 +17,10 @@
         parameter_filename = 'SIS_input',
                              'SIS_layout',
                              'SIS_override' /
+
+! &COBALT_input_nml
+!	parameter_filename = 'COBALT_input',
+!			     'COBALT_override' /
 
  &atmos_model_nml
            layout = 1, 1
@@ -133,6 +137,7 @@
        do_generic_abiotic=.false.
        do_generic_CFC=.false.
        do_generic_COBALT=.true.
+!       do_generic_FEISTY=.true.	
        do_generic_SF6=.false.
        force_update_fluxes=.true.
        as_param='unused' 
@@ -143,7 +148,7 @@
        co2_calc = 'mocsy'
        debug = .false.
        imbalance_tolerance=1.0e+9
-       do_FEISTY = .false.
+       do_FEISTY = .true.
        nonFmort                   = 0.1
 !      do_nh3_atm_ocean_exchange  = .true.  !turn on exchange of NH3
 !      scheme_no3_nh4_lim         = 2       !update nh4/no3 uptake scheme

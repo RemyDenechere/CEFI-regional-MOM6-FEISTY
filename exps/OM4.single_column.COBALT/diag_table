@@ -938,6 +938,12 @@ OM4_single_column
 # "generic_cobalt", "no3",          "no3",                "ocean_feisty_forcing",  "all", "mean", "none",2
 # "generic_cobalt", "o2",           "o2",                 "ocean_feisty_forcing",  "all", "mean", "none",2
 # Tracer names:
+#       jprod_nmdz: productivity of medium zooplankton
+#       jprod_nlgz: productivity of large zooplankton
+#       jhploss_n_Mdz: loss to Hight-trophic level of medium zooplankton
+#       jhploss_n_Lgz: loss to Hight-trophic level of large zooplankton
+#       nmdz: medium zooplankton nitrogen 
+#       nlgz: large zooplankton nitrogen
 #       nbact: bacteria
 #       ndet: nitrogen detritus
 #       ndi: diazotroph nitrogen

@@ -22,8 +22,8 @@ fi
 echo "going to home "$HOME_DIR" to stage changes" 
 cd $HOME_DIR
 
-git add *
 git add .gitignore
+git add .
 
 git commit -m "$COMMIT_MESSAGE"
 
