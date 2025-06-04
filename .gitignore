@@ -6,6 +6,7 @@ html
 *.mat
 *.png
 *.jpeg
+*.nc
 
 # Ignore the database
 exps/datasets/
@@ -20,11 +21,13 @@ exps/OM4.single_column.COBALT/GOM_2/
 exps/OM4.single_column.COBALT/GMX/
 exps/OM4.single_column.COBALT/GMX_2/
 exps/OM4.single_column.COBALT/NS/
+exps/OM4.single_column.COBALT/GBK/
 exps/OM4.single_column.COBALT/BATS_restart/
 exps/OM4.single_column.COBALT/CCE_restart/
 exps/OM4.single_column.COBALT/GOM_restart/
 exps/OM4.single_column.COBALT/GMX_restart/
 exps/OM4.single_column.COBALT/NS_restart/
+exps/OM4.single_column.COBALT/*_restart/
 exps/OM4.single_column.COBALT/*OFFLINE_RESTART/
 
 # Ignore the programs produced
@@ -33,3 +36,4 @@ exps/OM4.single_column.COBALT/*OFFLINE_RESTART/
 # Other files to ignore 
 exps/OM4.single_column.COBALT/output.cobalt
 exps/OM4.single_column.COBALT/MOM6SIS2
+exps/OM4.single_column_new.COBALT/
