@@ -7,15 +7,14 @@ html
 *.png
 *.jpeg
 *.nc
-
 # Ignore the following folders: 
 exps/datasets/
 exps/NWA12.COBALT/
 exps/OM4.single_column_new.COBALT/
-
 # Ignore the programs produced
 /builds/build/
-
 # Other files to ignore 
 exps/OM4.single_column.COBALT/output.cobalt
 exps/OM4.single_column.COBALT/MOM6SIS2
+exps/OM4.single_column.COBALT/INPUT/
+exps/OM4.single_column.COBALT/GMX/
