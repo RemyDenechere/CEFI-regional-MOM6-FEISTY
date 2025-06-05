@@ -27,7 +27,7 @@
 /
 
  &coupler_nml
-            months = 12,
+            months = 24,
             days   = 0,
             hours  = 0,
             current_date = 2004,1,1,0,0,0,
@@ -148,7 +148,7 @@
        co2_calc = 'mocsy'
        debug = .false.
        imbalance_tolerance=1.0e+9
-       do_FEISTY = .true.
+       do_FEISTY = .false.
        nonFmort                   = 0.1
 !      do_nh3_atm_ocean_exchange  = .true.  !turn on exchange of NH3
 !      scheme_no3_nh4_lim         = 2       !update nh4/no3 uptake scheme
