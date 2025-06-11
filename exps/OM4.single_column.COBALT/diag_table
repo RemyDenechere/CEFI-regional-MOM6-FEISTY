@@ -333,7 +333,7 @@ OM4_single_column
  "generic_cobalt_z","nsm",                "nsm",          "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","pdi",                "pdi",          "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","plg",                "plg",          "ocean_cobalt_tracers_month_z","all","mean","none",2
- "generic_cobalt_z","pmd",                "pmd",          "ocean_cobalt_tracers_month_z","all","mean","none",2
+"generic_cobalt_z","pmd",                "pmd",          "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","psm",                "psm",          "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","q_p_2_n_Sm",         "q_p_2_n_Sm",   "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","q_p_2_n_Md",         "q_p_2_n_Md",   "ocean_cobalt_tracers_month_z","all","mean","none",2
@@ -363,7 +363,7 @@ OM4_single_column
  "generic_cobalt_z","nsmz",               "nsmz",         "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","nmdz",               "nmdz",         "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","nlgz",               "nlgz",         "ocean_cobalt_tracers_month_z","all","mean","none",2
- "generic_cobalt_z","po4",                "po4",          "ocean_cobalt_tracers_month_z","all","mean","none",2
+ # "generic_cobalt_z","po4",                "po4",          "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","nh4",                "nh4",          "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","fed",                "fed",          "ocean_cobalt_tracers_month_z","all","mean","none",2
  "generic_cobalt_z","fedet",              "fedet",        "ocean_cobalt_tracers_month_z","all","mean","none",2
@@ -428,7 +428,7 @@ OM4_single_column
 "generic_cobalt","chlos",        "chlos",                  "ocean_cobalt_omip_daily","all","mean","none",2
 "generic_cobalt","phycos",       "phycos",                 "ocean_cobalt_omip_daily","all","mean","none",2
 # not requested by CMIP/OMIP
-# "generic_cobalt","mesozoo_200",  "mesozoo_200",            "ocean_cobalt_omip_daily","all","mean","none",2
+# "generic_cobalt","mesozoo_200",  "mewsozoo_200",            "ocean_cobalt_omip_daily","all","mean","none",2
 #
 #====================================================================================================================
 # Omon: 2-D Marine Biogeochemical Surface Tracer Fields:  ocean_cobalt_omip_sfc   
@@ -969,7 +969,7 @@ OM4_single_column
 "generic_cobalt", "fesm",          "fesm",              "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "pdi",           "pdi",               "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "plg",           "plg",               "ocean_cobalt_restart",  "all", "mean", "none",2
-"generic_cobalt", "pmd",           "pmd",               "ocean_cobalt_restart",  "all", "mean", "none",2
+#"generic_cobalt,  "pmd",           "pmd",               "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "psm",           "psm",               "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "ldon",          "ldon",              "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "ldop",          "ldop",              "ocean_cobalt_restart",  "all", "mean", "none",2
@@ -1009,7 +1009,9 @@ OM4_single_column
 "generic_cobalt", "mu_mem_nmd",    "mu_mem_nmd",        "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "mu_mem_nsm",    "mu_mem_nsm",        "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "nh3",           "nh3",               "ocean_cobalt_restart",  "all", "mean", "none",2
-"generic_cobalt", "pdet",           "pdet",               "ocean_cobalt_restart",  "all", "mean", "none",2
+"generic_cobalt", "pdet",          "pdet",              "ocean_cobalt_restart",  "all", "mean", "none",2
+# "generic_cobalt", "so",            "so",                "ocean_cobalt_restart",  "all", "mean", "none",2
+#"generic_cobalt", "MLD_003",       "MLD_003",           "ocean_cobalt_restart",  "all", "mean", "none",2
 #  LIST OF TRACERS AND NAMES:
 #       alk: Alkalinity
 #       cadet_arag: Detrital CaCO3
@@ -1091,9 +1093,10 @@ OM4_single_column
 #
 #
 # FEISTY detritus:
-"ocean_model",    "volcello",     "volcello",         "ocean_feisty_forcing_detritus",  "all", "mean", "none",2
-"ocean_model",    "thetao",        "thetao",          "ocean_feisty_forcing_detritus",  "all", "mean", "none",2  
-"generic_cobalt", "Pop_btm",      "Pop_btm",          "ocean_feisty_forcing_detritus",  "all", "mean", "none",2
+"ocean_model",     "volcello",  "volcello",     "ocean_feisty_forcing_detritus", "all", "mean", "none",2 
+"ocean_model",     "thetao",    "thetao",       "ocean_feisty_forcing_detritus", "all", "mean", "none",2 
+"generic_cobalt",  "Pop_btm",   "Pop_btm",      "ocean_feisty_forcing_detritus", "all", "mean", "none",2 
+# "generic_cobalt",  "MLD_003",	"MLD_003",      "ocean_feisty_forcing_detritus", "all", "mean", "none",2
 #
 # MOM6 ocean diagnostics files
 "ocean_daily",            1, "days",   1, "days", "time"
@@ -1136,6 +1139,7 @@ OM4_single_column
 # -----------------------------------------------------------------------------------------
 # CMIP6/OMIP Table H1: scalar fields such as tracers, cell mass/volume, sea level, MLD
 # Generally save annuals, and sometimes monthly and daily.
+ "ocean_model",   "volcello",     "volcello",         "ocean_daily",         "all", "mean", "none",2 # Cell measure for 3d data
  "ocean_model_z", "volcello",     "volcello",         "ocean_annual_z",      "all", "mean", "none",2 # Cell measure for 3d data
  "ocean_model_z", "volcello",     "volcello",         "ocean_month_z",       "all", "mean", "none",2 # Cell measure for 3d data
  "ocean_model",   "volcello",     "volcello",         "ocean_annual",        "all", "mean", "none",2 # Cell measure for 3d data
@@ -1178,10 +1182,10 @@ OM4_single_column
  "ocean_model",   "tob",          "tob",              "ocean_annual",        "all", "mean", "none",2
  "ocean_model",   "tob",          "tob",              "ocean_month",         "all", "mean", "none",2
  "ocean_model",   "tob",          "tob",              "ocean_daily",         "all", "mean", "none",2
- "ocean_model",   "so",           "so",               "ocean_annual",        "all", "mean", "none",2
+# "ocean_model",   "so",           "so",               "ocean_annual",        "all", "mean", "none",2
 #"ocean_model",   "so",           "so",               "ocean_month",         "all", "mean", "none",2
- "ocean_model_z", "so",           "so",               "ocean_annual_z",      "all", "mean", "none",2
- "ocean_model_z", "so",           "so",               "ocean_month_z",       "all", "mean", "none",2
+# "ocean_model_z", "so",           "so",               "ocean_annual_z",      "all", "mean", "none",2
+# "ocean_model_z", "so",           "so",               "ocean_month_z",       "all", "mean", "none",2
  "ocean_model_z", "so_xyave",     "so_xyave",         "ocean_annual_z",      "all", "mean", "none",2
  "ocean_model",   "sos",          "sos",              "ocean_annual",        "all", "mean", "none",2
  "ocean_model",   "sos",          "sos",              "ocean_month",         "all", "mean", "none",2
@@ -1415,11 +1419,13 @@ OM4_single_column
 "ocean_model_z", "Kd_salt",          "Kd_salt",            "ocean_annual_z", "all", "mean", "none",2
 # "ocean_model",   "TKE_tidal",        "TKE_tidal",          "ocean_annual",   "all", "mean", "none",2
 # "ocean_model",   "TKE_itidal",       "TKE_itidal",         "ocean_annual",   "all", "mean", "none",2
- "ocean_model",   "MLD_003",          "MLD_003",            "ocean_annual",   "all", "mean", "none",2
- "ocean_model",   "MLD_003",          "MLD_003",            "ocean_month",    "all", "mean", "none",2
- "ocean_model",   "MLD_003",          "MLD_003_min",        "ocean_annual",   "all", "min",  "none",2
- "ocean_model",   "MLD_003",          "MLD_003_max",        "ocean_annual",   "all", "max",  "none",2
- "ocean_model",   "MLD_restrat",      "MLD_restrat",        "ocean_month",    "all", "mean", "none",2
+ "ocean_model",   "MLD_003",          "MLD_003",            "ocean_daily",    "all", "mean", "none",2
+ "ocean_model",   "so",	              "so",                 "ocean_daily",    "all", "mean", "none",2
+# "ocean_model",   "MLD_003",          "MLD_003",            "ocean_annual",   "all", "mean", "none",2
+# "ocean_model",   "MLD_003",          "MLD_003",            "ocean_month",    "all", "mean", "none",2
+# "ocean_model",   "MLD_003",          "MLD_003_min",        "ocean_annual",   "all", "min",  "none",2
+# "ocean_model",   "MLD_003",          "MLD_003_max",        "ocean_annual",   "all", "max",  "none",2
+# "ocean_model",   "MLD_restrat",      "MLD_restrat",        "ocean_month",    "all", "mean", "none",2
  "ocean_model",   "udml_restrat",     "udml_restrat",       "ocean_month",    "all", "mean", "none",2
  "ocean_model",   "vdml_restrat",     "vdml_restrat",       "ocean_month",    "all", "mean", "none",2
  "ocean_model",   "uml_restrat",      "uml_restrat",        "ocean_month",    "all", "mean", "none",2

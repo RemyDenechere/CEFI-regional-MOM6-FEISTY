@@ -624,9 +624,46 @@ VELOCITY_CONFIG = "zero"        ! default = "zero"
                                 !     USER - call a user modified routine.
 ODA_INCUPD = False              !   [Boolean] default = False
                                 ! If true, oda incremental updates will be applied everywhere in the domain.
-SPONGE = False                  !   [Boolean] default = False
+SPONGE = True                   !   [Boolean] default = False
                                 ! If true, sponges may be applied anywhere in the domain. The exact location and
                                 ! properties of those sponges are specified via SPONGE_CONFIG.
+SPONGE_CONFIG = "file"          ! default = "file"
+                                ! A string that sets how the sponges are configured:
+                                !     file - read sponge properties from the file
+                                !       specified by (SPONGE_FILE).
+                                !     ISOMIP - apply ale sponge in the ISOMIP case
+                                !     RGC - apply sponge in the rotating_gravity_current case
+                                !     DOME - use a slope and channel configuration for the
+                                !       DOME sill-overflow test case.
+                                !     BFB - Sponge at the southern boundary of the domain
+                                !       for buoyancy-forced basin case.
+                                !     USER - call a user modified routine.
+SPONGE_DAMPING_FILE = "damping_full_t_30.nc" !
+                                ! The name of the file with the sponge damping rates.
+SPONGE_STATE_FILE = "nudging_monthly_woa.nc" ! default = "damping_full_t_30.nc"
+                                ! The name of the file with the state to damp toward.
+SPONGE_PTEMP_VAR = "ptemp_an"   ! default = "PTEMP"
+                                ! The name of the potential temperature variable in SPONGE_STATE_FILE.
+SPONGE_SALT_VAR = "s_an"        ! default = "SALT"
+                                ! The name of the salinity variable in SPONGE_STATE_FILE.
+SPONGE_UV = False               !   [Boolean] default = False
+                                ! Apply sponges in u and v, in addition to tracers.
+SPONGE_ETA_VAR = "ETA"          ! default = "ETA"
+                                ! The name of the interface height variable in SPONGE_STATE_FILE.
+SPONGE_IDAMP_VAR = "Idamp"      ! default = "Idamp"
+                                ! The name of the inverse damping rate variable in SPONGE_DAMPING_FILE.
+INTERPOLATE_SPONGE_TIME_SPACE = True !   [Boolean] default = False
+                                ! If True, perform on-the-fly regridding in lat-lon-time of sponge restoring
+                                ! data.
+
+! === module MOM_sponge ===
+VARYING_SPONGE_MASK_THICKNESS = 0.001 !   [m] default = 0.001
+                                ! An input file thickness below which the target values with time-varying
+                                ! sponges are replaced by the value above.
+SPONGE_DATA_ONGRID = True       !   [Boolean] default = False
+                                ! When defined, the incoming sponge data are assumed to be on the model grid
+!Total sponge columns at h points = 16 !
+                                ! The total number of columns where sponges are applied at h points.
 
 ! === module MOM_diag_mediator ===
 NUM_DIAG_COORDS = 2             ! default = 1
@@ -1877,13 +1914,13 @@ MAX_P_SURF = 0.0                !   [Pa] default = -1.0
                                 ! structure does not limit the water that can be frozen out of the ocean and the
                                 ! ice-ocean heat fluxes are treated explicitly.  No limit is applied if a
                                 ! negative value is used.
-RESTORE_SALINITY = True         !   [Boolean] default = False
+RESTORE_SALINITY = False        !   [Boolean] default = False
                                 ! If true, the coupled driver will add a globally-balanced fresh-water flux that
                                 ! drives sea-surface salinity toward specified values.
-RESTORE_TEMPERATURE = True      !   [Boolean] default = False
+RESTORE_TEMPERATURE = False     !   [Boolean] default = False
                                 ! If true, the coupled driver will add a  heat flux that drives sea-surface
                                 ! temperature toward specified values.
-ADJUST_NET_SRESTORE_TO_ZERO = True !   [Boolean] default = True
+ADJUST_NET_SRESTORE_TO_ZERO = False !   [Boolean] default = False
                                 ! If true, adjusts the salinity restoring seen to zero whether restoring is via
                                 ! a salt flux or virtual precip.
 ADJUST_NET_SRESTORE_BY_SCALING = False !   [Boolean] default = False
@@ -1914,51 +1951,6 @@ WIND_STAGGER = "C"              ! default = "C"
 WIND_STRESS_MULTIPLIER = 1.0    !   [nondim] default = 1.0
                                 ! A factor multiplying the wind-stress given to the ocean by the coupler. This
                                 ! is used for testing and should be =1.0 for any production runs.
-FLUXCONST = 0.1667              !   [m day-1] default = 0.0
-                                ! The constant that relates the restoring surface fluxes to the relative surface
-                                ! anomalies (akin to a piston velocity).  Note the non-MKS units.
-FLUXCONST_SALT = 0.1667         !   [m day-1] default = 0.1667
-                                ! The constant that relates the restoring surface salt fluxes to the relative
-                                ! surface anomalies (akin to a piston velocity).  Note the non-MKS units.
-SALT_RESTORE_FILE = "salt_restore_woa13_decav.nc" ! default = "salt_restore.nc"
-                                ! A file in which to find the surface salinity to use for restoring.
-SALT_RESTORE_VARIABLE = "salt"  ! default = "salt"
-                                ! The name of the surface salinity variable to read from SALT_RESTORE_FILE for
-                                ! restoring salinity.
-SRESTORE_AS_SFLUX = True        !   [Boolean] default = False
-                                ! If true, the restoring of salinity is applied as a salt flux instead of as a
-                                ! freshwater flux.
-MAX_DELTA_SRESTORE = 5.0        !   [PSU or g kg-1] default = 999.0
-                                ! The maximum salinity difference used in restoring terms.
-MASK_SRESTORE_UNDER_ICE = False !   [Boolean] default = False
-                                ! If true, disables SSS restoring under sea-ice based on a frazil criteria
-                                ! (SST<=Tf). Only used when RESTORE_SALINITY is True.
-MASK_SRESTORE_MARGINAL_SEAS = False !   [Boolean] default = False
-                                ! If true, disable SSS restoring in marginal seas. Only used when
-                                ! RESTORE_SALINITY is True.
-BASIN_FILE = "basin.nc"         ! default = "basin.nc"
-                                ! A file in which to find the basin masks, in variable 'basin'.
-MASK_SRESTORE = False           !   [Boolean] default = False
-                                ! If true, read a file (salt_restore_mask) containing a mask for SSS restoring.
-FLUXCONST_TEMP = 0.1667         !   [m day-1] default = 0.1667
-                                ! The constant that relates the restoring surface temperature fluxes to the
-                                ! relative surface anomalies (akin to a piston velocity).  Note the non-MKS
-                                ! units.
-SST_RESTORE_FILE = "temp_restore_woa13_decav.nc" ! default = "temp_restore.nc"
-                                ! A file in which to find the surface temperature to use for restoring.
-SST_RESTORE_VARIABLE = "temp"   ! default = "temp"
-                                ! The name of the surface temperature variable to read from SST_RESTORE_FILE for
-                                ! restoring sst.
-MAX_DELTA_TRESTORE = 999.0      !   [degC] default = 999.0
-                                ! The maximum sst difference used in restoring terms.
-MASK_TRESTORE = False           !   [Boolean] default = False
-                                ! If true, read a file (temp_restore_mask) containing a mask for SST restoring.
-SPEAR_ECDA_SST_RESTORE_TFREEZE = False !   [Boolean] default = False
-                                ! If true, modify SST restoring field using SSS state. This only modifies the
-                                ! restoring data that is within 0.0001degC of -1.8degC.
-RESTORE_FLUX_RHO = 1035.0       !   [kg m-3] default = 1035.0
-                                ! The density that is used to convert piston velocities into salt or heat fluxes
-                                ! with RESTORE_SALINITY or RESTORE_TEMPERATURE.
 CD_TIDES = 0.0018               !   [nondim] default = 1.0E-04
                                 ! The drag coefficient that applies to the tides.
 READ_TIDEAMP = False            !   [Boolean] default = False

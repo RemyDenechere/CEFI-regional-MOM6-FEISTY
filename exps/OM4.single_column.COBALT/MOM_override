@@ -73,18 +73,18 @@ HOMOGENIZE_IOB_FORCINGS = True
 !GEOTHERMAL_VARNAME = "geothermal_hf" ! default = "geo_heat"
 #override MAX_FIELDS=105
 !!Restoration files for temperature and salinity
-#override RESTORE_SALINITY = True
-#override RESTORE_TEMPERATURE = True
-#override SALT_RESTORE_FILE = "salt_restore_woa13_decav.nc"
-#override SST_RESTORE_FILE  = "temp_restore_woa13_decav.nc"
+!#override RESTORE_SALINITY = True
+!#override RESTORE_TEMPERATURE = True
+!#override SALT_RESTORE_FILE = "salt_restore_woa13_decav.nc"
+!#override SST_RESTORE_FILE  = "temp_restore_woa13_decav.nc"
 #DIAG_COORD_DEF_01 = "FNC1:2,4680,6,.01" ! default = "UNIFORM"
 ! Nudging: 
-! #override SPONGE = True
-! #override SPONGE_UV = False
-! #override SPONGE_DAMPING_FILE = "damping_full_t_30.nc"
-! #override SPONGE_IDAMP_VAR = "Idamp"
-! #override SPONGE_STATE_FILE = "nudging_monthly_woa.nc"
-! #override SPONGE_PTEMP_VAR = "ptemp_an"
-! #override SPONGE_SALT_VAR = "s_an"
-! #override INTERPOLATE_SPONGE_TIME_SPACE = True
-! #override SPONGE_DATA_ONGRID = True
+#override SPONGE = True
+#override SPONGE_UV = False
+#override SPONGE_DAMPING_FILE = "damping_full_t_30.nc"
+#override SPONGE_IDAMP_VAR = "Idamp"
+#override SPONGE_STATE_FILE = "nudging_monthly_woa.nc"
+#override SPONGE_PTEMP_VAR = "ptemp_an"
+#override SPONGE_SALT_VAR = "s_an"
+#override INTERPOLATE_SPONGE_TIME_SPACE = True
+#override SPONGE_DATA_ONGRID = True

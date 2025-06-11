@@ -93,6 +93,23 @@ Then the field `#DIAG_COORD_DEF_01 = "FNC1:2,4680,6,.01"` should also be modifie
 
 --- 
 
+## Outputing diagnostic with diag_table
+Follow the exmple given for feisty in diag_table to output diagnostic form the model. There are some point to be aware of when doing so: 
+
+1) all the files must start with: 
+```
+"ocean_model", "volcello", "volcello", "NAME_OF_THE_OUTPUT_FILE", "all", "mean", "none", 2
+```
+
+2) "ocean_cobalt" files only output diagnostics that are listed in the COBALT_namelist. To ouptut diagnostic from the ocean model such as the mixed layer depth: "MLD_003" and salinity "so", that are diagnostic from the ocean model, you have to output them in the ocean_model files. Here is an exemple to ouput daily MLD_003 and so: 
+```
+"ocean_model",   "volcello",     "volcello",         "ocean_daily",          "all", "mean", "none",2 # Cell measure for 3d data
+"ocean_model",   "MLD_003",      "MLD_003",           "ocean_daily",         "all", "mean", "none",2
+"ocean_model",   "so",	         "so",                "ocean_daily",         "all", "mean", "none",2
+```
+
+---
+
 <!-- First, can you confirm that the variable REGRIDDING_COORDINATE_MODE is indeed Z* in your MOM_parameter_doc.all file?
 Next, can you confirm that ALE_COORDINATE_CONFIG is FNC1:2,6500,6,.01?
 This basically is a function that specifies the depths of the different Z* layers, which you can see in the variable ALE_RESOLUTION. For example, the first few values are 11*2.0, 2*2.01, 2.02,  -- which means that the first 11 layers are 2m thick, then there are 2 2.01 m thick layers, then 2.02 m thick, and so on. 

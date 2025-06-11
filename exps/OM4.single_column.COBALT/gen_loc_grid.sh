@@ -32,7 +32,7 @@ ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GMX/COBALT_2023_10_spinup_200
 echo "COBALT_2023_10_spinup_2003_subset.nc created for GMX"
 
 # GMX_2:
-ncea -d lath,25.,29. -d lonh,-87.,-82. -d latq,25.,29. -d lonq,-87.,-82.  ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GMX/COBALT_2023_10_spinup_2003_subset.nc
+ncea -d lath,25.,29. -d lonh,-87.,-82. -d latq,25.,29. -d lonq,-87.,-82.  ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GMX_2/COBALT_2023_10_spinup_2003_subset.nc
 ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GMX_2/COBALT_2023_10_spinup_2003_subset.nc
 echo "COBALT_2023_10_spinup_2003_subset.nc created for GMX_2"
 

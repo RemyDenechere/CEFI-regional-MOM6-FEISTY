@@ -1980,6 +1980,30 @@
     ! units: m-1
     ! cell_methods: xh:mean yh:mean zl:mean area:mean
     ! variants: {opac_2,opac_2_xyave}
+"sp_tendency_temp"  [Unused]
+    ! modules: {ocean_model,ocean_model_z,ocean_model_rho2,ocean_model_d2,ocean_model_z_d2,ocean_model_rho2_d2}
+    ! long_name: Time tendency due to restoring temperature
+    ! units: degC s-1
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {sp_tendency_temp,sp_tendency_temp_xyave}
+"sp_tendency_salt"  [Unused]
+    ! modules: {ocean_model,ocean_model_z,ocean_model_rho2,ocean_model_d2,ocean_model_z_d2,ocean_model_rho2_d2}
+    ! long_name: Time tendency due to restoring salinity
+    ! units: g kg-1 s-1
+    ! cell_methods: xh:mean yh:mean zl:mean area:mean
+    ! variants: {sp_tendency_salt,sp_tendency_salt_xyave}
+"sp_tendency_u"  [Unused]
+    ! modules: {ocean_model,ocean_model_z,ocean_model_rho2,ocean_model_d2,ocean_model_z_d2,ocean_model_rho2_d2}
+    ! long_name: Zonal acceleration due to sponges
+    ! units: m s-2
+    ! cell_methods: xq:point yh:mean zl:mean
+    ! variants: {sp_tendency_u,sp_tendency_u_xyave}
+"sp_tendency_v"  [Unused]
+    ! modules: {ocean_model,ocean_model_z,ocean_model_rho2,ocean_model_d2,ocean_model_z_d2,ocean_model_rho2_d2}
+    ! long_name: Meridional acceleration due to sponges
+    ! units: m s-2
+    ! cell_methods: xh:mean yq:point zl:mean
+    ! variants: {sp_tendency_v,sp_tendency_v_xyave}
 "KHTR_u"  [Unused]
     ! modules: {ocean_model,ocean_model_z,ocean_model_rho2,ocean_model_d2,ocean_model_z_d2,ocean_model_rho2_d2}
     ! long_name: Epipycnal tracer diffusivity at zonal faces of tracer cell

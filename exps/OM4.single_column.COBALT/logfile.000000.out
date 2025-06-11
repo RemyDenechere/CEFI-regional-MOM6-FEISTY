@@ -33,7 +33,7 @@ READ_INPUT_NML: input.nml
  /
  
   &coupler_nml
-             months = 24,
+             months = 12,
              days   = 0,
              hours  = 0,
              current_date = 2004,1,1,0,0,0,
@@ -242,7 +242,7 @@ unknown
  CURRENT_DATE=2004       , 2*1          , 3*0          ,
  CALENDAR="julian           ",
  FORCE_DATE_FROM_NAMELIST=T,
- MONTHS=24         ,
+ MONTHS=12         ,
  DAYS=0          ,
  HOURS=0          ,
  MINUTES=0          ,
@@ -630,6 +630,13 @@ MOM_in domain decomposition:     1 X    1
 MOM_in domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
+================================================================================
+GET_CAL_TIME_MOD
+unknown
+&GET_CAL_TIME_NML
+ ALLOW_CALENDAR_CONVERSION=T,
+ /
+
 MOM_in domain decomposition:     1 X    1
    pe,   is,  ie,  js,  je,    isd, ied, jsd, jed
 
@@ -642,13 +649,6 @@ unknown
  DEBUG_DATA_OVERRIDE=F,
  GRID_CENTER_BUG=F,
  REPRODUCE_NULL_CHAR_BUG=F,
- /
-
-================================================================================
-GET_CAL_TIME_MOD
-unknown
-&GET_CAL_TIME_NML
- ALLOW_CALENDAR_CONVERSION=T,
  /
 
 MOM_in domain decomposition:     1 X    1
