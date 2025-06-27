@@ -145,7 +145,6 @@ else
     cd "${HOME_DIR}"
 fi
 
-
 if [ -d "$WORK_DIR" ]; then
 	echo "${WORK_DIR} exists, continuing..."
 else
@@ -168,7 +167,10 @@ else
     echo "RUNS Directory does not exist, making it..."
     mkdir RUNS
 fi
-#mkdir RUNS
+
+## Turn on FEISTY: 
+NEW_LINE="do_FEISTY = .true."
+sed -i "/do_FEISTY/c\\ ${NEW_LINE}" input.nml
 
 if [ "$#" -eq $NUM_ARG ]; then
 
@@ -193,11 +195,9 @@ else
     exit 1
 fi
 
-
 cd INPUT/
 /project/rdenechere/CEFI-regional-MOM6-FEISTY/link_database.sh "${LOC_NAME}"
 cd ..
-
 
 ####################################################
 #  RUN THE MODEL 
@@ -243,7 +243,10 @@ else
 fi
 
 echo "Saving feisty files to specific YEAR_FOLDER_PATH"
-yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
+yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
+yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"/
+yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"/
+yes | cp -i 20040101.ocean_daily.nc "$YEAR_FOLDER_PATH"/
 
 ###############################################################################
 # Loop after 1st year: --------------------------------------------------------
@@ -269,6 +272,9 @@ do
 
     echo "Copying feisty files to YEAR_FOLDER_PATH"
     yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
+    yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"/
+    yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"/
+    yes | cp -i 20040101.ocean_daily.nc "$YEAR_FOLDER_PATH"/
 
     # get restart files: 
     echo "Copying RESTART files back to INPUT, there is some clobbering!"

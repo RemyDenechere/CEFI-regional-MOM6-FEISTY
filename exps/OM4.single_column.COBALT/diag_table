@@ -1010,8 +1010,6 @@ OM4_single_column
 "generic_cobalt", "mu_mem_nsm",    "mu_mem_nsm",        "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "nh3",           "nh3",               "ocean_cobalt_restart",  "all", "mean", "none",2
 "generic_cobalt", "pdet",          "pdet",              "ocean_cobalt_restart",  "all", "mean", "none",2
-# "generic_cobalt", "so",            "so",                "ocean_cobalt_restart",  "all", "mean", "none",2
-#"generic_cobalt", "MLD_003",       "MLD_003",           "ocean_cobalt_restart",  "all", "mean", "none",2
 #  LIST OF TRACERS AND NAMES:
 #       alk: Alkalinity
 #       cadet_arag: Detrital CaCO3

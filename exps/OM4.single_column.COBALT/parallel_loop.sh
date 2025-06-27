@@ -44,7 +44,7 @@
 # YOU CAN ALSO SET THEM HERE, UNCOMMENT THE FOUR FOLLOWING LINES AND SET:
 export CEFI_DATASET_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/
 #export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/monkfish-linux-gnu/ocean_ice/prod/MOM6SIS2
-export CEFI_EXECUTABLE_LOC=/project/jabrzenski/MOM6/FEISTY-CEFI/builds/build/monkfish-linux-gnu/ocean_ice/prod/MOM6SIS2
+export CEFI_EXECUTABLE_LOC=/project/rdenechere/CEFI-regional-MOM6-FEISTY/builds/build/monkfish-linux-gnu/ocean_ice/prod/MOM6SIS2
 export SCRATCH_DIR=/scratch
 export SAVE_DIR=/project/rdenechere/COBALT_output/parallel/
 #

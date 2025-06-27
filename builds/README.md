@@ -53,6 +53,13 @@ brew install wget
 ```console
 ./linux-build.bash -m YOUR_MACHINE_DIRECTORY -p NAME_OF_YOUR_mk_FILE -t repro -f mom6sis2
 ```
+
+For monkfish run: 
+```
+./linux-build.bash -m monkfish -p linux-gnu -t prod -f mom6sis2
+```
+
+
 - If the build completes successfully, you should be able to find the executable here: `builds/build/YOUR_MACHINE_DIRECTORY-NAME_OF_YOUR_mk_FILE/ocean_ice/repro/MOM6SIS2`
 
 ## Test run: 1-D MOM6-COBALT

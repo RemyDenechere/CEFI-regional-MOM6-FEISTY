@@ -224,6 +224,7 @@ echo "Saving feisty files to specific YEAR_FOLDER_PATH: $YEAR_FOLDER_PATH"
 yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
 yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"
 yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
+yes | cp -i 20040101.ocean_daily.nc "$YEAR_FOLDER_PATH"
 
 
 ####################################################
@@ -269,6 +270,7 @@ do
     yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"
     yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"
     yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
+    yes | cp -i 20040101.ocean_daily.nc "$YEAR_FOLDER_PATH"
 
     # get restart files: 
     if [ $RESTART = "OLD" ]; then 

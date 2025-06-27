@@ -22,3 +22,10 @@
 "ATM", "co2_flux_pcair_atm", "", "", "none", 278e-06
 "ATM", "co2_bot",            "", "", "none", 278e-06
 "ATM", "co2_dvmr_restore",   "", "", "none", 278e-06
+"OCN", "dry_dep_fed_flux_ice_ocn",  "FLUX",           "./INPUT/Soluble_Fe_Flux_PI.nc",                      "bilinear", -1.0
+"OCN", "dry_dep_lith_flux_ice_ocn", "FLUX_MINERAL",   "./INPUT/Mineral_Fe_Flux_PI.nc",                       "bilinear", -1.0
+"OCN", "dry_dep_po4_flux_ice_ocn",  "FLUX_MINERAL",   "./INPUT/Mineral_Fe_Flux_PI.nc",                       "bilinear", -4.0e-6
+"OCN", "wet_dep_no3_flux_ice_ocn",  "NO3_WET_DEP",    "./INPUT/depflux_total.mean.1860.nc",                "bilinear",  -1.0
+"OCN", "dry_dep_no3_flux_ice_ocn",  "NO3_DRY_DEP",    "./INPUT/depflux_total.mean.1860.nc",                "bilinear",  -1.0
+"OCN", "wet_dep_nh4_flux_ice_ocn",  "NH4_WET_DEP",    "./INPUT/depflux_total.mean.1860.nc",                "bilinear",  -1.0
+"OCN", "dry_dep_nh4_flux_ice_ocn",  "NH4_DRY_DEP",    "./INPUT/depflux_total.mean.1860.nc",                "bilinear",  -1.0
