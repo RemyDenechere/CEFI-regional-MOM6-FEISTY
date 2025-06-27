@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Description of the setup 
 Here is a description of the different changes we have made to the model setup to make it run in any Location
 
@@ -128,6 +127,3 @@ if regriding is happening at every time step in MOM6 splits into layer and let t
 density 
 
 regriding https://mom6.readthedocs.io/en/main/api/generated/pages/ALE_Timestep.html -->
-=======
-
->>>>>>> f0756d0458bbf90508f7d7afc05b848dae2b67eb
