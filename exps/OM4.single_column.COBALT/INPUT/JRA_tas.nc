@@ -1,0 +1,1 @@
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/dataset_1_yr/JRA_tas_2004_2004.nc

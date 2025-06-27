@@ -1,0 +1,1 @@
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OceanBGC_dataset/woa13_all_o_annual_01.nc

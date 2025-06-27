@@ -1,0 +1,1 @@
+../BATS/land_mask.nc
