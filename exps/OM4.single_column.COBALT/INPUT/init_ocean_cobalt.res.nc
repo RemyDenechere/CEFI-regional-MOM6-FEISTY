@@ -1,1 +1,1 @@
-../../datasets/generate_global_ic/init_ocean_cobalt.res_modified.nc
+/project/rdenechere/CEFI-regional-MOM6-FEISTY/exps/datasets/OceanBGC_dataset/init_ocean_cobalt.res.nc

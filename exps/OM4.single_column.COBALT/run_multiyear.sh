@@ -28,7 +28,7 @@
 # Rfug_EXP_DEFAULT=1
 NUM_ARG=8
 
-#FUNCTION TO KILL ALL SPAWNED PROCESSES
+# FUNCTION TO KILL ALL SPAWNED PROCESSES
 cleanup() {
   echo "Terminating all spawned processes..."
   echo "Check the SCRATCH directory for any stray files."
@@ -244,9 +244,9 @@ fi
 
 echo "Saving feisty files to specific YEAR_FOLDER_PATH"
 yes | cp -i *feisty*.nc "$YEAR_FOLDER_PATH"/
-yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"/
-yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"/
-yes | cp -i 20040101.ocean_daily.nc "$YEAR_FOLDER_PATH"/
+yes | cp -i 20040101.ocean_cobalt_restart.nc "$YEAR_FOLDER_PATH"
+yes | cp -i 20040101.ocean_cobalt_btm.nc "$YEAR_FOLDER_PATH"
+yes | cp -i 20040101.ocean_daily.nc "$YEAR_FOLDER_PATH"
 
 ###############################################################################
 # Loop after 1st year: --------------------------------------------------------
@@ -260,7 +260,7 @@ do
     YEAR_FOLDER_PATH="$FOLDER_SAVE_LOC/${LONG_NAME}_yr_${i}"
     if [ -d "$YEAR_FOLDER_PATH" ]; then 
         rm -rf "$YEAR_FOLDER_PATH"/*
-    else 
+    else
         mkdir "$YEAR_FOLDER_PATH"/
     fi
 
