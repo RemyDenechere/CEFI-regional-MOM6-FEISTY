@@ -109,6 +109,42 @@ Follow the exmple given for feisty in diag_table to output diagnostic form the m
 ```
 
 ---
+## Global IC 
+
+1) Downloaded and and linked the global IC data to the INPUT folders: here are the three files I am using:
+- ftp.gfdl.noaa.gov/pub/Yi-cheng.Teng/bgc/woa_seasonal_annual_merged.nc
+- ftp.gfdl.noaa.gov/pub/Yi-cheng.Teng/bgc/GLODAPv2.2016b.oi-filled.20180322.nc
+- ftp.gfdl.noaa.gov/pub/Yi-cheng.Teng/bgc/init_ocean_cobalt.res.nc
+
+2) Use the proper field table linking the COBALT field to the global IC files above. 
+3) When running the model I get the following error:
+FATAL: NaN in input field of reproducing_EFP_sum(_2d). 
+This is happening during the initialisation of the sio4 tracer : NOTE: initialize_MOM_generic_tracer: initializing generic tracer sio4 using MOM_initialize_tracer_from_Z
+
+It seems that the tracers from the file:  ftp.gfdl.noaa.gov/pub/Yi-cheng.Teng/bgc/woa_seasonal_annual_merged.nc, do not get processed properly because of the NaN field value; however, the tracers from the two other files seems to be initialized properly. 
+
+Here is what the files looks like: 
+```ncdump -h  woa_seasonal_annual_merged.nc 
+float po4(time, z, lat, lon) ;
+po4:_FillValue = NaNf ;
+```
+The other files have different FillValues: 
+```
+ncdump -h init_ocean_cobalt.res.nc
+float pdet(time, z_l, yh, xh) ;
+                pdet:_FillValue = 1.e+20f ;
+                pdet:long_name = "Detrital Phosphorus" ;
+                pdet:units = "mol/kg" ;
+                pdet:missing_value = 1.e+20f ;
+                pdet:cell_methods = "area:mean z_l:mean yh:mean xh:mean time: mean" ;                                                                pdet:cell_measures = "volume: volcello area: areacello" ;                                                                            pdet:time_avg_info = "average_T1,average_T2,average_DT" ;                                                                            pdet:interp_method = "conserve_order1" ;
+```
+4) I tried to change the FillValue in  woa_seasonal_annual_merged.nc to match the fillValue of the other files:
+```
+ ncatted -a _FillValue,,m,f,1.0e20 woa_seasonal_annual_merged_modified.nc
+```
+
+### Proposed solution
+Using files from woa, potential issue
 
 <!-- First, can you confirm that the variable REGRIDDING_COORDINATE_MODE is indeed Z* in your MOM_parameter_doc.all file?
 Next, can you confirm that ALE_COORDINATE_CONFIG is FNC1:2,6500,6,.01?

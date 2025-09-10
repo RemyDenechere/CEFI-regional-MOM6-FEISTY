@@ -68,6 +68,12 @@ else
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/woa13_decav_s_monthly_fulldepth_01.nc ./woa13_decav_s_monthly_fulldepth_01.nc
 	ln -fs ${CEFI_DATASET_GLOBAL}/OM4_025.JRA.single_column/woa13_decav_s_monthly_fulldepth_01.nc ./woa13_decav_s_monthly_fulldepth_01.nc
 	#ln -fs ${CEFI_DATASET_GLOBAL}/mosaic.nc ./mosaic.nc
+	
+	# DATASET FOR GLOBAC IC: 
+	ln  -fs ${CEFI_DATASET_GLOBAL}/generate_global_ic/init_ocean_cobalt.res.nc ./init_ocean_cobalt.res.nc
+	ln  -fs ${CEFI_DATASET_GLOBAL}/generate_global_ic/woa_seasonal_annual_merged.nc  ./woa_seasonal_annual_merged.nc
+	ln  -fs ${CEFI_DATASET_GLOBAL}/generate_global_ic/woa_seasonal_annual_merged_modified.nc  ./woa_seasonal_annual_merged_modified.nc
+	ln  -fs ${CEFI_DATASET_GLOBAL}/generate_global_ic/GLODAPv2.2016b.oi-filled.20180322.nc ./GLODAPv2.2016b.oi-filled.20180322.nc
 fi
 
 if [ -z "${CEFI_DATASET_LOC}" ]; then
@@ -75,20 +81,23 @@ if [ -z "${CEFI_DATASET_LOC}" ]; then
 else
     echo "CEFI_DATASET_LOC is set to '${CEFI_DATASET_LOC}'."
 	
-	ln -fs ${CEFI_DATASET_LOC}/grid_spec.nc ./grid_spec.nc
-	ln -fs ${CEFI_DATASET_LOC}/land_mosaic_tile1Xocean_mosaic_tile1.nc ./land_mosaic_tile1Xocean_mosaic_tile1.nc
-	ln -fs ${CEFI_DATASET_LOC}/ocean_mosaic.nc ./ocean_mosaic.nc
-	ln -fs ${CEFI_DATASET_LOC}/atmos_mosaic_tile1Xocean_mosaic_tile1.nc ./atmos_mosaic_tile1Xocean_mosaic_tile1.nc
-	ln -fs ${CEFI_DATASET_LOC}/land_mask.nc ./land_mask.nc
-	ln -fs ${CEFI_DATASET_LOC}/ocean_hgrid.nc ./ocean_hgrid.nc
-	ln -fs ${CEFI_DATASET_LOC}/ocean_topog.nc ./ocean_topog.nc
-	#ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc 		./FEISTY_2023_10_spinup_subset.nc
+	ln -fs ${CEFI_DATASET_LOC}/grid_spec.nc  ./grid_spec.nc
+	ln -fs ${CEFI_DATASET_LOC}/land_mosaic_tile1Xocean_mosaic_tile1.nc  ./land_mosaic_tile1Xocean_mosaic_tile1.nc
+	ln -fs ${CEFI_DATASET_LOC}/ocean_mosaic.nc  ./ocean_mosaic.nc
+	ln -fs ${CEFI_DATASET_LOC}/atmos_mosaic_tile1Xocean_mosaic_tile1.nc  ./atmos_mosaic_tile1Xocean_mosaic_tile1.nc
+	ln -fs ${CEFI_DATASET_LOC}/land_mask.nc    ./land_mask.nc
+	ln -fs ${CEFI_DATASET_LOC}/ocean_hgrid.nc  ./ocean_hgrid.nc
+	ln -fs ${CEFI_DATASET_LOC}/ocean_topog.nc  ./ocean_topog.nc
+	# ln -fs ${CEFI_DATASET_LOC}/FEISTY_2023_10_spinup_subset.nc 	./FEISTY_2023_10_spinup_subset.nc
 	ln -fs ${CEFI_DATASET_LOC}/FEISTY_2D_2023_10_spinup_subset.nc 	./FEISTY_2D_2023_10_spinup_subset.nc
-	ln -fs ${CEFI_DATASET_LOC}/land_mosaic.nc ./land_mosaic.nc
-	ln -fs ${CEFI_DATASET_LOC}/ocean_mask.nc ./ocean_mask.nc
+	ln -fs ${CEFI_DATASET_LOC}/land_mosaic.nc  ./land_mosaic.nc
+	ln -fs ${CEFI_DATASET_LOC}/ocean_mask.nc   ./ocean_mask.nc
 	ln -fs ${CEFI_DATASET_LOC}/COBALT_2023_10_spinup_2003_subset.nc ./COBALT_2023_10_spinup_2003_subset.nc	
-	ln -fs ${CEFI_DATASET_LOC}/temp_restore_woa13_decav.nc ./temp_restore_woa13_decav.nc
-	ln -fs ${CEFI_DATASET_LOC}/salt_restore_woa13_decav.nc ./salt_restore_woa13_decav.nc
+	ln -fs ${CEFI_DATASET_LOC}/temp_restore_woa13_decav.nc   ./temp_restore_woa13_decav.nc
+	ln -fs ${CEFI_DATASET_LOC}/salt_restore_woa13_decav.nc   ./salt_restore_woa13_decav.nc
+	# Damping and nudging files:
+	ln -fs ${CEFI_DATASET_LOC}/nudging_monthly_2004_subset.nc  ./nudging_monthly_2004_subset.nc
+	ln -fs ${CEFI_DATASET_LOC}/damping_full_t_90_subset.nc     ./damping_full_t_90_subset.nc
 fi
 
 

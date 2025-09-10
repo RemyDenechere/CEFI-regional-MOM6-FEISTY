@@ -13,28 +13,28 @@
 ./BuildExchangeGrid.sh GBK 41.1909 -67.68 50        # Georges Bank
 ./BuildExchangeGrid.sh GMX 28.8503 -89.714 200		# Gold Of Mexico 
 ./BuildExchangeGrid.sh GMX_2 27.5168 -84.16 300		# Gold Of Mexico 
-#./BuildExchangeGrid.sh NS  53.7217 3.2790   50  # Noth Sea
+#./BuildExchangeGrid.sh NS  53.7217 3.2790   50     # Noth Sea
 
-# Generate initial conditions for the the various locations: 
-## BATS: 
-ncea -d lath,30.,34. -d lonh,-66.,-62. -d latq,30.,34. -d lonq,-66.,-62. ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc BATS/COBALT_2023_10_spinup_2003_subset.nc
-ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 BATS/COBALT_2023_10_spinup_2003_subset.nc
-echo "COBALT_2023_10_spinup_2003_subset.nc created for BATS"
+# # Generate initial conditions for the the various locations: 
+# ## BATS: 
+# ncea -d lath,30.,34. -d lonh,-66.,-62. -d latq,30.,34. -d lonq,-66.,-62. ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc BATS/COBALT_2023_10_spinup_2003_subset.nc
+# ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 BATS/COBALT_2023_10_spinup_2003_subset.nc
+# echo "COBALT_2023_10_spinup_2003_subset.nc created for BATS"
 
-## GBK: 
-ncea -d lath,39.,43. -d lonh,-70.,-66. -d latq,39.,43. -d lonq,-70.,-66. ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GBK/COBALT_2023_10_spinup_2003_subset.nc
-ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GBK/COBALT_2023_10_spinup_2003_subset.nc
-echo "COBALT_2023_10_spinup_2003_subset.nc created for GBK"
+# ## GBK: 
+# ncea -d lath,39.,43. -d lonh,-70.,-66. -d latq,39.,43. -d lonq,-70.,-66. ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GBK/COBALT_2023_10_spinup_2003_subset.nc
+# ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GBK/COBALT_2023_10_spinup_2003_subset.nc
+# echo "COBALT_2023_10_spinup_2003_subset.nc created for GBK"
 
-# GMX:
-ncea -d lath,27.,31. -d lonh,-92.,-88. -d latq,27.,31. -d lonq,-92.,-88.  ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GMX/COBALT_2023_10_spinup_2003_subset.nc
-ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GMX/COBALT_2023_10_spinup_2003_subset.nc
-echo "COBALT_2023_10_spinup_2003_subset.nc created for GMX"
+# # GMX:
+# ncea -d lath,27.,31. -d lonh,-92.,-88. -d latq,27.,31. -d lonq,-92.,-88.  ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GMX/COBALT_2023_10_spinup_2003_subset.nc
+# ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GMX/COBALT_2023_10_spinup_2003_subset.nc
+# echo "COBALT_2023_10_spinup_2003_subset.nc created for GMX"
 
-# GMX_2:
-ncea -d lath,25.,29. -d lonh,-87.,-82. -d latq,25.,29. -d lonq,-87.,-82.  ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GMX_2/COBALT_2023_10_spinup_2003_subset.nc
-ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GMX_2/COBALT_2023_10_spinup_2003_subset.nc
-echo "COBALT_2023_10_spinup_2003_subset.nc created for GMX_2"
+# # GMX_2:
+# ncea -d lath,25.,29. -d lonh,-87.,-82. -d latq,25.,29. -d lonq,-87.,-82.  ../datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc GMX_2/COBALT_2023_10_spinup_2003_subset.nc
+# ncatted -O -a _FillValue,,o,f,1.00000002004088e+20 GMX_2/COBALT_2023_10_spinup_2003_subset.nc
+# echo "COBALT_2023_10_spinup_2003_subset.nc created for GMX_2"
 
 ## CCE:
 # ./datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc
