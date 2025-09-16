@@ -1,1 +1,1 @@
-../BATS/land_mask.nc
+../CCE/land_mask.nc

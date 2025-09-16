@@ -1,1 +1,1 @@
-../BATS/land_mosaic.nc
+../CCE/land_mosaic.nc

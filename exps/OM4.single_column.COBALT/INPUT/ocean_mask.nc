@@ -1,1 +1,1 @@
-../BATS/ocean_mask.nc
+../CCE/ocean_mask.nc

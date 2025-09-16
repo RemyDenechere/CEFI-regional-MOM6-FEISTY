@@ -1,1 +1,1 @@
-../BATS/ocean_topog.nc
+../CCE/ocean_topog.nc
