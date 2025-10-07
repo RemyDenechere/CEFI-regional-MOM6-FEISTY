@@ -1,13 +1,16 @@
+#!/bin/bash
 ######################################################################
 #	Generate grid files for several test location in the
 #		Californie Current Ecosystem
 ######################################################################
 # Default locations: 
 ./BuildExchangeGrid.sh BATS 31.6667  -64.1667  4680    # Bermuda Atlantic Time Series
-./BuildExchangeGrid.sh CCE 34.2781   -120.5    100     # California Current Ecosystem 34.5 238.5
+./BuildExchangeGrid.sh CCE 35.5      -122.5    3600    # California Current Ecosystem 34.5 238.5
 ./BuildExchangeGrid.sh GBK 41.1909   -67.68    50      # Georges Bank
 ./BuildExchangeGrid.sh GMX 28.8503   -89.714   200	   # Gold Of Mexico 
-./BuildExchangeGrid.sh GMX_2 27.5168 -84.16    300	   # Gold Of Mexico 
+./BuildExchangeGrid.sh GMX_2 27.5168 -84.16    300	   # Gold Of Mexico
+./BuildExchangeGrid.sh OSP 50.1      -144.9    4200    # Ocean Station Papa
+
 #./BuildExchangeGrid.sh NS  53.7217  3.2790    50      # Noth Sea
 
 # # Generate initial conditions for the the various locations: 
@@ -34,7 +37,6 @@
 ## CCE:
 # ./datasets/nwa12_datasets/nwa12_input/NWA12_COBALT_2023_10_spinup_2003.nc
 ## NS:
-
 
 ## CCE locations to test : 
 # ./BuildExchangeGrid.sh CCE_loc1  34.2781 -120.6810 30

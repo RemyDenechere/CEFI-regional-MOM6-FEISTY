@@ -4601,7 +4601,6 @@ contains
     !
     ! Additional diagnostics added for debugging jgj 2015/10/26
     !
-
     vardesc_temp = vardesc("jalk","Alkalinity source layer integral",'h','L','s','eq m-2 s-1','f')
     cobalt%id_jalk = register_diag_field(package_name, vardesc_temp%name, axes(1:3),&
          init_time, vardesc_temp%longname,vardesc_temp%units, missing_value = missing_value1)

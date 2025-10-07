@@ -12,7 +12,7 @@
 !   Add a prognostic tracer (tracer to pass over time): 
 !   1) Define tracer as a field in FEISTY_type :        FEISTY%varname
 !   2) Add the tracer in the list of tracers in subroutine user_add_tracer, call g_add_tracers
-!
+! 
 !</DESCRIPTION>
 
 module generic_FEISTY
@@ -31,6 +31,7 @@ module generic_FEISTY
 
     use fm_util_mod,        only: fm_util_start_namelist, fm_util_end_namelist
     use fms_mod,            only: open_namelist_file, close_file
+
 implicit none; private  
 
 character(len=128) :: version = '$FEISTY_setupbasic2$'
@@ -1699,7 +1700,6 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
 
     stdoutunit=stdout(); stdlogunit=stdlog()
     
-
     ! Affect value for each tracer: 
     fish(SF)%B = FEISTY%Sf_B(i,j,1)
     fish(SP)%B = FEISTY%Sp_B(i,j,1)
@@ -1710,7 +1710,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     fish(LP)%B = FEISTY%Lp_B(i,j,1)
     fish(LD)%B = FEISTY%Ld_B(i,j,1)
     FEISTY%BE  = FEISTY%BE_B(i,j,1)
-    
+
     ! get id of 100 m depth
     Do k = 1, nk
         if (zt(k) .le. FEISTY%dp_int) then ! BRZENSKI k used to be 'm'
@@ -1744,7 +1744,7 @@ subroutine generic_FEISTY_fish_update_from_source(tracer_list, i, j, nk, NUM_PRE
     !======================================================================!
     !                       test for negative values: 
     do m = 1, FEISTY%nFishGroup
-        if (fish(m)%B .le. FEISTY%IC) then 
+        if (fish(m)%B .le. FEISTY%IC) then
             fish(m)%B = FEISTY%IC
         end if  
     end do 
