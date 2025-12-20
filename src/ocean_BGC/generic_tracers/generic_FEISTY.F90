@@ -1337,15 +1337,15 @@ subroutine user_add_params_FEISTY
     call g_tracer_add_param('pref_Mp_Lz', FEISTY%pref_Mp_Lz, 1.0)                   ! Preference for Large Mesozooplankton
     call g_tracer_add_param('pref_Mp_S', FEISTY%pref_Mp_S, 1.0)                     ! Preference for small fish
     ! Medium Demersal 
-    call g_tracer_add_param('pref_Md_BE', FEISTY%pref_Md_BE, 1.0/100.00)                   ! Preference for Benthos
+    call g_tracer_add_param('pref_Md_BE', FEISTY%pref_Md_BE, 1.0)                   ! Preference for Benthos
     ! Large Pelagic
     call g_tracer_add_param('pref_Lp_Mf', FEISTY%pref_Lp_Mf, FEISTY%A)              ! Preference for Medium forage
     call g_tracer_add_param('pref_Lp_Mp', FEISTY%pref_Lp_Mp, 1.0) 
     ! Large Demersal
     call g_tracer_add_param('pref_Ld_Mf', FEISTY%pref_Ld_Mf, FEISTY%D*FEISTY%A)     ! Preference for Medium forage
     call g_tracer_add_param('pref_Ld_Mp', FEISTY%pref_Ld_Mp, FEISTY%D)              ! Preference for Medium pelagics
-    call g_tracer_add_param('pref_Ld_Md', FEISTY%pref_Ld_Md, 1.0/100.00)            ! Preference for Medium Demersal
-    call g_tracer_add_param('pref_Ld_BE', FEISTY%pref_Ld_BE, 1.0/100.00)            ! Preference for Benthos
+    call g_tracer_add_param('pref_Ld_Md', FEISTY%pref_Ld_Md, 1.0)            ! Preference for Medium Demersal
+    call g_tracer_add_param('pref_Ld_BE', FEISTY%pref_Ld_BE, 1.0)            ! Preference for Benthos
 
     call g_tracer_add_param('Bent_eff'  , FEISTY%Bent_eff  , 0.075)
 
