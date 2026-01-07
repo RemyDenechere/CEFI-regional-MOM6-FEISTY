@@ -1542,56 +1542,56 @@ subroutine user_add_tracers_FEISTY(tracer_list)
         name       = 'Mf_B',         &
         longname   = 'Medium forage fish biomass',  &
         units      = 'g m-3',      &
-        prog       = .false.) ! , &
+        prog       = .true.) ! , &
   !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sp_B',         &
         longname   = 'Small large pelagic fish biomass',  &
         units      = 'g m-3',      &
-        prog       = .false.) ! , &
+        prog       = .true.) ! , &
         !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Mp_B',         &
         longname   = 'Medium large pelagic fish biomass',  &
         units      = 'g m-3',      &
-        prog       = .false.) ! , &
+        prog       = .true.) ! , &
         !      init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Lp_B',         &
         longname   = 'Large pelagic fish biomass',  &
         units      = 'g m-3',      &
-        prog       = .false.) ! , &
+        prog       = .true.) ! , &
         !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Sd_B',         &
         longname   = 'Small demersal fish biomass',  &
         units      = 'g m-3',      &
-        prog       = .false.) ! , &
+        prog       = .true.) ! , &
   !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Md_B',         &
         longname   = 'Medium demersal fish biomass',  &
         units      = 'g m-3',      &
-        prog       = .false.) ! , &
+        prog       = .true.) ! , &
   !      init_value = FEISTY%IC)
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'Ld_B',         &
         longname   = 'Large demersal fish biomass',  &
         units      = 'g m-3',      &
-        prog       = .false.) ! , &
+        prog       = .true.) ! , &
   !      init_value = FEISTY%IC)			
 
     call g_tracer_add(tracer_list,package_name,&
         name       = 'BE_B',         &
         longname   = 'Benthic invertebrate biomass',  &
         units      = 'g m-3',      &
-        prog       = .false.) ! , &
+        prog       = .true.) ! , &
   !      init_value = FEISTY%IC)
 
     ! Diagnostic tracers:----------------------------
