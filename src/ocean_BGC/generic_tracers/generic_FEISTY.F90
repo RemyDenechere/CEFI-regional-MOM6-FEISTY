@@ -1350,7 +1350,7 @@ subroutine user_add_params_FEISTY
     call g_tracer_add_param('Bent_eff'  , FEISTY%Bent_eff  , 0.075)
 
     ! Conversion from cobalt zooplankton and detritus to FEISTY  
-    call g_tracer_add_param('convers_Mz', FEISTY%convers_Mz, 6.625*12.01*9.0 * 1000.0)       ! zooplankton biomass unit conversion conversion 
+    call g_tracer_add_param('convers_Mz', FEISTY%convers_Mz, 6.625*12.01*9.0 * 1035.0)       ! zooplankton biomass unit conversion conversion 
     call g_tracer_add_param('convers_det', FEISTY%convers_det, 6.625*12.01*9.0*FEISTY%d2s)   ! detritus unit conversion
    
 	! Stop param list:    
